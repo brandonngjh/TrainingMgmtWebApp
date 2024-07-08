@@ -2,6 +2,8 @@
 
 This project consists of a frontend and backend service for a training management application, along with a MySQL database. The services are containerized using Docker and managed with Docker Compose.
 
+The application is developed using MySQL for the database, Express and Node.js for the backend, and React with TypeScript for the frontend.
+
 **Note:** This application is still a work in progress.
 
 ## Prerequisites
