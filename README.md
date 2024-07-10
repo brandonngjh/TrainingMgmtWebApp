@@ -37,6 +37,7 @@ The application is developed using MySQL for the database, Express and Node.js f
 
 ## Accessing the Application
 - Backend: The backend service runs on http://localhost:3000
+  - The following api access are available: '/employees'
 - Frontend: Open your browser and navigate to http://localhost:5000 (home page)
   - To access employee page, navigate to http://localhost:5000/employees
 
