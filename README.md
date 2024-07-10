@@ -33,6 +33,8 @@ The application is developed using MySQL for the database, Express and Node.js f
    ```
    _This will build and start the frontend, backend, and MySQL services._
 
+5. The file contains a schema.sql on how to setup the database to run locally. Refer to the section below on how to run these commands.
+
 ## Accessing the Application
 - Backend: The backend service runs on http://localhost:3000
 - Frontend: Open your browser and navigate to http://localhost:5000 (home page)
