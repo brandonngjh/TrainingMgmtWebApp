@@ -21,7 +21,7 @@ const ShowEmployee = () => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/employees/${id}`)
+        .get(`http://localhost:3000/api/employees/${id}`)
         .then((response) => {
           setEmployee(response.data);
           setLoading(false);

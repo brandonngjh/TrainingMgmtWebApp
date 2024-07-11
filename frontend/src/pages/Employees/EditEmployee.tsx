@@ -37,7 +37,7 @@ const EditEmployee = () => {
     };
     setLoading(true);
     axios
-      .put(`http://localhost:3000/employees/${id}`, data)
+      .put(`http://localhost:3000/api/employees/${id}`, data)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Edited succesfully", { variant: "success" });

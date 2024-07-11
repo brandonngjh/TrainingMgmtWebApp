@@ -13,7 +13,7 @@ const DeleteEmployee = () => {
   const handleDeleteEmployee = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/employees/${id}`)
+      .delete(`http://localhost:3000/api/employees/${id}`)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Deleted successfully", {

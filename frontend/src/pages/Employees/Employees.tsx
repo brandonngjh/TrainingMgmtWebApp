@@ -19,7 +19,7 @@ const Employees = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/employees")
+      .get("http://localhost:3000/api/employees")
       .then((response) => {
         setEmployees(response.data);
         setLoading(false);

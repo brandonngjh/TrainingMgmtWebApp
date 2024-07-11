@@ -1,5 +1,5 @@
 import express from "express";
-import loginRoutes from "./loginRoutes";
+import loginRoutes from "./loginRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
 import trainingRoutes from "./trainingRoutes.js";
 import employeeRoutes from "./employeeRoutes.js";

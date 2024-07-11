@@ -20,7 +20,7 @@ const CreateEmployee = () => {
     };
     setLoading(true);
     axios
-      .post(`http://localhost:3000/employees`, data)
+      .post(`http://localhost:3000/api/employees`, data)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Created successfully", {
