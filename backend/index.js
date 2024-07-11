@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   return res.status(234).send("Welcome To Training Management App");
 });
 
-app.use("/employees", employeeRoute);
+app.use("/api", mainRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
