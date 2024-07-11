@@ -1,4 +1,4 @@
-CREATE DATABASE training_app;
+CREATE DATABASE IF NOT EXISTS training_app;
 USE training_app;
 
 CREATE TABLE Employees (
