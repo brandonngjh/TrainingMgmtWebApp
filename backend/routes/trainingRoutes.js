@@ -1,9 +1,102 @@
-import express from 'express';
+import express from "express";
+import {
+  getTrainings,
+  getTrainingByID,
+  createTraining,
+  deleteTraining,
+  updateTraining,
+} from "../database/trainingDatabase.js";
 
 const router = express.Router();
 
-router.get('/trainings', async (req, res) => {
-  res.send('Training route');
+// Route for Get All Trainings from database
+router.get("/", async (req, res) => {
+  try {
+    const trainings = await getTrainings();
+    return res.status(200).json(trainings);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// Route for Get One Training from database by id
+router.get("/:id", async (req, res) => {
+  try {
+    const training = await getTrainingByID(req.params.id);
+    if (training) {
+      return res.status(200).json(training);
+    } else {
+      return res.status(404).send({ message: "Training not found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// Route for adding a new Training
+router.post("/", async (req, res) => {
+  try {
+    const { title, description, training_provider } = req.body;
+    if (!title || !description || !training_provider) {
+      return res
+        .status(400)
+        .send({
+          message:
+            "Send required fields: title, description, training_provider",
+        });
+    }
+    const newTraining = await createTraining(
+      title,
+      description,
+      training_provider
+    );
+    return res.status(201).json(newTraining);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// Route for Deleting a Training
+router.delete("/:id", async (req, res) => {
+  try {
+    const message = await deleteTraining(req.params.id);
+    return res.status(200).send({ message });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+// Route for Updating a Training
+router.put("/:id", async (req, res) => {
+  try {
+    const { title, description, training_provider } = req.body;
+    if (!title || !description || !training_provider) {
+      return res
+        .status(400)
+        .send({
+          message:
+            "Send required fields: title, description, training_provider",
+        });
+    }
+    const updatedTraining = await updateTraining(
+      req.params.id,
+      title,
+      description,
+      training_provider
+    );
+    if (updatedTraining) {
+      return res.status(200).json(updatedTraining);
+    } else {
+      return res.status(404).send({ message: "Training not found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
 });
 
 export default router;

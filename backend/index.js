@@ -1,8 +1,9 @@
 import express from "express";
-import employeeRoute from "./routes/employeeRoutes.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
+import loginRoutes from "./routes/loginRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", mainRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/login", loginRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

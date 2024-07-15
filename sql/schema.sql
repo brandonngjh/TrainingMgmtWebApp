@@ -1,28 +1,166 @@
 CREATE DATABASE IF NOT EXISTS training_app;
 USE training_app;
 
-CREATE TABLE Employees (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    department VARCHAR(255) NOT NULL
+CREATE TABLE user_credentials (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
 );
 
-INSERT INTO Employees (name, email, department)
-VALUES
-('Alice', 'alice@gmail.com', 'Precision Machine'),
-('Bob', 'bob@gmail.com', 'Precision Machine'),
-('Charlie', 'charlie@gmail.com', 'Boxbuild & Module Assembly'),
-('David', 'david@gmail.com', 'Wire Harnessing'),
-('Eve', 'eve@gmail.com', 'Sheet Metal, Fabrication, Spray & Powder Coating'),
-('Frank', 'frank@gmail.com', 'Precision Machine'),
-('Grace', 'grace@gmail.com', 'Precision Machine'),
-('Heidi', 'heidi@gmail.com', 'Boxbuild & Module Assembly'),
-('Ivan', 'ivan@gmail.com', 'Wire Harnessing'),
-('Judy', 'judy@gmail.com', 'Sheet Metal, Fabrication, Spray & Powder Coating'),
-('Mallory', 'mallory@gmail.com', 'Precision Machine'),
-('Nina', 'nina@gmail.com', 'Precision Machine'),
-('Oscar', 'oscar@gmail.com', 'Boxbuild & Module Assembly'),
-('Peggy', 'peggy@gmail.com', 'Wire Harnessing'),
-('Trent', 'trent@gmail.com', 'Sheet Metal, Fabrication, Spray & Powder Coating'),
-('Victor', 'victor@gmail.com', 'Precision Machine');
+CREATE TABLE departments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE jobs (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    department_id BIGINT,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
+CREATE TABLE employees (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL DEFAULT 'temp@gmail.com',
+    hire_date DATE,
+    division VARCHAR(255),
+    department_id BIGINT,
+    job_id BIGINT,
+    designation VARCHAR(255),
+    FOREIGN KEY (department_id) REFERENCES departments(id),
+    FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+
+CREATE TABLE trainings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    training_provider VARCHAR(255)
+);
+
+CREATE TABLE employees_trainings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT,
+    training_id BIGINT,
+    status VARCHAR(50) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id),
+    INDEX (employee_id, training_id)
+);
+
+-- Additional Indexes for performance
+CREATE INDEX idx_employee_email ON employees(email);
+CREATE INDEX idx_training_title ON trainings(title);
+
+-- Stored procedure to enroll an employee in a training
+DELIMITER $$
+CREATE PROCEDURE EnrollEmployeeInTraining (
+    IN p_employee_id BIGINT,
+    IN p_training_id BIGINT,
+    IN p_start_date DATE,
+    IN p_end_date DATE
+)
+BEGIN
+    INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
+    VALUES (p_employee_id, p_training_id, 'Incomplete', p_start_date, p_end_date);
+END $$
+DELIMITER ;
+
+INSERT INTO user_credentials (username, password, role) VALUES 
+('admin', 'admin', 'admin'),
+('hr', 'hr', 'hr'),
+('hod', 'hod', 'hod');
+
+INSERT INTO departments (name) VALUES ('Machining');
+
+INSERT INTO jobs (name, department_id)
+VALUES ('Production', (SELECT id FROM departments WHERE name = 'Machining'));
+
+INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
+VALUES 
+    (294, 'Robert Destreza', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Machining HOD'),
+    (523, 'Ashikin Binti Ibrahim', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production/MES Planner'),
+    (897, 'Min Htet Kyaw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assitant Planner'),
+    (923, 'Myat Naing Maw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Material Planner'),
+    (969, 'Ernest Bryan Buenacida', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'MES Planner'),
+    (363, 'Mangawang Benjo Tejada', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Supervisor (Machining)'),
+    (875, 'Fery Suwandri Wijaya', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Big Format Leader'),
+    (878, 'Heri Nurul Huda', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Big Format Machinist Setter'),
+    (968, 'Franclin Cole Vitug', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (530, 'Danial Haikal Bin Badrol Sham', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Fanuc Leader/Machinist'),
+    (862, 'Dileep Kumar', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Fanuc Machinist Setter'),
+    (815, 'Zaw Lin Naing', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (694, 'Khaing Soe Wai', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (937, 'Tin Lin Aung', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (811, 'Gopinathan Nair Anish Kumar', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Slim3N Leader/Machinist'),
+    (510, 'Chand Dhan Bahadur', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (680, 'Gauj Kazi', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (894, 'San Ko Win', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (539, 'Bashir Muhammad', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (781, 'Kottaisamy Arjunan', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'PS105 Leader/Machinist'),
+    (802, 'Basanta Rai', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (682, 'Mir Rabby Saddam', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (944, 'Tham Wai Seng', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'J300 Machinist Setter'),
+    (895, 'Kaung Khant Zaw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
+    (2, 'See Seng Giap', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Supervisor (Conventional)'),
+    (23, 'Muhamad Al Amin Bin Md Surep', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer Leader'),
+    (392, 'Muhammad Riduan Bin Mohd Misman', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
+    (645, 'Mohd Shahrul Nizam Bin Nordin', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
+    (790, 'Aung Myint Thein', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
+    (490, 'Surindra Mahato', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
+    (349, 'Manlabian Ernesto JR Ramon', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Tool Crib Leader'),
+    (805, 'Mahesh Nepali', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Tooling operator'),
+    (678, 'Hossain MD Jubayer', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Conventional Grinding'),
+    (703, 'Myo Min Oo', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Saw cut'),
+    (733, 'Phyo That Hlaing', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
+    (832, 'Aktaruzzaman Md', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
+    (838, 'Rayhan Md', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
+    (177, 'Muhammad Syafiq Bin Abdul Razak', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assembly Leader'),
+    (587, 'Jaiswal Pashupati Nath', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assembly'),
+    (69, 'Mohd Sapuan Bin Othmar', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance Leader'),
+    (812, 'Htet Wai Oo', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance'),
+    (693, 'Kyaw San Htwe', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance'),
+    (833, 'Hosion MD Saddam', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
+    (935, 'Thein Kyaw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
+    (978, 'Rukesh a/l Ravendran', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Machinist'),
+    (504, 'Sah Fulgendra', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
+    (22, 'Brandon', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
+    (21, 'Bob', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction');
+
+INSERT INTO trainings (title, description)
+VALUES 
+    ('AS 9100D AWARNESS', 'EXTERNAL'),
+    ('COUNTERFEIT', 'INTERNAL'),
+    ('CI & IP AWARENESS', 'INTERNAL'),
+    ('FOD', 'INTERNAL'),
+    ('IQA TRAINING AS9100D', 'EXTERNAL'),
+    ('SAFETY AWARENESS (PPE)', 'INTERNAL'),
+    ('5S', 'INTERNAL'),
+    ('MACHINING PHASE 1', 'INTERNAL'),
+    ('MACHINING PHASE 2', 'INTERNAL'),
+    ('PROCESS MANAGEMENT PLAN / PROCESS TRAVELER', 'INTERNAL'),
+    ('NC PROGRAMME', 'INTERNAL'),
+    ('MESUREMENT AND CALIBRATION', 'INTERNAL'),
+    ('GD&T', 'INTERNAL'),
+    ('ENGINEERING MANAGEMENT', 'INTERNAL'),
+    ('TOOLS (JIG & FITURES)', 'INTERNAL'),
+    ('DRAWING INTERPERTATION', 'INTERNAL'),
+    ('QUALITY AWARNESS', 'INTERNAL'),
+    ('DEBURING AND BUFFING', 'INTERNAL'),
+    ('MES SYSTEM', 'INTERNAL');
+
+INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
+VALUES 
+    (22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
+    (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'Incomplete', '2024-07-01', '2024-08-28'),
+    (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Incomplete', '2024-08-01', '2024-09-29'),
+    (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Incomplete', '2024-09-01', '2024-10-20'),
+
+    (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
+    (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Incomplete', '2024-07-01', '2024-08-27'),
+    (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Incomplete', '2024-08-01', '2024-09-29'),
+    (21, (SELECT id FROM trainings WHERE title = '5S'), 'Incomplete', '2024-09-01', '2024-10-27');

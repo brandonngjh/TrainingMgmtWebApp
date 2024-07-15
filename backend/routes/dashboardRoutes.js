@@ -1,9 +1,9 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-router.get('/home', async (req, res) => {
-  res.send('Dashboard route');
+router.get("/", async (req, res) => {
+  res.send("Dashboard route");
 });
 
 export default router;
