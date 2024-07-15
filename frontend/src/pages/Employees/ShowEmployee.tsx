@@ -8,7 +8,7 @@ interface Employee {
   id: string;
   name: string;
   email: string;
-  department: string;
+  designation: string;
 }
 
 const ShowEmployee = () => {
@@ -54,8 +54,8 @@ const ShowEmployee = () => {
             <span>{employee.email}</span>
           </div>
           <div className="my-4">
-            <span className="text-xl mr-4 text-gray-500">Department</span>
-            <span>{employee.department}</span>
+            <span className="text-xl mr-4 text-gray-500">Designation</span>
+            <span>{employee.designation}</span>
           </div>
         </div>
       )}

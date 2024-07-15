@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack";
 const EditEmployee = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
+  const [designation, setDesignation] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -16,10 +16,10 @@ const EditEmployee = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/employees/${id}`)
+      .get(`http://localhost:3000/api/employees/${id}`)
       .then((response) => {
         setEmail(response.data.email);
-        setDepartment(response.data.department);
+        setDesignation(response.data.designation);
         setName(response.data.name);
         setLoading(false);
       })
@@ -33,7 +33,7 @@ const EditEmployee = () => {
     const data = {
       name,
       email,
-      department,
+      designation,
     };
     setLoading(true);
     axios
@@ -76,11 +76,11 @@ const EditEmployee = () => {
           />
         </div>
         <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Department</label>
+          <label className="text-xl mr-4 text-gray-500">Designation</label>
           <input
             type="text"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full"
           />
         </div>

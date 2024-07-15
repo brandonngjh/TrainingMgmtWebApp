@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack";
 const CreateEmployee = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
+  const [designation, setDesignation] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -16,7 +16,7 @@ const CreateEmployee = () => {
     const data = {
       name,
       email,
-      department,
+      designation,
     };
     setLoading(true);
     axios
@@ -61,11 +61,11 @@ const CreateEmployee = () => {
           />
         </div>
         <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Department</label>
+          <label className="text-xl mr-4 text-gray-500">Designation</label>
           <input
             type="text"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full"
           />
         </div>

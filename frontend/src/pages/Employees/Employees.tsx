@@ -10,7 +10,7 @@ interface Employee {
   id: string;
   name: string;
   email: string;
-  department: string;
+  designation: string;
 }
 
 const Employees = () => {
@@ -44,12 +44,13 @@ const Employees = () => {
           <thead>
             <tr>
               <th className="border border-slate-600 rounded-md">No</th>
+              <th className="border border-slate-600 rounded-md">ID</th>
               <th className="border border-slate-600 rounded-md">Name</th>
               <th className="border border-slate-600 rounded-md max-md:hidden">
                 Email
               </th>
               <th className="border border-slate-600 rounded-md max-md:hidden">
-                Department
+                Designation
               </th>
               <th className="border border-slate-600 rounded-md">Operations</th>
             </tr>
@@ -61,13 +62,16 @@ const Employees = () => {
                   {index + 1}
                 </td>
                 <td className="border border-slate-700 rounded-md text-center">
+                  {employee.id}
+                </td>
+                <td className="border border-slate-700 rounded-md text-center">
                   {employee.name}
                 </td>
                 <td className="border border-slate-700 rounded-md text-center max-md:hidden">
                   {employee.email}
                 </td>
                 <td className="border border-slate-700 rounded-md text-center max-md:hidden">
-                  {employee.department}
+                  {employee.designation}
                 </td>
                 <td className="border border-slate-700 rounded-md text-center">
                   <div className="flex justify-center gap-x-4">
