@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Employees/Employees.tsx";
+import Employees from "./pages/Employees/Employees.tsx";
 import CreateEmployee from "./pages/Employees/CreateEmployee.tsx";
 import ShowEmployee from "./pages/Employees/ShowEmployee.tsx";
 import EditEmployee from "./pages/Employees/EditEmployee.tsx";
@@ -15,7 +15,8 @@ import Dashboard from "./pages/Dashboard/Dashboard.tsx";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/employees" element={<Employees />} />
       <Route path="/employees/create" element={<CreateEmployee />} />
       <Route path="/employees/details/:id" element={<ShowEmployee />} />
       <Route path="/employees/edit/:id" element={<EditEmployee />} />
