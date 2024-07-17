@@ -37,16 +37,27 @@ CREATE TABLE trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    validity_period INT,
     training_provider VARCHAR(255)
+);
+
+CREATE TABLE relevant_trainings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT,
+    training_id BIGINT,
+    validity ENUM('valid', 'expired', 'NA') DEFAULT 'NA',
+    foreign key (employee_id) references employees(id),
+    foreign key (training_id) references trainings(id)
 );
 
 CREATE TABLE employees_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT,
     training_id BIGINT,
-    status VARCHAR(50) NOT NULL,
+    status ENUM('Completed', 'Scheduled') NOT NULL,
     start_date DATE,
     end_date DATE,
+    expiry_date DATE,
     FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (training_id) REFERENCES trainings(id),
     INDEX (employee_id, training_id)
@@ -66,7 +77,7 @@ CREATE PROCEDURE EnrollEmployeeInTraining (
 )
 BEGIN
     INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
-    VALUES (p_employee_id, p_training_id, 'Incomplete', p_start_date, p_end_date);
+    VALUES (p_employee_id, p_training_id, 'Scheduled', p_start_date, p_end_date);
 END $$
 DELIMITER ;
 
@@ -131,36 +142,49 @@ VALUES
     (22, 'Brandon', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
     (21, 'Bob', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction');
 
-INSERT INTO trainings (title, description)
+INSERT INTO trainings (title, description, validity_period)
 VALUES 
-    ('AS 9100D AWARNESS', 'EXTERNAL'),
-    ('COUNTERFEIT', 'INTERNAL'),
-    ('CI & IP AWARENESS', 'INTERNAL'),
-    ('FOD', 'INTERNAL'),
-    ('IQA TRAINING AS9100D', 'EXTERNAL'),
-    ('SAFETY AWARENESS (PPE)', 'INTERNAL'),
-    ('5S', 'INTERNAL'),
-    ('MACHINING PHASE 1', 'INTERNAL'),
-    ('MACHINING PHASE 2', 'INTERNAL'),
-    ('PROCESS MANAGEMENT PLAN / PROCESS TRAVELER', 'INTERNAL'),
-    ('NC PROGRAMME', 'INTERNAL'),
-    ('MESUREMENT AND CALIBRATION', 'INTERNAL'),
-    ('GD&T', 'INTERNAL'),
-    ('ENGINEERING MANAGEMENT', 'INTERNAL'),
-    ('TOOLS (JIG & FITURES)', 'INTERNAL'),
-    ('DRAWING INTERPERTATION', 'INTERNAL'),
-    ('QUALITY AWARNESS', 'INTERNAL'),
-    ('DEBURING AND BUFFING', 'INTERNAL'),
-    ('MES SYSTEM', 'INTERNAL');
+    ('AS 9100D AWARNESS', 'EXTERNAL', 365),
+    ('COUNTERFEIT', 'INTERNAL', 365),
+    ('CI & IP AWARENESS', 'INTERNAL', 365),
+    ('FOD', 'INTERNAL', 365),
+    ('IQA TRAINING AS9100D', 'EXTERNAL', 365),
+    ('SAFETY AWARENESS (PPE)', 'INTERNAL', 365),
+    ('5S', 'INTERNAL', 365),
+    ('MACHINING PHASE 1', 'INTERNAL', 365),
+    ('MACHINING PHASE 2', 'INTERNAL', 365),
+    ('PROCESS MANAGEMENT PLAN / PROCESS TRAVELER', 'INTERNAL', 365),
+    ('NC PROGRAMME', 'INTERNAL', 365),
+    ('MESUREMENT AND CALIBRATION', 'INTERNAL', 365),
+    ('GD&T', 'INTERNAL', 365),
+    ('ENGINEERING MANAGEMENT', 'INTERNAL', 365),
+    ('TOOLS (JIG & FITURES)', 'INTERNAL', 365),
+    ('DRAWING INTERPERTATION', 'INTERNAL', 365),
+    ('QUALITY AWARNESS', 'INTERNAL', 365),
+    ('DEBURING AND BUFFING', 'INTERNAL', 365),
+    ('MES SYSTEM', 'INTERNAL', 365);
 
-INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
+INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
+(22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'Scheduled', '2024-09-01', '2024-09-28', '2025-09-28'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
+(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Scheduled', '2024-09-01', '2024-10-20', '2025-10-20'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-27', '2024-11-27'),
+
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31', '2026-01-31'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-07-01', '2024-08-27', '2025-08-27', '2026-08-27'),
+(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-01', '2024-09-29', '2025-09-29'),
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27');
+
+INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES 
-    (22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
-    (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'Incomplete', '2024-07-01', '2024-08-28'),
-    (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Incomplete', '2024-08-01', '2024-09-29'),
-    (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Incomplete', '2024-09-01', '2024-10-20'),
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
 
-    (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
-    (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Incomplete', '2024-07-01', '2024-08-27'),
-    (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Incomplete', '2024-08-01', '2024-09-29'),
-    (21, (SELECT id FROM trainings WHERE title = '5S'), 'Incomplete', '2024-09-01', '2024-10-27');
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'NA'),
+(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
