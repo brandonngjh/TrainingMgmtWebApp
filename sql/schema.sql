@@ -81,7 +81,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-INSERT INTO user_credentials (username, password, role) VALUES 
+INSERT INTO user_credentials (username, password, role) VALUES
 ('admin', 'admin', 'admin'),
 ('hr', 'hr', 'hr'),
 ('hod', 'hod', 'hod');
@@ -92,7 +92,7 @@ INSERT INTO jobs (name, department_id)
 VALUES ('Production', (SELECT id FROM departments WHERE name = 'Machining'));
 
 INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
-VALUES 
+VALUES
     (294, 'Robert Destreza', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Machining HOD'),
     (523, 'Ashikin Binti Ibrahim', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production/MES Planner'),
     (897, 'Min Htet Kyaw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assitant Planner'),
@@ -143,7 +143,7 @@ VALUES
     (21, 'Bob', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction');
 
 INSERT INTO trainings (title, description, validity_period)
-VALUES 
+VALUES
     ('AS 9100D AWARNESS', 'EXTERNAL', 365),
     ('COUNTERFEIT', 'INTERNAL', 365),
     ('CI & IP AWARENESS', 'INTERNAL', 365),
@@ -169,15 +169,15 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'Scheduled', '2024-09-01', '2024-09-28', '2025-09-28'),
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
 (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Scheduled', '2024-09-01', '2024-10-20', '2025-10-20'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-27', '2024-11-27'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-27'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31', '2026-01-31'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-07-01', '2024-08-27', '2025-08-27', '2026-08-27'),
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-07-01', '2024-08-27', '2025-08-27'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-01', '2024-09-29', '2025-09-29'),
 (21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27');
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
-VALUES 
+VALUES
 (22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
 (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
@@ -185,6 +185,46 @@ VALUES
 (22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
 
 (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'NA'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 (21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
+
+
+-- Getting the basic employee info
+SELECT
+    e.id,
+    e.name AS employee_name,
+    d.name AS department_name,
+    j.name AS job_name
+FROM employees e
+JOIN departments d ON e.department_id = d.id
+JOIN jobs j ON e.job_id = j.id;
+
+-- Getting the courses that are relevant to each employee
+SELECT
+    rt.employee_id,
+    SELECT
+        rt.id,
+        rt.employee_id,
+        rt.validity,
+        t.title
+    FROM trainings t
+    JOIN relevant_trainings rt ON t.id = rt.training_id
+    ORDER BY rt.employee_id;
+
+-- 
+Given an employee id, search the employees_trainings table for the end date and expiry date of the training for the employee. However, the expiry date should only be returned if the status attribute in the employees_training table is set to completed. Also include the training title and id of each training found.
+
+Search the employees_training table for the end date and expiry date of each row. If there are multiple rows that share the same employee id and training id, only return the row with the latest end date. The expiry date should only be returned if the status attribute in the employees_training table is set to completed. Also include the training title and id of each training found.
+
+SELECT
+    et.training_id,
+    t.title,
+    et.end_date,
+    CASE
+        WHEN et.status = 'Completed' THEN et.expiry_date
+        ELSE NULL
+    END AS expiry_date
+FROM employees_trainings et
+JOIN trainings t ON et.training_id = t.id
+WHERE et.employee_id = ?;
