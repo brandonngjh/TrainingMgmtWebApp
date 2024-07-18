@@ -108,10 +108,25 @@ const Example: React.FC = () => {
             id: 'trainingTitles',
             header: 'Relevant Trainings',
             size: 200,
-            Cell: ({ cell }) => (
+            Cell: ({ row }) => (
               <Box>
-                {cell.getValue<string>().split(', ').map((title, index) => (
-                  <div key={index}>{title}</div>
+                {row.original.relevantTrainings.map((training, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        training.validity === 'valid'
+                          ? 'green'
+                          : training.validity === 'expired'
+                          ? 'orange'
+                          : 'red',
+                      color: 'white',
+                      padding: '4px',
+                      margin: '2px 0',
+                    }}
+                  >
+                    {training.title}
+                  </div>
                 ))}
               </Box>
             ),
@@ -121,10 +136,25 @@ const Example: React.FC = () => {
             id: 'trainingLatestEndDates',
             header: 'Latest End Dates',
             size: 200,
-            Cell: ({ cell }) => (
+            Cell: ({ row }) => (
               <Box>
-                {cell.getValue<string>().split(', ').map((date, index) => (
-                  <div key={index}>{new Date(date).toLocaleDateString()}</div>
+                {row.original.relevantTrainings.map((training, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        training.validity === 'valid'
+                          ? 'green'
+                          : training.validity === 'expired'
+                          ? 'orange'
+                          : 'red',
+                      color: 'white',
+                      padding: '4px',
+                      margin: '2px 0',
+                    }}
+                  >
+                    {new Date(training.latest_end_date).toLocaleDateString()}
+                  </div>
                 ))}
               </Box>
             ),
@@ -134,10 +164,25 @@ const Example: React.FC = () => {
             id: 'trainingExpiryDates',
             header: 'Expiry Dates',
             size: 200,
-            Cell: ({ cell }) => (
+            Cell: ({ row }) => (
               <Box>
-                {cell.getValue<string>().split(', ').map((date, index) => (
-                  <div key={index}>{date ? new Date(date).toLocaleDateString() : 'N/A'}</div>
+                {row.original.relevantTrainings.map((training, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        training.validity === 'valid'
+                          ? 'green'
+                          : training.validity === 'expired'
+                          ? 'orange'
+                          : 'red',
+                      color: 'white',
+                      padding: '4px',
+                      margin: '2px 0',
+                    }}
+                  >
+                    {training.expiry_date ? new Date(training.expiry_date).toLocaleDateString() : 'N/A'}
+                  </div>
                 ))}
               </Box>
             ),
@@ -176,7 +221,11 @@ const Example: React.FC = () => {
     },
   });
 
-  return <MaterialReactTable table={table} />;
+  return (<div className="flex">
+    <Sidebar activeItem="Dashboard" />
+    <MaterialReactTable table={table} />
+  </div>
+  );
 };
 
 // Date Picker Imports - these should just be in your Context Provider
