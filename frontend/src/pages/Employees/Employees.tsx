@@ -17,6 +17,7 @@ interface Employee {
 const Employees = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -30,71 +31,83 @@ const Employees = () => {
         setLoading(false);
       });
   }, []);
+
   return (
     <div className="flex">
       <Sidebar activeItem="Employees" />
-      <div className="flex-1">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl my-8">Employees List</h1>
+      <div className="flex-1 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex-col">
+            <h1 className="text-3xl font-bold text-gray-800">Employees</h1>
+            <h2 className="text-lg text-gray-600">List of all employees</h2>
+          </div>
           <Link to="/employees/create">
-            <MdOutlineAddBox className="text-sky-800 text-4xl" />
+            <div className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Add Employee
+            </div>
           </Link>
         </div>
         {loading ? (
           <Spinner />
         ) : (
-          <table className="w-full border-separate border-spacing-2">
-            <thead>
-              <tr>
-                <th className="border border-slate-600 rounded-md">No</th>
-                <th className="border border-slate-600 rounded-md">ID</th>
-                <th className="border border-slate-600 rounded-md">Name</th>
-                <th className="border border-slate-600 rounded-md max-md:hidden">
-                  Email
-                </th>
-                <th className="border border-slate-600 rounded-md max-md:hidden">
-                  Designation
-                </th>
-                <th className="border border-slate-600 rounded-md">
-                  Operations
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((employee, index) => (
-                <tr key={employee.id} className="h-8">
-                  <td className="border border-slate-700 rounded-md text-center">
-                    {index + 1}
-                  </td>
-                  <td className="border border-slate-700 rounded-md text-center">
-                    {employee.id}
-                  </td>
-                  <td className="border border-slate-700 rounded-md text-center">
-                    {employee.name}
-                  </td>
-                  <td className="border border-slate-700 rounded-md text-center max-md:hidden">
-                    {employee.email}
-                  </td>
-                  <td className="border border-slate-700 rounded-md text-center max-md:hidden">
-                    {employee.designation}
-                  </td>
-                  <td className="border border-slate-700 rounded-md text-center">
-                    <div className="flex justify-center gap-x-4">
-                      <Link to={`/employees/details/${employee.id}`}>
-                        <BsInfoCircle className="text-2xl text-green-800" />
-                      </Link>
-                      <Link to={`/employees/edit/${employee.id}`}>
-                        <AiOutlineEdit className="text-2xl text-yellow-600" />
-                      </Link>
-                      <Link to={`/employees/delete/${employee.id}`}>
-                        <MdOutlineDelete className="text-2xl text-red-600" />
-                      </Link>
-                    </div>
-                  </td>
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 bg-gray-100 border-b">No</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b max-md:hidden">
+                    Email
+                  </th>
+                  <th className="py-2 px-4 bg-gray-100 border-b max-md:hidden">
+                    Designation
+                  </th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {employees.map((employee, index) => (
+                  <tr
+                    key={employee.id}
+                    className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                  >
+                    <td className="py-2 px-4 border-b">{index + 1}</td>
+                    <td className="py-2 px-4 border-b">{employee.id}</td>
+                    <td className="py-2 px-4 border-b">{employee.name}</td>
+                    <td className="py-2 px-4 border-b max-md:hidden">
+                      {employee.email}
+                    </td>
+                    <td className="py-2 px-4 border-b max-md:hidden">
+                      {employee.designation}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <div className="flex justify-center gap-x-4">
+                        <Link
+                          to={`/employees/details/${employee.id}`}
+                          className="bg-green-100 p-1 rounded-full hover:bg-green-200"
+                        >
+                          <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
+                        </Link>
+                        <Link
+                          to={`/employees/edit/${employee.id}`}
+                          className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
+                        >
+                          <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
+                        </Link>
+                        <Link
+                          to={`/employees/delete/${employee.id}`}
+                          className="bg-red-100 p-1 rounded-full hover:bg-red-200"
+                        >
+                          <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

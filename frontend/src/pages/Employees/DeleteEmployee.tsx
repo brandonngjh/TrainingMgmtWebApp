@@ -10,6 +10,7 @@ const DeleteEmployee = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+
   const handleDeleteEmployee = () => {
     setLoading(true);
     axios
@@ -19,26 +20,26 @@ const DeleteEmployee = () => {
         enqueueSnackbar("Employee Deleted successfully", {
           variant: "success",
         });
-        navigate("/");
+        navigate("/employees");
       })
       .catch((error) => {
         setLoading(false);
-        // alert("An error happened. Please Check Console");
         enqueueSnackbar("Error", { variant: "error" });
         console.log(error);
       });
   };
+
   return (
-    <div>
-      <BackButton />
-      <h1 className="text-3xl my-4">Delete Employee</h1>
-      {loading ? <Spinner /> : ""}
-      <div className="flex flex-col items-center border-2 border-sky-400 rounded-xl w-[600px] p-8 mx-auto">
-        <h3 className="text-2xl">
-          Are You Sure You want to delete this employee?
+    <div className="p-6">
+      <BackButton destination="/employees" />
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Delete Employee</h1>
+      {loading ? <Spinner /> : null}
+      <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-8 mx-auto max-w-lg text-center">
+        <h3 className="text-2xl mb-4">
+          Are you sure you want to delete this employee?
         </h3>
         <button
-          className="p-4 bg-red-600 text-white m-8 w-full"
+          className="bg-red-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-red-700"
           onClick={handleDeleteEmployee}
         >
           Yes, Delete it

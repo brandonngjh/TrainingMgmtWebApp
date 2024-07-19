@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", mainRoutes);
 app.use("/dashboard", dashboardRoutes);
-app.use("/login", loginRoutes);
+app.use("/", loginRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

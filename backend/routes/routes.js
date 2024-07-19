@@ -6,7 +6,6 @@ import jobsRoutes from "./jobRoutes.js";
 
 const router = express.Router();
 
-
 router.use("/trainings", trainingRoutes);
 router.use("/employees", employeeRoutes);
 router.use("/departments", departmentRoutes);
