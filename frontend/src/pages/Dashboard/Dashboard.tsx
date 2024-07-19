@@ -154,7 +154,7 @@ const Example: React.FC = () => {
                       margin: '2px 0',
                     }}
                   >
-                    {new Date(training.latest_end_date).toLocaleDateString()}
+                    {training.expiry_date ? new Date(training.latest_end_date).toLocaleDateString() : 'N/A'}
                   </div>
                 ))}
               </Box>
