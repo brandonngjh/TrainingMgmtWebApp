@@ -17,8 +17,8 @@ export async function getEmployeeDetails() {
 export async function getRelevantCourses() {
     const [rows] = await pool.query(`
         SELECT
-            rt.id,
             rt.employee_id,
+            rt.training_id,
             rt.validity,
             t.title
         FROM trainings t
@@ -34,15 +34,12 @@ export async function getTrainingDates() {
             et.employee_id,
             et.training_id,
             t.title,
-            MAX(et.end_date) AS latest_end_date,
-            CASE
-                WHEN et.status = 'Completed' THEN MAX(et.expiry_date)
-                ELSE NULL
-            END AS expiry_date
+            MAX(IF(et.status = 'Completed', et.end_date, NULL)) AS latest_end_date,
+            MAX(IF(et.status = 'Completed', et.expiry_date, NULL)) AS expiry_date,
+            MAX(IF(et.status = 'Scheduled', et.start_date, NULL)) AS scheduled_date
         FROM employees_trainings et
         JOIN trainings t ON et.training_id = t.id
-        GROUP BY et.employee_id, et.training_id, t.title, et.status
-        HAVING et.status = 'Completed' OR et.status <> 'Completed'
+        GROUP BY et.employee_id, et.training_id
         ORDER BY et.employee_id, et.training_id;
     `);
     return rows;

@@ -33,6 +33,7 @@ interface Training {
   title: string;
   latest_end_date: string;
   expiry_date: string | null;
+  scheduled_date: string | null;
 }
 
 interface Employee {
@@ -65,7 +66,7 @@ const Example: React.FC = () => {
       {
         accessorKey: 'employee_id',
         header: 'ID',
-        size: 50,
+        size: 10,
       },
       {
         id: 'employee', // id used to define `group` column
@@ -116,10 +117,10 @@ const Example: React.FC = () => {
                     style={{
                       backgroundColor:
                         training.validity === 'valid'
-                          ? 'green'
+                          ? 'rgba(0, 128, 0, 0.8)' // green with 80% opacity
                           : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
+                          ? 'rgba(255, 165, 0, 0.8)' // orange with 80% opacity
+                          : 'rgba(255, 0, 0, 0.8)', // red with 80% opacity
                       color: 'white',
                       padding: '4px',
                       margin: '2px 0',
@@ -134,7 +135,7 @@ const Example: React.FC = () => {
           {
             accessorFn: (row) => row.relevantTrainings.map(training => training.latest_end_date).join(', '),
             id: 'trainingLatestEndDates',
-            header: 'Latest End Dates',
+            header: 'Last Completed Date',
             size: 200,
             Cell: ({ row }) => (
               <Box>
@@ -162,8 +163,8 @@ const Example: React.FC = () => {
           {
             accessorFn: (row) => row.relevantTrainings.map(training => training.expiry_date).join(', '),
             id: 'trainingExpiryDates',
-            header: 'Expiry Dates',
-            size: 200,
+            header: 'Certification End Date',
+            size: 250,
             Cell: ({ row }) => (
               <Box>
                 {row.original.relevantTrainings.map((training, index) => (
@@ -187,6 +188,34 @@ const Example: React.FC = () => {
               </Box>
             ),
           },
+          {
+            accessorFn: (row) => row.relevantTrainings.map(training => training.scheduled_date).join(', '),
+            id: 'scheduledTrainingDate',
+            header: 'Next Scheduled Date',
+            size: 200,
+            Cell: ({ row }) => (
+              <Box>
+                {row.original.relevantTrainings.map((training, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        training.validity === 'valid'
+                          ? 'green'
+                          : training.validity === 'expired'
+                          ? 'orange'
+                          : 'red',
+                      color: 'white',
+                      padding: '4px',
+                      margin: '2px 0',
+                    }}
+                  >
+                    {training.scheduled_date ? new Date(training.scheduled_date).toLocaleDateString() : 'N/A'}
+                  </div>
+                ))}
+              </Box>
+            ),
+          }
         ],
       },
     ],

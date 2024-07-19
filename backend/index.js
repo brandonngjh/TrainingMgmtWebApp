@@ -26,7 +26,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", mainRoutes);
-app.use("/dashboard", dashboardRoutes);
 app.use("/login", loginRoutes);
 
 const PORT = 3000;

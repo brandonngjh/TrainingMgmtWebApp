@@ -28,7 +28,8 @@ router.get("/", async (req, res) => {
       return {
         ...relevantTraining,
         latest_end_date: training.latest_end_date,
-        expiry_date: training.expiry_date
+        expiry_date: training.expiry_date,
+        scheduled_date: training.scheduled_date
       }
     })
 
