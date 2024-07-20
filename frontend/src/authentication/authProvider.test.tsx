@@ -1,3 +1,5 @@
+//this not working for some reason
+
 import { render, waitFor } from '@testing-library/react';
 import { AuthProvider, useAuth } from './authContext';
 import React from 'react';

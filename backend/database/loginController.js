@@ -2,7 +2,8 @@ import pool from "./database.js"
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../auth_utils/jwt.js';
 
-// login
+// login controller 
+//compares entered password and username with one in database
 export const login = async (req, res) => {
     const { username, password } = req.body;
 

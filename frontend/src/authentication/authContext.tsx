@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { decodeToken } from './jwtutils'; 
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -13,17 +12,17 @@ interface AuthProviderProps {
     children: ReactNode;
   }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined); //creating context
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {  
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
-  const sessionTimeout = 3600000;
+  const sessionTimeout = 3600000; //1 hour
   let timeout: NodeJS.Timeout;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const expiration = localStorage.getItem('sessionExpiration');
+    // const expiration = localStorage.getItem('sessionExpiration');
     console.log('useEffect called, token:', token);
     if (token) {
       const decoded = jwtDecode(token);
@@ -33,12 +32,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(true);
         console.log('Token is valid, set isAuthenticated to true');
         navigate('/'); // Navigate if the token is valid
-    } else {
+    } 
+      else {
       console.log('Token is expired');
       setIsAuthenticated(false);
       navigate('/login');
     }
-  } else {
+  } 
+    else {
     console.log('No token found');
     setIsAuthenticated(false);
     navigate('/login');
@@ -59,13 +60,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   resetTimeout();
 
   return () => {
-      window.removeEventListener('mousemove', resetTimeout);
+      window.removeEventListener('mousemove', resetTimeout);  
       window.removeEventListener('keydown', resetTimeout);
       if (timeout) clearTimeout(timeout);
       };
     }, [navigate]);
 
-  const isTokenExpired = (token: string) => {
+  const isTokenExpired = (token: string) => { //checks if token expired
     try{
     const decoded: any = jwtDecode(token);
     console.log('Token decoded:', decoded);
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (token: string) => {
     console.log('Login function called, token:', token);
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token);   //temporary store token
     setIsAuthenticated(true);
     navigate('/');
   };

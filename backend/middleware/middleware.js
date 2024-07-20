@@ -1,5 +1,5 @@
 import { verifyToken } from '../auth_utils/jwt.js';
-
+//middleware verifies token for authentication
 export const protect = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
     //return 401 if no token

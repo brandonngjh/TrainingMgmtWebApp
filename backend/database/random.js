@@ -1,4 +1,4 @@
-// random code to hash the user_credential passwords
+// random code to hash the user_credential passwords in SQL databse
 
 import bcrypt from "bcryptjs";
 
