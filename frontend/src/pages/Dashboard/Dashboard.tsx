@@ -251,10 +251,18 @@ const Example: React.FC = () => {
     },
   });
 
-  return (<div className="flex">
+  return (<div className="dashboard-container">
     <Sidebar activeItem="Dashboard" />
-    <MaterialReactTable table={table} />
-  </div>
+      <div className="dashboard-content">
+        <h2 className="text-3xl my-8">Dashboard Page</h2>
+        <MaterialReactTable table={table} />
+        <div className="dashboard-generate-button-container">
+          <Link to="/report">
+            <button className="dashboard-generate-button">Generate Skills Report</button>
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

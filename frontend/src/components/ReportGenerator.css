@@ -7,11 +7,6 @@
   padding: 20px;
 }
 
-h2 {
-  font-weight: 900; /* Increase font weight */
-  font-size: 28px; /* Increase font size */
-}
-
 .button-container {
   display: flex;
   flex-direction: column;
@@ -68,10 +63,14 @@ h2 {
 .generate-button-container {
   display: flex;
   justify-content: flex-start; /* Align button to the start (left) */
-  width: 100%;
+  background-color: #083adffe; /* Dark Blue container */
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
 }
 
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -88,4 +87,4 @@ th, td {
 
 th {
   background-color: #f2f2f2;
-}
+} */

@@ -128,7 +128,7 @@ const ReportGenerator: React.FC = () => {
     <div className="flex">
       <Sidebar activeItem="Skills Report Generator" />
       <div className="flex-1">
-        <h2>Skills Report Generator</h2>
+        <h2 className= "text-3xl my-8">Skills Report Generator</h2>
         <div className="button-container">
           <button onClick={fetchSkillsReport}>Fetch Skills Report</button>
 
@@ -156,33 +156,44 @@ const ReportGenerator: React.FC = () => {
           </div>
 
           <div className="generate-button-container">
-            <button onClick={generatePDF}>Generate PDF</button>
+            <button onClick={generatePDF}>Download Skills Report PDF</button>
           </div>
         </div>
 
         {dataFetched && (
           <>
-            <h3>Preview Skills Report</h3>
-            <table>
+            <table className="w-full border-separate border-spacing-2">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Job</th>
-                  <th>Training</th>
-                  <th>Validity</th>
+                <th className="border border-slate-600 rounded-md">ID</th>
+                <th className="border border-slate-600 rounded-md">Name</th>
+                <th className="border border-slate-600 rounded-md">Department</th>
+                <th className="border border-slate-600 rounded-md">Job</th>
+                <th className="border border-slate-600 rounded-md">Training</th>
+                <th className="border border-slate-600 rounded-md">Validity</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredReports.map((report, index) => (
-                  <tr key={index}>
-                    <td>{report.employee_id}</td>
-                    <td>{report.employee_name}</td>
-                    <td>{report.department_name}</td>
-                    <td>{report.job_name}</td>
-                    <td>{report.training_course}</td>
-                    <td>{report.validity}</td>
+                  <tr key={index} className="h-8">
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.employee_id}
+                    </td>
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.employee_name}
+                    </td>
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.department_name}
+                    </td>
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.job_name}
+                    </td>
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.training_course}
+                    </td>
+                    <td className="border border-slate-700 rounded-md text-center">
+                      {report.validity}
+                    </td>
                   </tr>
                 ))}
               </tbody>
