@@ -1,6 +1,8 @@
 import  pool  from './database.js'; 
 import bcrypt from 'bcryptjs';
 
+//run this for your localhost database to hash passwords
+
 const hashPasswords = async () => {
   try {
     // Fetch all users and their plain-text passwords
