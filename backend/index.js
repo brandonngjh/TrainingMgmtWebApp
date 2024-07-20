@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
 
-dotenv.config({ path: '../.env' });
+dotenv.config({ path: '../.env' });   //.env contains JWT key
 console.log('JWT_SECRET in index.js:', process.env.JWT_SECRET);
 const app = express();
 
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS for all requests
 app.use(morgan("dev")); // Log all requests to the console for debug
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;  //both are 3000, but added OR syntax to avoid error
 
 // Option 2: Allow Custom Origins
 // app.use(
@@ -33,6 +33,7 @@ app.use('/api', (req, res, next) => {
   console.log('MainRoutes middleware'); // Log every request to the mainRoutes middleware
   next();
 }, mainRoutes);
+
 // Unknown route handler
 app.use((req, res) => {
   console.log(`Route not found: ${req.originalUrl}`);
