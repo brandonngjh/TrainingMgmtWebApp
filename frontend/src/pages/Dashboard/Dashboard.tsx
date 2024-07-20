@@ -2,8 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar";
-import { Link } from 'react-router-dom';
-import './Dashboard.css'; // Import the CSS file
+
 import { useMemo } from 'react';
 
 //MRT Imports

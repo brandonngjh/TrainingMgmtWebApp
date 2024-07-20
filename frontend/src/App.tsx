@@ -10,8 +10,7 @@ import Trainings from "./pages/Trainings/Trainings.tsx";
 import ShowTraining from "./pages/Trainings/ShowTraining.tsx";
 import EditTraining from "./pages/Trainings/EditTraining.tsx";
 import DeleteTraining from "./pages/Trainings/DeleteTraining.tsx"; */
-import Dashboard from "./pages/Dashboard/Dashboard.tsx";
-import ReportGenerator from "./components/ReportGenerator"; // Import the ReportGenerator component  
+import Dashboard from "./pages/Dashboard/Dashboard.tsx"; 
 
 const App = () => {
   return (
@@ -29,7 +28,6 @@ const App = () => {
       <Route path="/trainings/details/:id" element={<ShowTraining />} />
       <Route path="/trainings/edit/:id" element={<EditTraining />} />
       <Route path="/trainings/delete/:id" element={<DeleteTraining />} />  */}
-      <Route path="/report" element={<ReportGenerator />} /> {/* Add route for ReportGenerator */}
     </Routes>
   );
 };

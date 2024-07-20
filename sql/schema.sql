@@ -45,6 +45,7 @@ CREATE TABLE relevant_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT,
     training_id BIGINT,
+    validity ENUM('valid', 'expired', 'NA') DEFAULT 'NA',
     foreign key (employee_id) references employees(id),
     foreign key (training_id) references trainings(id)
 );
@@ -62,21 +63,9 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
-CREATE TABLE skills_report (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    employee_id BIGINT NOT NULL,
-    employee_name VARCHAR(255) NOT NULL,
-    department_name VARCHAR(255) NOT NULL,
-    job_name VARCHAR(255) NOT NULL,
-    training_course VARCHAR(255) NOT NULL,
-    validity VARCHAR(50) NOT NULL,
-    UNIQUE (employee_id, training_course)
-);
-
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
-CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 -- Stored procedure to enroll an employee in a training
 DELIMITER $$
@@ -189,6 +178,17 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
+
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
+
 
 -- -- Getting the basic employee info
 -- SELECT
@@ -239,4 +239,4 @@ VALUES
 -- FROM employees_trainings et
 -- JOIN trainings t ON et.training_id = t.id
 -- GROUP BY et.employee_id, et.training_id, et.status
-
+-- ORDER BY et.employee_id, et.training_id;
