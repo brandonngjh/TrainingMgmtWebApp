@@ -279,8 +279,3 @@ ON DUPLICATE KEY UPDATE
     job_name = VALUES(job_name),
     training_course = VALUES(training_course),
     validity = VALUES(validity);
-
-GRANT ALL PRIVILEGES ON training_app.* TO 'pichu'@'localhost';
-FLUSH PRIVILEGES;
-
-
