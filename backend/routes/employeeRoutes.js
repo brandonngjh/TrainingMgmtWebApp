@@ -7,7 +7,10 @@ import {
   updateEmployee,
 } from "../database/employeeDatabase.js";
 
-const router = express.Router();
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
+
+router.use(protect);    //add this
 
 // Route for Get All Employees from database
 router.get("/", async (req, res) => {
