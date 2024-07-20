@@ -162,36 +162,39 @@ const ReportGenerator: React.FC = () => {
 
         {dataFetched && (
           <>
-            <table className="w-full border-separate border-spacing-2">
+            <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                <th className="border border-slate-600 rounded-md">ID</th>
-                <th className="border border-slate-600 rounded-md">Name</th>
-                <th className="border border-slate-600 rounded-md">Department</th>
-                <th className="border border-slate-600 rounded-md">Job</th>
-                <th className="border border-slate-600 rounded-md">Training</th>
-                <th className="border border-slate-600 rounded-md">Validity</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">Department</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">Job</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">Training</th>
+                <th className="py-2 px-4 bg-gray-100 border-b">Validity</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredReports.map((report, index) => (
-                  <tr key={index} className="h-8">
-                    <td className="border border-slate-700 rounded-md text-center">
+                  <tr 
+                    key={index} 
+                    className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                  >
+                    <td className="py-2 px-4 border-b">
                       {report.employee_id}
                     </td>
-                    <td className="border border-slate-700 rounded-md text-center">
+                    <td className="py-2 px-4 border-b">
                       {report.employee_name}
                     </td>
-                    <td className="border border-slate-700 rounded-md text-center">
+                    <td className="py-2 px-4 border-b">
                       {report.department_name}
                     </td>
-                    <td className="border border-slate-700 rounded-md text-center">
+                    <td className="py-2 px-4 border-b">
                       {report.job_name}
                     </td>
-                    <td className="border border-slate-700 rounded-md text-center">
+                    <td className="py-2 px-4 border-b">
                       {report.training_course}
                     </td>
-                    <td className="border border-slate-700 rounded-md text-center">
+                    <td className="py-2 px-4 border-b">
                       {report.validity}
                     </td>
                   </tr>

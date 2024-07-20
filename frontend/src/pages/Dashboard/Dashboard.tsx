@@ -51,7 +51,7 @@ const Example: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get<Employee[]>('http://localhost:3000/api/dashboard');
+        const response = await axios.get<Employee[]>('http://localhost:3000/dashboard');
         setEmployees(response.data);
       } catch (error) {
         console.error('Error fetching employees:', error);
