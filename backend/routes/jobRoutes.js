@@ -7,7 +7,10 @@ import {
   updateJob,
 } from "../database/jobDatabase.js";
 
-const router = express.Router();
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
+
+router.use(protect);    //add this
 
 // Route for Get All Jobs from database
 router.get("/", async (req, res) => {
