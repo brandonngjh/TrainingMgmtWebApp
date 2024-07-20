@@ -127,11 +127,25 @@ To run SQL queries directly on the MySQL database:
    ```
    git push origin <your_branch_name>
    ```
-5. **Create a Pull Request:**
+5. **Before creating Pull Request, rebase and sync up with main branch**
+   ```
+   git checkout <your-feature-branch>
+   git fetch origin
+   git rebase origin/main
+   
+   Resolve any conflicts that may arise during the rebase process
+   # You will need to manually resolve conflicts and then continue the rebase
+   # After resolving conflicts, use the following command to continue:
+   # git rebase --continue
+
+   # (only if you have already pushed your branch before)
+   git push origin <your-feature-branch> --force
+   ```
+7. **Create a Pull Request:**
 
    Go to the repository on GitHub and click on the "New Pull Request" button. Select your branch and compare it to the base branch (main). Create the pull request and provide a description of your changes.
 
-6. **Review and Merge:**
+8. **Review and Merge:**
 
    Once your pull request is reviewed and approved, it will be merged into the main branch.
 
