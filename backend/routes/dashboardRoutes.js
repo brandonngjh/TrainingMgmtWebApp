@@ -12,29 +12,48 @@ router.get("/", async (req, res) => {
     getTrainingDates()
   ]);
 
+  // const combined = employeeDetails.map((employee) => {
+
+  //   const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
+
+  //   employee.relevantTrainings = employeeTrainings.map(training => ({
+  //     validity: training.validity,
+  //     title: training.title
+  //   }));
+
+  //   const relevantDates = trainingDates.filter(training => training.employee_id === employee.employee_id);
+
+  //   employee.relevantTrainings = relevantDates.map(training => {
+  //     const relevantTraining = employee.relevantTrainings.find(relevantTraining => relevantTraining.title === training.title);
+  //     return {
+  //       ...relevantTraining,
+  //       latest_end_date: training.latest_end_date,
+  //       expiry_date: training.expiry_date,
+  //       scheduled_date: training.scheduled_date
+  //     }
+  //   })
+
+  //   return employee;
+  // })
+
   const combined = employeeDetails.map((employee) => {
-
     const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
-
-    employee.relevantTrainings = employeeTrainings.map(training => ({
-      validity: training.validity,
-      title: training.title
-    }));
-
+  
     const relevantDates = trainingDates.filter(training => training.employee_id === employee.employee_id);
-
-    employee.relevantTrainings = relevantDates.map(training => {
-      const relevantTraining = employee.relevantTrainings.find(relevantTraining => relevantTraining.title === training.title);
+  
+    employee.relevantTrainings = employeeTrainings.map(training => {
+      const matchingDate = relevantDates.find(date => date.title === training.title);
       return {
-        ...relevantTraining,
-        latest_end_date: training.latest_end_date,
-        expiry_date: training.expiry_date,
-        scheduled_date: training.scheduled_date
+        validity: training.validity,
+        title: training.title,
+        latest_end_date: matchingDate ? matchingDate.latest_end_date : null,
+        expiry_date: matchingDate ? matchingDate.expiry_date : null,
+        scheduled_date: matchingDate ? matchingDate.scheduled_date : null
       }
     })
-
+  
     return employee;
-  })
+  });
 
   return res.status(200).send(combined);
 
