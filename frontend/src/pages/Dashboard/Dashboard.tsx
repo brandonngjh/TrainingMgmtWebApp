@@ -1,31 +1,22 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar";
+import PercentagePieChart from './Percentage.tsx';
+import Numbers from './Numbers.tsx';
 
-import { useMemo } from 'react';
 
 //MRT Imports
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
-  MRT_GlobalFilterTextField,
-  MRT_ToggleFiltersButton,
 } from 'material-react-table';
 
 //Material UI Imports
 import {
   Box,
-  Button,
-  ListItemIcon,
-  MenuItem,
-  Typography,
-  lighten,
 } from '@mui/material';
-
-//Icons Imports
-import { AccountCircle, Send, Clear, Edit} from '@mui/icons-material';
 
 // Define the Employee and Training interfaces
 interface Training {
@@ -252,7 +243,13 @@ const Example: React.FC = () => {
 
   return (<div className="flex">
     <Sidebar activeItem="Dashboard" />
-    <MaterialReactTable table={table} />
+    <div className="dashboard">
+      <MaterialReactTable table={table} />
+      <div className="stats-container">
+        <PercentagePieChart />
+        <Numbers />
+      </div>
+    </div>
   </div>
   );
 };
