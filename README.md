@@ -133,10 +133,9 @@ To run SQL queries directly on the MySQL database:
    git fetch origin
    git rebase origin/main
    
-   Resolve any conflicts that may arise during the rebase process
-   # You will need to manually resolve conflicts and then continue the rebase
-   # After resolving conflicts, use the following command to continue:
-   # git rebase --continue
+   # Resolve any conflicts that may arise during the rebase process
+   # Manually resolve conflicts and then continue the rebase
+   git rebase --continue
 
    # (only if you have already pushed your branch before)
    git push origin <your-feature-branch> --force
