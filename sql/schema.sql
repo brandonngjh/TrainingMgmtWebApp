@@ -45,7 +45,6 @@ CREATE TABLE relevant_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT,
     training_id BIGINT,
-    validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
     foreign key (employee_id) references employees(id),
     foreign key (training_id) references trainings(id)
 );
@@ -190,16 +189,6 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
-(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
-(22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
-
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
-(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
-(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
 
 -- -- Getting the basic employee info
 -- SELECT
@@ -250,34 +239,4 @@ VALUES
 -- FROM employees_trainings et
 -- JOIN trainings t ON et.training_id = t.id
 -- GROUP BY et.employee_id, et.training_id, et.status
--- ORDER BY et.employee_id, et.training_id;
-
--- Populate the skills_report table
-INSERT INTO skills_report (employee_id, employee_name, department_name, job_name, training_course, validity)
-SELECT 
-    e.id AS employee_id,
-    e.name AS employee_name,
-    d.name AS department_name,
-    j.name AS job_name,
-    t.title AS training_course,
-    rt.validity AS validity
-FROM 
-    employees e
-JOIN 
-    departments d ON e.department_id = d.id
-JOIN 
-    jobs j ON e.job_id = j.id
-JOIN 
-    employees_trainings et ON e.id = et.employee_id
-JOIN 
-    trainings t ON et.training_id = t.id
-JOIN 
-    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
-ON DUPLICATE KEY UPDATE
-    employee_name = VALUES(employee_name),
-    department_name = VALUES(department_name),
-    job_name = VALUES(job_name),
-    training_course = VALUES(training_course),
-    validity = VALUES(validity);
-
 
