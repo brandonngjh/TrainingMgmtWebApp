@@ -37,24 +37,47 @@ CREATE TABLE trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    validity_period INT,
     training_provider VARCHAR(255)
+);
+
+CREATE TABLE relevant_trainings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT,
+    training_id BIGINT,
+    validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
+    foreign key (employee_id) references employees(id),
+    foreign key (training_id) references trainings(id)
 );
 
 CREATE TABLE employees_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT,
     training_id BIGINT,
-    status VARCHAR(50) NOT NULL,
+    status ENUM('Completed', 'Scheduled') NOT NULL,
     start_date DATE,
     end_date DATE,
+    expiry_date DATE,
     FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (training_id) REFERENCES trainings(id),
     INDEX (employee_id, training_id)
 );
 
+CREATE TABLE skills_report (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT NOT NULL,
+    employee_name VARCHAR(255) NOT NULL,
+    department_name VARCHAR(255) NOT NULL,
+    job_name VARCHAR(255) NOT NULL,
+    training_course VARCHAR(255) NOT NULL,
+    validity VARCHAR(50) NOT NULL,
+    UNIQUE (employee_id, training_course)
+);
+
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
+CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 -- Stored procedure to enroll an employee in a training
 DELIMITER $$
@@ -66,11 +89,11 @@ CREATE PROCEDURE EnrollEmployeeInTraining (
 )
 BEGIN
     INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
-    VALUES (p_employee_id, p_training_id, 'Incomplete', p_start_date, p_end_date);
+    VALUES (p_employee_id, p_training_id, 'Scheduled', p_start_date, p_end_date);
 END $$
 DELIMITER ;
 
-INSERT INTO user_credentials (username, password, role) VALUES 
+INSERT INTO user_credentials (username, password, role) VALUES
 ('admin', 'admin', 'admin'),
 ('hr', 'hr', 'hr'),
 ('hod', 'hod', 'hod');
@@ -81,7 +104,7 @@ INSERT INTO jobs (name, department_id)
 VALUES ('Production', (SELECT id FROM departments WHERE name = 'Machining'));
 
 INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
-VALUES 
+VALUES
     (294, 'Robert Destreza', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Machining HOD'),
     (523, 'Ashikin Binti Ibrahim', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production/MES Planner'),
     (897, 'Min Htet Kyaw', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assitant Planner'),
@@ -131,36 +154,130 @@ VALUES
     (22, 'Brandon', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
     (21, 'Bob', 'temp@gmail.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction');
 
-INSERT INTO trainings (title, description)
-VALUES 
-    ('AS 9100D AWARNESS', 'EXTERNAL'),
-    ('COUNTERFEIT', 'INTERNAL'),
-    ('CI & IP AWARENESS', 'INTERNAL'),
-    ('FOD', 'INTERNAL'),
-    ('IQA TRAINING AS9100D', 'EXTERNAL'),
-    ('SAFETY AWARENESS (PPE)', 'INTERNAL'),
-    ('5S', 'INTERNAL'),
-    ('MACHINING PHASE 1', 'INTERNAL'),
-    ('MACHINING PHASE 2', 'INTERNAL'),
-    ('PROCESS MANAGEMENT PLAN / PROCESS TRAVELER', 'INTERNAL'),
-    ('NC PROGRAMME', 'INTERNAL'),
-    ('MESUREMENT AND CALIBRATION', 'INTERNAL'),
-    ('GD&T', 'INTERNAL'),
-    ('ENGINEERING MANAGEMENT', 'INTERNAL'),
-    ('TOOLS (JIG & FITURES)', 'INTERNAL'),
-    ('DRAWING INTERPERTATION', 'INTERNAL'),
-    ('QUALITY AWARNESS', 'INTERNAL'),
-    ('DEBURING AND BUFFING', 'INTERNAL'),
-    ('MES SYSTEM', 'INTERNAL');
+INSERT INTO trainings (title, description, validity_period)
+VALUES
+    ('AS 9100D AWARNESS', 'EXTERNAL', 365),
+    ('COUNTERFEIT', 'INTERNAL', 365),
+    ('CI & IP AWARENESS', 'INTERNAL', 365),
+    ('FOD', 'INTERNAL', 365),
+    ('IQA TRAINING AS9100D', 'EXTERNAL', 365),
+    ('SAFETY AWARENESS (PPE)', 'INTERNAL', 365),
+    ('5S', 'INTERNAL', 365),
+    ('MACHINING PHASE 1', 'INTERNAL', 365),
+    ('MACHINING PHASE 2', 'INTERNAL', 365),
+    ('PROCESS MANAGEMENT PLAN / PROCESS TRAVELER', 'INTERNAL', 365),
+    ('NC PROGRAMME', 'INTERNAL', 365),
+    ('MESUREMENT AND CALIBRATION', 'INTERNAL', 365),
+    ('GD&T', 'INTERNAL', 365),
+    ('ENGINEERING MANAGEMENT', 'INTERNAL', 365),
+    ('TOOLS (JIG & FITURES)', 'INTERNAL', 365),
+    ('DRAWING INTERPERTATION', 'INTERNAL', 365),
+    ('QUALITY AWARNESS', 'INTERNAL', 365),
+    ('DEBURING AND BUFFING', 'INTERNAL', 365),
+    ('MES SYSTEM', 'INTERNAL', 365);
 
-INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
-VALUES 
-    (22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
-    (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'Incomplete', '2024-07-01', '2024-08-28'),
-    (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Incomplete', '2024-08-01', '2024-09-29'),
-    (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Incomplete', '2024-09-01', '2024-10-20'),
+INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-27'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Scheduled', '2024-09-01', '2024-09-28', '2025-09-28'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
+(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Scheduled', '2024-09-01', '2024-10-20', '2025-10-20'),
 
-    (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31'),
-    (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Incomplete', '2024-07-01', '2024-08-27'),
-    (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Incomplete', '2024-08-01', '2024-09-29'),
-    (21, (SELECT id FROM trainings WHERE title = '5S'), 'Incomplete', '2024-09-01', '2024-10-27');
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-07-01', '2024-07-15', '2025-07-15'),
+(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-01', '2024-09-29', '2025-09-29'),
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27');
+
+INSERT INTO relevant_trainings(employee_id, training_id, validity)
+VALUES
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
+(22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
+
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
+
+-- -- Getting the basic employee info
+-- SELECT
+--     e.id,
+--     e.name AS employee_name,
+--     d.name AS department_name,
+--     j.name AS job_name
+-- FROM employees e
+-- JOIN departments d ON e.department_id = d.id
+-- JOIN jobs j ON e.job_id = j.id;
+
+-- -- Getting the courses that are relevant to each employee
+-- SELECT
+--     rt.employee_id,
+--     SELECT
+--         rt.id,
+--         rt.employee_id,
+--         rt.validity,
+--         t.title
+--     FROM trainings t
+--     JOIN relevant_trainings rt ON t.id = rt.training_id
+--     ORDER BY rt.employee_id;
+
+-- -- 
+-- Given an employee id, search the employees_trainings table for the end date and expiry date of the training for the employee. However, the expiry date should only be returned if the status attribute in the employees_training table is set to completed. Also include the training title and id of each training found.
+
+-- Search the employees_training table for the end date and expiry date of each row. If there are multiple rows that share the same employee id and training id, only return the row with the latest end date. The expiry date should only be returned if the status attribute in the employees_training table is set to completed. Also include the training title and id of each training found.
+
+-- SELECT
+--     et.training_id,
+--     t.title,
+--     et.end_date,
+--     CASE
+--         WHEN et.status = 'Completed' THEN et.expiry_date
+--         ELSE NULL
+--     END AS expiry_date
+-- FROM employees_trainings et
+-- JOIN trainings t ON et.training_id = t.id
+-- WHERE et.employee_id = ?;
+
+-- SELECT
+--     et.employee_id,
+--     et.training_id,
+--     t.title,
+--     IF(et.status = 'Completed', MAX(et.end_date), NULL) AS latest_end_date,
+--     IF(et.status = 'Completed', MAX(et.expiry_date), NULL) AS expiry_date,
+--     IF(et.status = 'Scheduled', MAX(et.start_date), NULL) AS scheduled_date
+-- FROM employees_trainings et
+-- JOIN trainings t ON et.training_id = t.id
+-- GROUP BY et.employee_id, et.training_id, et.status
+-- ORDER BY et.employee_id, et.training_id;
+
+-- Populate the skills_report table
+INSERT INTO skills_report (employee_id, employee_name, department_name, job_name, training_course, validity)
+SELECT 
+    e.id AS employee_id,
+    e.name AS employee_name,
+    d.name AS department_name,
+    j.name AS job_name,
+    t.title AS training_course,
+    rt.validity AS validity
+FROM 
+    employees e
+JOIN 
+    departments d ON e.department_id = d.id
+JOIN 
+    jobs j ON e.job_id = j.id
+JOIN 
+    employees_trainings et ON e.id = et.employee_id
+JOIN 
+    trainings t ON et.training_id = t.id
+JOIN 
+    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+ON DUPLICATE KEY UPDATE
+    employee_name = VALUES(employee_name),
+    department_name = VALUES(department_name),
+    job_name = VALUES(job_name),
+    training_course = VALUES(training_course),
+    validity = VALUES(validity);
+
+

@@ -1,5 +1,7 @@
 import React from "react";
 import Sidebar from "../../components/Sidebar";
+import { Link } from 'react-router-dom';
+import './Dashboard.css'; // Import the CSS file
 
 const Dashboard = () => {
   return (
@@ -7,7 +9,11 @@ const Dashboard = () => {
       <Sidebar activeItem="Dashboard"/>
       <div className="flex-1">
         <h2>Dashboard Page</h2>
-        {/* Add your dashboard components here */}
+          <div className="generate-button-container">
+            <Link to="/report">
+              <button className="generate-button">Generate PDF Report</button>
+            </Link>
+        </div>
       </div>
     </div>
   );
