@@ -41,7 +41,8 @@ app.use((req, res) => {
     message: "Route not found",
   });
 });
-// app.use("/dashboard", dashboardRoutes);
+
+app.use("/dashboard", dashboardRoutes);
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
