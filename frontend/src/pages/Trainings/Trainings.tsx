@@ -45,6 +45,7 @@ const Trainings = () => {
             </div>
           </Link>
         </div>
+        
         {loading ? (
           <Spinner />
         ) : (
@@ -55,9 +56,11 @@ const Trainings = () => {
                   <th className="py-2 px-4 bg-gray-100 border-b">No</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Title</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Description</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">
                     Validity Period
                   </th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Provider</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
                 </tr>
               </thead>
@@ -70,9 +73,11 @@ const Trainings = () => {
                     <td className="py-2 px-4 border-b">{index + 1}</td>
                     <td className="py-2 px-4 border-b">{training.id}</td>
                     <td className="py-2 px-4 border-b">{training.title}</td>
-                    <td className="py-2 px-4 border-b">
+                    <td className="py-2 px-4 border-b">{training.description}</td>
+                    <td className="py-2 px-4 border-b text-center">
                       {training.validity_period}
                     </td>
+                    <td className="py-2 px-4 border-b">{training.training_provider}</td>
                     <td className="py-2 px-4 border-b">
                       <div className="flex justify-center gap-x-4">
                         <Link

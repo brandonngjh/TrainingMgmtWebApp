@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
+import EmployeesTrainings from "../EmployeesTrainings/EmployeesTrainings";
 
 interface Employee {
   id: string;
@@ -37,9 +38,7 @@ const ShowEmployee = () => {
   return (
     <div className="p-6">
       <BackButton destination="/employees" />
-      <h1 className="text-3xl font-bold text-gray-800 my-4">
-        Employee Details
-      </h1>
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Employee Details</h1>
       {loading ? (
         <Spinner />
       ) : (
@@ -47,53 +46,43 @@ const ShowEmployee = () => {
           {employee ? (
             <div className="flex flex-col space-y-4">
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  ID
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">ID</span>
                 <span className="text-xl text-gray-800">{employee.id}</span>
               </div>
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  Name
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">Name</span>
                 <span className="text-xl text-gray-800">{employee.name}</span>
               </div>
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  Email
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">Email</span>
                 <span className="text-xl text-gray-800">{employee.email}</span>
               </div>
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  Hire Date
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">Hire Date</span>
                 <span className="text-xl text-gray-800">
                   {employee.hire_date ? employee.hire_date : "N/A"}
                 </span>
               </div>
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  Division
-                </span>
-                <span className="text-xl text-gray-800">
-                  {employee.division}
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">Division</span>
+                <span className="text-xl text-gray-800">{employee.division}</span>
               </div>
               <div className="flex">
-                <span className="text-xl font-semibold text-gray-500 w-1/3">
-                  Designation
-                </span>
-                <span className="text-xl text-gray-800">
-                  {employee.designation}
-                </span>
+                <span className="text-xl font-semibold text-gray-500 w-1/3">Designation</span>
+                <span className="text-xl text-gray-800">{employee.designation}</span>
               </div>
+              <Link to={`/employeestrainings/create?employeeId=${employee.id}`} className="mt-4">
+                <button className="bg-indigo-600 text-white w-full py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+                  Assign Training
+                </button>
+              </Link>
             </div>
           ) : (
             <div className="text-xl text-gray-500">Employee not found</div>
           )}
         </div>
       )}
+      {employee && <EmployeesTrainings employeeId={employee.id} />}
     </div>
   );
 };
