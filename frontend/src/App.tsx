@@ -9,6 +9,7 @@ import Trainings from "./pages/Trainings/Trainings.tsx";
 import CreateTraining from "./pages/Trainings/CreateTraining.tsx";
 import ShowTraining from "./pages/Trainings/ShowTraining.tsx";
 import EditTraining from "./pages/Trainings/EditTraining.tsx";
+import ReportGenerator from "./components/ReportGenerator";
 import DeleteTraining from "./pages/Trainings/DeleteTraining.tsx";
 import Dashboard from "./pages/Dashboard/Dashboard.tsx"; 
 import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployeesTrainings.tsx";
@@ -36,7 +37,7 @@ const App = () => {
       <Route path="/employeestrainings/delete/:id" element={<DeleteEmployeesTrainings />} />
       <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
       <Route path="/trainingsemployees" element={<TrainingsEmployees />} />
-
+      <Route path="/report" element={<ReportGenerator />} /> 
     </Routes>
   );
 };

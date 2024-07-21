@@ -45,7 +45,7 @@ CREATE TABLE relevant_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     employee_id BIGINT,
     training_id BIGINT,
-    validity ENUM('valid', 'expired', 'NA') DEFAULT 'NA',
+    validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
     FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (training_id) REFERENCES trainings(id)
 );
@@ -63,9 +63,21 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
+CREATE TABLE skills_report (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT NOT NULL,
+    employee_name VARCHAR(255) NOT NULL,
+    department_name VARCHAR(255) NOT NULL,
+    job_name VARCHAR(255) NOT NULL,
+    training_course VARCHAR(255) NOT NULL,
+    validity VARCHAR(50) NOT NULL,
+    UNIQUE (employee_id, training_course)
+);
+
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
+CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 -- Stored procedure to enroll an employee in a training
 DELIMITER $$
@@ -230,3 +242,31 @@ FROM employees_trainings et
 JOIN trainings t ON et.training_id = t.id
 WHERE et.employee_id = ?;
 */
+
+-- Populate the skills_report table
+INSERT INTO skills_report (employee_id, employee_name, department_name, job_name, training_course, validity)
+SELECT 
+    e.id AS employee_id,
+    e.name AS employee_name,
+    d.name AS department_name,
+    j.name AS job_name,
+    t.title AS training_course,
+    rt.validity AS validity
+FROM 
+    employees e
+JOIN 
+    departments d ON e.department_id = d.id
+JOIN 
+    jobs j ON e.job_id = j.id
+JOIN 
+    employees_trainings et ON e.id = et.employee_id
+JOIN 
+    trainings t ON et.training_id = t.id
+JOIN 
+    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+ON DUPLICATE KEY UPDATE
+    employee_name = VALUES(employee_name),
+    department_name = VALUES(department_name),
+    job_name = VALUES(job_name),
+    training_course = VALUES(training_course),
+    validity = VALUES(validity);
