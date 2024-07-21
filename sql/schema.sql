@@ -46,8 +46,8 @@ CREATE TABLE relevant_trainings (
     employee_id BIGINT,
     training_id BIGINT,
     validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
-    foreign key (employee_id) references employees(id),
-    foreign key (training_id) references trainings(id)
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id)
 );
 
 CREATE TABLE employees_trainings (
