@@ -27,9 +27,6 @@ export async function createEmployee(
   name,
   email,
   hire_date,
-  division,
-  department_id,
-  job_id,
   designation
 ) {
   // Check if the employee ID already exists
@@ -38,8 +35,8 @@ export async function createEmployee(
   }
 
   const [result] = await pool.query(
-    "INSERT INTO employees (id, name, email, hire_date, division, department_id, job_id, designation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    [id, name, email, hire_date, division, department_id, job_id, designation]
+    "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?)",
+    [id, name, email, hire_date, designation]
   );
   return getEmployeeByID(result.insertId);
 }
@@ -56,9 +53,6 @@ export async function updateEmployee(
   name,
   email,
   hire_date,
-  division,
-  department_id,
-  job_id,
   designation
 ) {
   // Check if the employee ID exists before updating
@@ -67,8 +61,8 @@ export async function updateEmployee(
   }
 
   const [result] = await pool.query(
-    "UPDATE employees SET name = ?, email = ?, hire_date = ?, division = ?, department_id = ?, job_id = ?, designation = ? WHERE id = ?",
-    [name, email, hire_date, division, department_id, job_id, designation, id]
+    "UPDATE employees SET name = ?, email = ?, hire_date = ?, designation = ? WHERE id = ?",
+    [name, email, hire_date, designation, id]
   );
   return result.affectedRows > 0 ? getEmployeeByID(id) : null;
 }

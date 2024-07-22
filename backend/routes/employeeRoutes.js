@@ -41,22 +41,21 @@ router.get("/:id", async (req, res) => {
 // Route for adding a new Employee
 router.post("/", async (req, res) => {
   try {
+    // console.log(req.body);
     const {
       id,
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation,
     } = req.body;
-    if (!id || !name || !email || !department_id || !job_id) {
+
+    if (!id || !name || !email || !hire_date || !designation) {
       return res
         .status(400)
         .send({
           message:
-            "Send all required fields: id, name, email, department_id, job_id",
+            "Send all required fields: id, name, email, hire_date, designation",
         });
     }
     const newEmployee = await createEmployee(
@@ -64,9 +63,6 @@ router.post("/", async (req, res) => {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation
     );
     return res.status(201).json(newEmployee);
@@ -92,22 +88,20 @@ router.delete("/:id", async (req, res) => {
 
 // Route for Updating an Employee
 router.put("/:id", async (req, res) => {
+  // console.log(req.body);
   try {
     const {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation,
     } = req.body;
-    if (!name || !email || !department_id || !job_id) {
+    if (!name || !email || !hire_date || !designation) {
       return res
         .status(400)
         .send({
           message:
-            "Send all required fields: name, email, department_id, job_id",
+            "Send all required fields: id, name, email, hire_date, designation",
         });
     }
     const updatedEmployee = await updateEmployee(
@@ -115,9 +109,6 @@ router.put("/:id", async (req, res) => {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation
     );
     if (updatedEmployee) {

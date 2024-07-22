@@ -10,7 +10,7 @@ interface Employee {
   name: string;
   email: string;
   hire_date: string | null;
-  division: string;
+  // division: string;
   designation: string;
 }
 
@@ -69,10 +69,10 @@ const ShowEmployee = () => {
                   {employee.hire_date ? employee.hire_date : "N/A"}
                 </span>
               </div>
-              <div className="flex">
+              {/* <div className="flex">
                 <span className="text-xl font-semibold text-gray-500 w-1/3">Division</span>
                 <span className="text-xl text-gray-800">{employee.division}</span>
-              </div>
+              </div> */}
               <div className="flex">
                 <span className="text-xl font-semibold text-gray-500 w-1/3">Designation</span>
                 <span className="text-xl text-gray-800">{employee.designation}</span>

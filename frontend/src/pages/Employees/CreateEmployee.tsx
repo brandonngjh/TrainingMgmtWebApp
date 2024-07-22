@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const CreateEmployee = () => {
+  const [id, setID] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [hireDate, setHireDate] = useState("");
   const [designation, setDesignation] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,8 +18,10 @@ const CreateEmployee = () => {
 
   const handleSaveEmployee = () => {
     const data = {
+      id,
       name,
       email,
+      hire_date: hireDate,
       designation,
     };
     setLoading(true);
@@ -49,13 +53,22 @@ const CreateEmployee = () => {
       {loading ? <Spinner /> : null}
       <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
         <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Name</label>
+          <label className="text-xl mr-4 text-gray-500">ID</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={id}
+            onChange={(e) => setID(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
+        </div>
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            />
         </div>
         <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Email</label>
@@ -72,6 +85,15 @@ const CreateEmployee = () => {
             type="text"
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
+            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+          />
+        </div>
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Hire Date</label>
+          <input
+            type="text"
+            value={hireDate}
+            onChange={(e) => setHireDate(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
