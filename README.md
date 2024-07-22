@@ -39,41 +39,6 @@ The application is developed using MySQL for the database, Express and Node.js f
    npm run dev
    ```
 
-## DOCKER DEPLOYMENT SETUP
-
-1. **Clone the repository:**
-   ```
-   git clone <repository_url>
-   cd TrainingMgmtWebApp
-   ```
-2. **Create a .env file in the root directory with the following content:**
-
-   ```
-   MYSQL_HOST=mysql
-   MYSQL_USER=<your_mysql_username>
-   MYSQL_PASSWORD=<your_mysql_password>
-   MYSQL_DATABASE=training_app
-   JWT_SECRET=52978356f7b8e636082d3820422ba2c96ee4748c686d4c227c198c02349a8e6e
-   ```
-
-   _Replace <your_mysql_username> and <your_mysql_password> with your desired MySQL username and password._
-
-3. **Build and start the Docker containers:**
-
-   ```
-   docker-compose up --build
-   ```
-
-   _This will build and start the frontend, backend, and MySQL services._
-
-4. **The file contains a schema.sql on how to setup the database.**
-   ```
-   mysql -u <your_mysql_username> -p
-   <your_mysql_password>
-   USE training_app;
-   source <path to repo file>\TrainingMgmtWebApp\sql\schema.sql
-   ```
-
 ## Accessing the Application
 
 - Backend: The backend service runs on http://localhost:3000
