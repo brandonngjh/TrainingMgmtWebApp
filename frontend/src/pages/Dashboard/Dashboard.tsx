@@ -32,8 +32,9 @@ interface Training {
 interface Employee {
   employee_id: string;
   employee_name: string;
-  department_name: string;
-  job_name: string;
+  designation: string;
+  // department_name: string;
+  // job_name: string;
   relevantTrainings: Training[];
 }
 
