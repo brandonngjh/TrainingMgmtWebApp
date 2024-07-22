@@ -24,6 +24,7 @@ The application is developed using MySQL for the database, Express and Node.js f
    MYSQL_USER=<your_mysql_username>
    MYSQL_PASSWORD=<your_mysql_password>
    MYSQL_DATABASE=training_app
+   JWT_SECRET=52978356f7b8e636082d3820422ba2c96ee4748c686d4c227c198c02349a8e6e
    ```
 3. **Setup initial MySQL Database with preset data**
    ```
@@ -34,6 +35,7 @@ The application is developed using MySQL for the database, Express and Node.js f
    ```
 4. **Run backend and frontend on separate terminals**
    ```
+   npm i
    npm run dev
    ```
 
@@ -51,6 +53,7 @@ The application is developed using MySQL for the database, Express and Node.js f
    MYSQL_USER=<your_mysql_username>
    MYSQL_PASSWORD=<your_mysql_password>
    MYSQL_DATABASE=training_app
+   JWT_SECRET=52978356f7b8e636082d3820422ba2c96ee4748c686d4c227c198c02349a8e6e
    ```
 
    _Replace <your_mysql_username> and <your_mysql_password> with your desired MySQL username and password._
