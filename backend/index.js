@@ -6,6 +6,7 @@ import loginRoutes from "./routes/loginRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import pool from './database/database.js';
 import morgan from "morgan";
+import './scheduler/emailScheduler.js'
 
 dotenv.config({ path: '../.env' });   //.env contains JWT key
 console.log('JWT_SECRET in index.js:', process.env.JWT_SECRET);

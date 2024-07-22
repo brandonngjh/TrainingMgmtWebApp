@@ -5,11 +5,8 @@ export async function getEmployeeDetails() {
         SELECT
             e.id AS employee_id,
             e.name AS employee_name,
-            d.name AS department_name,
-            j.name AS job_name
+            e.designation as designation
         FROM employees e
-        JOIN departments d ON e.department_id = d.id
-        JOIN jobs j ON e.job_id = j.id;
     `);
     return rows;
 }

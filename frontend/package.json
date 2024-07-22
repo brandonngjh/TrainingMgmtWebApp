@@ -31,7 +31,8 @@
     "@mui/material": "^5.16.1",
     "@mui/x-date-pickers": "^7.10.0",
     "dayjs": "^1.11.11",
-    "material-react-table": "^2.13.0"
+    "material-react-table": "^2.13.0",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
