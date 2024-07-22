@@ -108,13 +108,14 @@ const Example: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
-                        training.validity === 'valid'
-                          ? 'rgba(0, 128, 0, 0.8)' // green with 80% opacity
-                          : training.validity === 'expired'
-                          ? 'rgba(255, 165, 0, 0.8)' // orange with 80% opacity
-                          : 'rgba(255, 0, 0, 0.8)', // red with 80% opacity
-                      color: 'white',
+                      backgroundColor: index % 2 === 0 ? 'rgba(227,227,227,0.8)' : 'transparent',
+                      // backgroundColor:
+                      //   training.validity === 'valid'
+                      //     ? 'rgba(0, 128, 0, 0.8)' // green with 80% opacity
+                      //     : training.validity === 'expired'
+                      //     ? 'rgba(255, 165, 0, 0.8)' // orange with 80% opacity
+                      //     : 'rgba(255, 0, 0, 0.8)', // red with 80% opacity
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -136,13 +137,14 @@ const Example: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
-                        training.validity === 'valid'
-                          ? 'green'
-                          : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                      backgroundColor: index % 2 === 0 ? 'rgba(227,227,227,0.8)' : 'transparent',
+                      // backgroundColor:
+                      //   training.validity === 'valid'
+                      //     ? 'green'
+                      //     : training.validity === 'expired'
+                      //     ? 'orange'
+                      //     : 'red',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -166,11 +168,11 @@ const Example: React.FC = () => {
                     style={{
                       backgroundColor:
                         training.validity === 'valid'
-                          ? 'green'
+                          ? 'rgb(188,226,158,1)'
                           : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                          ? 'rgb(255,207,150,1)'
+                          : 'rgb(255,135,135)',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -192,13 +194,13 @@ const Example: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
+                        backgroundColor:
                         training.validity === 'valid'
-                          ? 'green'
+                          ? 'rgb(188,226,158,1)'
                           : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                          ? 'rgb(255,207,150,1)'
+                          : 'rgb(255,135,135)',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
