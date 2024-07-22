@@ -6,12 +6,7 @@ The application is developed using MySQL for the database, Express and Node.js f
 
 **Note:** This application is still a work in progress.
 
-## Prerequisites
-
-- [Docker](https://www.docker.com/products/docker-desktop)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-## DEVELOPMENT SETUP
+## Setup
 
 1. **Clone the repository:**
    ```
@@ -46,23 +41,9 @@ The application is developed using MySQL for the database, Express and Node.js f
 - Frontend: Open your browser and navigate to http://localhost:5001 (home page)
   - To access employee page, navigate to http://localhost:5001/employees
 
-## Stopping the Application
-
-To stop the application, run:
-
-```
-docker-compose down
-```
-
 ## Running SQL Queries
 
 To run SQL queries directly on the MySQL database:
-
-1. Open Docker Dashboard and find the container running MYSQL.
-
-2. Click on the actions button and click open in terminal to open a command-line interface within the container.
-
-3. Run the MySQL command-line client:
    ```
    mysql -u root -p
    <your_mysql_password>
