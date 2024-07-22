@@ -5,6 +5,7 @@ import departmentRoutes from "./departmentRoutes.js";
 import jobsRoutes from "./jobRoutes.js";
 import skillsReportRoutes from "./skillsReportRoutes.js"
 import { protect } from '../middleware/middleware.js';
+import loginRoutes from "./loginRoutes.js";
 
 const router = express.Router();
 

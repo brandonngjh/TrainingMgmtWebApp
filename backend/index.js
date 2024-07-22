@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
+import loginRoutes from "./routes/loginRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import pool from './database/database.js';
+import morgan from "morgan";
 
 dotenv.config({ path: '../.env' });   //.env contains JWT key
 console.log('JWT_SECRET in index.js:', process.env.JWT_SECRET);
