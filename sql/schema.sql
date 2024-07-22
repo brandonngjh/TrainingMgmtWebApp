@@ -190,6 +190,9 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 (21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27'),
 (21, (SELECT id FROM trainings WHERE title = 'MES SYSTEM'), 'Completed', '2023-07-17', '2023-07-29', '2024-07-29');
 
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31');
+
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
 (22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
@@ -204,6 +207,9 @@ VALUES
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 (21, (SELECT id FROM trainings WHERE title = '5S'), 'NA'),
 (21, (SELECT id FROM trainings WHERe title = 'MES SYSTEM'), 'valid');
+
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid');
 
 
 -- Getting the basic employee info
