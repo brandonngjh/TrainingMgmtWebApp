@@ -57,18 +57,18 @@ const Example: React.FC = () => {
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
       {
-        accessorKey: 'employee_id',
-        header: 'ID',
-        size: 10,
-      },
-      {
         id: 'employee', // id used to define `group` column
-        header: 'Employee',
+        header: 'Employee Details',
         columns: [
+          {
+            accessorKey: 'employee_id',
+            header: 'ID',
+            size: 1,
+          },
           {
             accessorKey: 'employee_name', // Directly use the employee_name from the Employee interface
             header: 'Name',
-            size: 150,
+            size: 200,
             Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
@@ -81,13 +81,13 @@ const Example: React.FC = () => {
               </Box>
             ),
           },
+          // {
+          //   accessorKey: 'department_name', // Use the department_name field
+          //   header: 'Department',
+          //   size: 150,
+          // },
           {
-            accessorKey: 'department_name', // Use the department_name field
-            header: 'Department',
-            size: 150,
-          },
-          {
-            accessorKey: 'job_name', // Use the job_name field
+            accessorKey: 'designation', // Use the job_name field
             header: 'Designation',
             size: 150,
           },
@@ -101,20 +101,21 @@ const Example: React.FC = () => {
             accessorFn: (row) => row.relevantTrainings.map(training => training.title).join(', '),
             id: 'trainingTitles',
             header: 'Relevant Trainings',
-            size: 200,
+            size: 300,
             Cell: ({ row }) => (
               <Box>
                 {row.original.relevantTrainings.map((training, index) => (
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
-                        training.validity === 'valid'
-                          ? 'rgba(0, 128, 0, 0.8)' // green with 80% opacity
-                          : training.validity === 'expired'
-                          ? 'rgba(255, 165, 0, 0.8)' // orange with 80% opacity
-                          : 'rgba(255, 0, 0, 0.8)', // red with 80% opacity
-                      color: 'white',
+                      backgroundColor: index % 2 === 0 ? 'rgba(227,227,227,0.8)' : 'transparent',
+                      // backgroundColor:
+                      //   training.validity === 'valid'
+                      //     ? 'rgba(0, 128, 0, 0.8)' // green with 80% opacity
+                      //     : training.validity === 'expired'
+                      //     ? 'rgba(255, 165, 0, 0.8)' // orange with 80% opacity
+                      //     : 'rgba(255, 0, 0, 0.8)', // red with 80% opacity
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -136,13 +137,14 @@ const Example: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
-                        training.validity === 'valid'
-                          ? 'green'
-                          : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                      backgroundColor: index % 2 === 0 ? 'rgba(227,227,227,0.8)' : 'transparent',
+                      // backgroundColor:
+                      //   training.validity === 'valid'
+                      //     ? 'green'
+                      //     : training.validity === 'expired'
+                      //     ? 'orange'
+                      //     : 'red',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -165,12 +167,12 @@ const Example: React.FC = () => {
                     key={index}
                     style={{
                       backgroundColor:
-                        training.validity === 'valid'
-                          ? 'green'
-                          : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                        training.validity === 'Valid'
+                          ? 'rgb(188,226,158,1)'
+                          : training.validity === 'Expired'
+                          ? 'rgb(255,207,150,1)'
+                          : 'rgb(255,135,135)',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -192,13 +194,13 @@ const Example: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      backgroundColor:
-                        training.validity === 'valid'
-                          ? 'green'
-                          : training.validity === 'expired'
-                          ? 'orange'
-                          : 'red',
-                      color: 'white',
+                        backgroundColor:
+                        training.validity === 'Valid'
+                          ? 'rgb(188,226,158,1)'
+                          : training.validity === 'Expired'
+                          ? 'rgb(255,207,150,1)'
+                          : 'rgb(255,135,135)',
+                      // color: 'white',
                       padding: '4px',
                       margin: '2px 0',
                     }}
@@ -237,7 +239,7 @@ const Example: React.FC = () => {
     positionToolbarAlertBanner: 'top',
     muiPaginationProps: {
       color: 'secondary',
-      rowsPerPageOptions: [15, 30, 50],
+      rowsPerPageOptions: [10],
       shape: 'rounded',
       variant: 'outlined',
     },
@@ -247,16 +249,19 @@ const Example: React.FC = () => {
     <Sidebar activeItem="Dashboard" />
       <div className="dashboard-content">
         <h2 className="text-3xl my-8">Dashboard Page</h2>
-        <MaterialReactTable table={table} />
-        <div className="stats-container">
-          <PercentagePieChart />
-          <Numbers />
+        <div id="dashboard-table">
+          <MaterialReactTable table={table} />
         </div>
         <div className="dashboard-generate-button-container">
           <Link to="/report">
             <button className="dashboard-generate-button">Generate Skills Report</button>
           </Link>
         </div>
+        <div className="stats-container">
+          <PercentagePieChart />
+          <Numbers />
+        </div>
+
       </div>
     </div>
   );
