@@ -15,17 +15,46 @@ export async function getEmployeeTrainings() {
   return rows;
 }
 
-// Get employee training by training ID
+// Get employee training by session ID
 export async function getEmployeeTrainingByID(id) {
   const [rows] = await pool.query("SELECT * FROM employees_trainings WHERE id = ?", [id]);
   return rows[0];
 }
 
+// Create SQL to get the id, status, start date, end date, and expiry date from the employee trainings table. Also get the employee id, employee name, and training title from the employees and trainings tables respectively. Only get it based on the training id
+
+
 // Get employee training by training ID
-export async function getEmployeeTrainingByTrainingID(training_id) {
-  const [rows] = await pool.query(
-    "SELECT * FROM employees_trainings WHERE training_id = ?", 
-    [training_id]);
+// export async function getEmployeeTrainingByTrainingID(training_id) {
+//   const [rows] = await pool.query(
+//     "SELECT * FROM employees_trainings WHERE training_id = ?", 
+//     [training_id]);
+//   return rows;
+// }
+
+export async function getEmployeeTrainingByTrainingID(id) {
+  const [rows] = await pool.query(`
+    SELECT
+      et.id as session_id,
+      t.id as training_id,
+      t.title AS training_title,
+      e.id AS employee_id,
+      e.name AS employee_name,
+      e.email AS employee_email,
+      e.designation as employee_designation,
+      et.status,
+      et.start_date,
+      et.end_date,
+      et.expiry_date
+    FROM
+      employees_trainings et
+    JOIN
+      employees e ON et.employee_id = e.id
+    JOIN
+      trainings t ON et.training_id = t.id
+    WHERE
+      et.training_id = ?;
+    `, [id]);
   return rows;
 }
 
@@ -37,6 +66,8 @@ export async function getEmployeeTrainingsByEmployeeID(employee_id) {
   );
   return rows;
 }
+
+
 
 // Create a new employee training
 export async function createEmployeeTraining(

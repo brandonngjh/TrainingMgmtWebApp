@@ -42,8 +42,9 @@ router.get("/:id", async (req, res) => {
 // Route for Get a specific employee training by training ID
 router.get("/training/:id", async (req, res) => {
   try {
-    console.log(`Fetching training ID: ${req.params.id}`);
+    // console.log(`Fetching training ID: ${req.params.id}`);
     const employeeTraining = await getEmployeeTrainingByTrainingID(req.params.id);
+    // console.log(employeeTraining);
     if (employeeTraining) {
       return res.status(200).json(employeeTraining);
     } else {

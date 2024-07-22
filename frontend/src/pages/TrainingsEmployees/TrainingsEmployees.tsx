@@ -5,24 +5,28 @@ import Spinner from "../../components/Spinner";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
 
-interface EmployeeTraining {
-  id: string; // ID from employees_trainings table
+interface SessionDetails {
+  session_id: string; // ID from employees_trainings table
   employee_id: string;
   training_id: string;
+  training_title: string;
+  employee_name: string;
+  employee_email: string;
+  employee_designation: string;
   status: string;
   start_date: string;
   end_date: string;
   expiry_date: string;
 }
 
-interface Employee {
-  name: string;
-  email: string;
-  division: string;
-  designation: string;
-}
+// interface Employee {
+//   name: string;
+//   email: string;
+//   division: string;
+//   designation: string;
+// }
 
-interface EmployeeTrainingWithDetails extends EmployeeTraining, Employee {}
+// interface EmployeeTrainingWithDetails extends EmployeeTraining, Employee {}
 
 interface TrainingsEmployeesProps {
   trainingId: string;
@@ -35,42 +39,55 @@ const formatDate = (dateString: string | null) => {
 };
 
 const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) => {
-  const [employeeTrainings, setEmployeeTrainings] = useState<EmployeeTrainingWithDetails[]>([]);
+  const [sessionDetails, setSessionDetails] = useState<SessionDetails[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEmployeeDetails = async (training: EmployeeTraining) => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/employees/${training.employee_id}`);
-        return { ...training, ...response.data };
-      } catch (error) {
-        console.log(error);
-        return { ...training, name: "N/A", email: "N/A", division: "N/A", designation: "N/A" };
-      }
-    };
+    // const fetchEmployeeDetails = async (training: EmployeeTraining) => {
+    //   try {
+    //     const response = await axios.get(`http://localhost:3000/api/employees/${training.employee_id}`);
+    //     return { ...training, ...response.data };
+    //   } catch (error) {
+    //     console.log(error);
+    //     return { ...training, name: "N/A", email: "N/A", division: "N/A", designation: "N/A" };
+    //   }
+    // };
 
-    const fetchEmployeeTrainings = async () => {
+    // const fetchEmployeeTrainings = async () => {
+    //   setLoading(true);
+    //   try {
+    //     const response = await axios.get(`http://localhost:3000/api/employeestrainings/training/${trainingId}`);
+    //     if (Array.isArray(response.data)) {
+    //       const employeeTrainingsWithDetails = await Promise.all(response.data.map(fetchEmployeeDetails));
+    //       setEmployeeTrainings(employeeTrainingsWithDetails);
+    //     } else {
+    //       console.error("Unexpected response format:", response.data);
+    //       setEmployeeTrainings([]);
+    //     }
+    //     setLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //     setLoading(false);
+    //   }
+    // };
+
+    // if (trainingId) {
+    //   fetchEmployeeTrainings();
+    // }
+
+    const fetchDetails = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`http://localhost:3000/api/employeestrainings/training/${trainingId}`);
-        if (Array.isArray(response.data)) {
-          const employeeTrainingsWithDetails = await Promise.all(response.data.map(fetchEmployeeDetails));
-          setEmployeeTrainings(employeeTrainingsWithDetails);
-        } else {
-          console.error("Unexpected response format:", response.data);
-          setEmployeeTrainings([]);
-        }
+        setSessionDetails(response.data);
         setLoading(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
-    };
-
-    if (trainingId) {
-      fetchEmployeeTrainings();
     }
-  }, [trainingId]);
+    fetchDetails();
+  }, []);
 
   return (
     <div className="p-6">
@@ -89,7 +106,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
               </button>
             </Link>
           </div>
-          {employeeTrainings.length === 0 ? (
+          {sessionDetails.length === 0 ? (
             <div className="text-xl text-gray-500">No employees found for this training</div>
           ) : (
             <div className="bg-white shadow-md rounded-lg overflow-hidden w-full">
@@ -97,11 +114,10 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                 <thead>
                   <tr>
                     <th className="py-2 px-4 bg-gray-100 border-b">No</th>
-                    <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
+                    <th className="py-2 px-4 bg-gray-100 border-b">Session ID</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Employee ID</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Email</th>
-                    <th className="py-2 px-4 bg-gray-100 border-b">Division</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Designation</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Status</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Start Date</th>
@@ -111,29 +127,28 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                   </tr>
                 </thead>
                 <tbody>
-                  {employeeTrainings.map((training, index) => (
-                    <tr key={training.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                  {sessionDetails.map((session, index) => (
+                    <tr key={session.session_id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                       <td className="py-2 px-4 border-b">{index + 1}</td>
-                      <td className="py-2 px-4 border-b text-center">{training.id}</td>
-                      <td className="py-2 px-4 border-b text-center">{training.employee_id}</td>
-                      <td className="py-2 px-4 border-b">{training.name}</td>
-                      <td className="py-2 px-4 border-b">{training.email}</td>
-                      <td className="py-2 px-4 border-b">{training.division}</td>
-                      <td className="py-2 px-4 border-b">{training.designation}</td>
-                      <td className="py-2 px-4 border-b">{training.status}</td>
-                      <td className="py-2 px-4 border-b">{formatDate(training.start_date)}</td>
-                      <td className="py-2 px-4 border-b">{formatDate(training.end_date)}</td>
-                      <td className="py-2 px-4 border-b">{formatDate(training.expiry_date)}</td>
+                      <td className="py-2 px-4 border-b text-center">{session.session_id}</td>
+                      <td className="py-2 px-4 border-b text-center">{session.employee_id}</td>
+                      <td className="py-2 px-4 border-b">{session.employee_name}</td>
+                      <td className="py-2 px-4 border-b">{session.employee_email}</td>
+                      <td className="py-2 px-4 border-b">{session.employee_designation}</td>
+                      <td className="py-2 px-4 border-b">{session.status}</td>
+                      <td className="py-2 px-4 border-b">{formatDate(session.start_date)}</td>
+                      <td className="py-2 px-4 border-b">{formatDate(session.end_date)}</td>
+                      <td className="py-2 px-4 border-b">{formatDate(session.expiry_date)}</td>
                       <td className="py-2 px-4 border-b">
                         <div className="flex justify-center gap-x-4">
                           <Link
-                            to={`/trainingsemployees/edit/1?trainingId=${training.training_id}`}
+                            to={`/trainingsemployees/edit/1?trainingId=${session.training_id}`}
                             className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
                           >
                             <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                           </Link>
                           <Link
-                            to={`/employeestrainings/delete/${training.id}?trainingId=${training.training_id}`}
+                            to={`/employeestrainings/delete/${session.session_id}?trainingId=${session.training_id}`}
                             className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                           >
                             <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
