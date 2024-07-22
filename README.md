@@ -33,6 +33,7 @@ The application is developed using MySQL for the database, Express and Node.js f
    npm i
    npm run dev
    ```
+5. **Login using "admin" as username and password**
 
 ## Accessing the Application
 
