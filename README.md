@@ -1,10 +1,22 @@
 # Training Management Web App
 
-This project consists of a frontend and backend service for a training management application, along with a MySQL database. The services are containerized using Docker and managed with Docker Compose.
+This project consists of a frontend and backend service for a training management web application, along with a MySQL database. It is designed to reduce the workload of HR by automating tasks and providing visualization and efficient platform. The services are containerized using Docker and managed with Docker Compose.
 
-The application is developed using MySQL for the database, Express and Node.js for the backend, and React with TypeScript for the frontend.
+The application is developed using:
+- MySQL for the database
+- Express and Node.js for the backend
+- React with TypeScript and TailwindCSS for the frontend
 
 **Note:** This application is still a work in progress.
+
+## Features
+
+- **Login (IAM) using Tokens JWT Authentication:** Secure login system using JSON Web Tokens (JWT) for authentication.
+- **Automation of Emailing Employees:** Automated email scheduling using `node-schedule` and email functionality with `nodemailer`.
+
+## Testing
+
+- **Unit Testing using Jest:** Comprehensive unit tests to ensure reliability and correctness of the application's functionality.
 
 ## Setup
 
