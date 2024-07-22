@@ -182,11 +182,13 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
 (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'Scheduled', '2024-09-01', '2024-10-20', '2025-10-20'),
 (22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-27'),
+(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Completed', '2023-07-03', '2023-07-28', '2024-07-28'),
 
 (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-01', '2024-01-31', '2025-01-31'),
 (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-07-01', '2024-08-27', '2025-08-27'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-01', '2024-09-29', '2025-09-29'),
-(21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27');
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'Scheduled', '2024-09-01', '2024-10-27', '2025-10-27'),
+(21, (SELECT id FROM trainings WHERE title = 'MES SYSTEM'), 'Completed', '2023-07-17', '2023-07-29', '2024-07-29');
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
@@ -195,11 +197,13 @@ VALUES
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
+(22, {SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'}, 'valid')
 
 (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
 (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
-(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA');
+(21, (SELECT id FROM trainings WHERE title = '5S'), 'NA'),
+(21, (SELECT id FROM trainings WHERe title = 'MES SYSTEM'), 'valid');
 
 
 -- Getting the basic employee info
