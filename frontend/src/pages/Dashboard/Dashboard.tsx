@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar";
+import { Link } from 'react-router-dom';
+import './Dashboard.css'; // Import the CSS file
 import PercentagePieChart from './Percentage.tsx';
 import Numbers from './Numbers.tsx';
 
@@ -41,7 +43,7 @@ const Example: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get<Employee[]>('http://localhost:3000/api/dashboard');
+        const response = await axios.get<Employee[]>('http://localhost:3000/dashboard');
         setEmployees(response.data);
       } catch (error) {
         console.error('Error fetching employees:', error);
@@ -241,16 +243,22 @@ const Example: React.FC = () => {
     },
   });
 
-  return (<div className="flex">
+  return (<div className="dashboard-container">
     <Sidebar activeItem="Dashboard" />
-    <div className="dashboard">
-      <MaterialReactTable table={table} />
-      <div className="stats-container">
-        <PercentagePieChart />
-        <Numbers />
+      <div className="dashboard-content">
+        <h2 className="text-3xl my-8">Dashboard Page</h2>
+        <MaterialReactTable table={table} />
+        <div className="stats-container">
+          <PercentagePieChart />
+          <Numbers />
+        </div>
+        <div className="dashboard-generate-button-container">
+          <Link to="/report">
+            <button className="dashboard-generate-button">Generate Skills Report</button>
+          </Link>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

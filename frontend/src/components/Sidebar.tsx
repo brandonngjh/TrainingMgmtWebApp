@@ -32,11 +32,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
   ];
 
   return (
-    <aside className="h-screen">
-      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
-        <div className="p-4 pb-2 flex justify-between items-center">
+    <aside className="sticky top-0 h-screen bg-gray-100 text-gray-800">
+      <nav className="h-full flex flex-col">
+        <div
+          className={`p-4 pb-2 flex ${
+            expanded ? "justify-between" : "justify-center"
+          } items-center`}
+        >
           <img
-            src="https://img.logoipsum.com/330.svg"
+            src="https://img.logoipsum.com/325.svg"
             className={`overflow-hidden transition-all ${
               expanded ? "w-32" : "w-0"
             }`}
@@ -44,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
           />
           <button
             onClick={() => setExpanded((curr) => !curr)}
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+            className="p-1.5 rounded-lg bg-gray-200 hover:bg-gray-300"
           >
             {expanded ? <LuChevronFirst /> : <LuChevronLast />}
           </button>
@@ -64,15 +68,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
           </ul>
         </SidebarContext.Provider>
 
-        <div className="border-t flex items-center p-3">
-          <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
-              U
-            </span>
+        <div className="border-t border-gray-200 flex items-center p-3">
+          <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
+            <span className="font-medium text-gray-600">U</span>
           </div>
           <h4
-            className={`font-semibold ml-3 overflow-hidden transition-all ${
-              expanded ? "" : "w-0 ml-0"
+            className={`font-semibold overflow-hidden transition-all ${
+              expanded ? "ml-3" : "w-0 ml-0"
             }`}
           >
             User
@@ -80,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
           <CgMoreVertical
             size={20}
             className={`ml-auto cursor-pointer overflow-hidden transition-all ${
-              expanded ? "" : "w-0 ml-0"
+              expanded ? "" : "w-0"
             }`}
           />
         </div>
@@ -104,10 +106,10 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   return (
     <Link to={`/${text}`}>
       <li
-        className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group : ${
+        className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
           active
-            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-            : "hover:bg-indigo-50 text-gray-600"
+            ? "bg-indigo-600 text-white"
+            : "hover:bg-gray-200 text-gray-800"
         }`}
       >
         {icon}
@@ -121,7 +123,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
 
         {!expanded && (
           <div
-            className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+            className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-gray-200 text-gray-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
           >
             {text}
           </div>

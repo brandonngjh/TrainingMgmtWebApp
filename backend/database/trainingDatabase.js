@@ -22,12 +22,16 @@ export async function getTrainingByID(id) {
 }
 
 // Create a new training
-export async function createTraining(title, description, training_provider) {
+export async function createTraining(title, description, validity_period, training_provider) {
+  
+  // Log the parameters to the console
+  console.log("Creating training with:", { title, description, validity_period, training_provider });
+
   const [result] = await pool.query(
-    "INSERT INTO trainings (title, description, training_provider) VALUES (?, ?, ?)",
-    [title, description, training_provider]
+    "INSERT INTO trainings (title, description, validity_period, training_provider) VALUES (?, ?, ?, ?)",
+    [title, description, validity_period, training_provider]
   );
-  return getTrainingByID(result.insertId);
+  // return getTrainingByID(result.insertId);
 }
 
 // Delete a training
@@ -41,6 +45,7 @@ export async function updateTraining(
   id,
   title,
   description,
+  validity_period,
   training_provider
 ) {
   // Check if the training ID exists before updating
@@ -49,8 +54,8 @@ export async function updateTraining(
   }
 
   const [result] = await pool.query(
-    "UPDATE trainings SET title = ?, description = ?, training_provider = ? WHERE id = ?",
-    [title, description, training_provider, id]
+    "UPDATE trainings SET title = ?, description = ?, validity_period = ?, training_provider = ? WHERE id = ?",
+    [title, description, validity_period, training_provider, id]
   );
   return result.affectedRows > 0 ? getTrainingByID(id) : null;
 }

@@ -8,7 +8,7 @@ const PercentagePieChart: React.FC = () => {
   useEffect(() => {
     const fetchPercentage = async () => {
       try {
-        const response = await axios.get<{ percentageValidEmployees: string }>('http://localhost:3000/api/dashboard/percentage');
+        const response = await axios.get<{ percentageValidEmployees: string }>('http://localhost:3000/dashboard/percentage');
         setPercentage(parseFloat(response.data.percentageValidEmployees));
       } catch (error) {
         console.error('Error fetching percentage:', error);

@@ -34,7 +34,6 @@ router.get("/", async (req, res) => {
 });
 
 
-
 router.get("/percentage", async (req, res) => {
   const [employeeDetails, relevantTrainings] = await Promise.all([
     getEmployeeDetails(),

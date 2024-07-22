@@ -38,18 +38,16 @@ router.get("/:id", async (req, res) => {
 // Route for adding a new Training
 router.post("/", async (req, res) => {
   try {
-    const { title, description, training_provider } = req.body;
-    if (!title || !description || !training_provider) {
-      return res
-        .status(400)
-        .send({
-          message:
-            "Send required fields: title, description, training_provider",
-        });
+    const { title, description, validity_period, training_provider } = req.body;
+    if (!title || !description || !validity_period || !training_provider) {
+      return res.status(400).send({
+        message: "Send required fields: title, description, validity_period, training_provider",
+      });
     }
     const newTraining = await createTraining(
       title,
       description,
+      validity_period,
       training_provider
     );
     return res.status(201).json(newTraining);
@@ -73,19 +71,17 @@ router.delete("/:id", async (req, res) => {
 // Route for Updating a Training
 router.put("/:id", async (req, res) => {
   try {
-    const { title, description, training_provider } = req.body;
-    if (!title || !description || !training_provider) {
-      return res
-        .status(400)
-        .send({
-          message:
-            "Send required fields: title, description, training_provider",
-        });
+    const { title, description, validity_period, training_provider } = req.body;
+    if (!title || !description || !validity_period || !training_provider) {
+      return res.status(400).send({
+        message: "Send required fields: title, description, validity_period, training_provider",
+      });
     }
     const updatedTraining = await updateTraining(
       req.params.id,
       title,
       description,
+      validity_period,
       training_provider
     );
     if (updatedTraining) {
