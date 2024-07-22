@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import { AiOutlineEdit } from "react-icons/ai";
-import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlineDelete } from "react-icons/md";
 
-interface Employee {
-  id: string;
-  name: string;
-  email: string;
-  division: string;
-  designation: string;
-}
-
 interface EmployeeTraining {
-  id: string;
+  id: string; // ID from employees_trainings table
   employee_id: string;
+  training_id: string;
   status: string;
   start_date: string;
   end_date: string;
   expiry_date: string;
+}
+
+interface Employee {
+  name: string;
+  email: string;
+  division: string;
+  designation: string;
 }
 
 interface EmployeeTrainingWithDetails extends EmployeeTraining, Employee {}
@@ -46,7 +45,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
         return { ...training, ...response.data };
       } catch (error) {
         console.log(error);
-        return { ...training, name: "N/A", email: "N/A", hire_date: "N/A", division: "N/A", designation: "N/A" };
+        return { ...training, name: "N/A", email: "N/A", division: "N/A", designation: "N/A" };
       }
     };
 
@@ -84,9 +83,9 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
             <div className="flex-col">
               <h2 className="text-lg text-gray-600">List of employees for training ID: {trainingId}</h2>
             </div>
-            <Link to={`/employeestrainings/create?trainingId=${trainingId}`} className="mt-4">
+            <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
               <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-                Assign Training
+                Add Sessions
               </button>
             </Link>
           </div>
@@ -98,6 +97,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                 <thead>
                   <tr>
                     <th className="py-2 px-4 bg-gray-100 border-b">No</th>
+                    <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Employee ID</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Email</th>
@@ -114,6 +114,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                   {employeeTrainings.map((training, index) => (
                     <tr key={training.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                       <td className="py-2 px-4 border-b">{index + 1}</td>
+                      <td className="py-2 px-4 border-b text-center">{training.id}</td>
                       <td className="py-2 px-4 border-b text-center">{training.employee_id}</td>
                       <td className="py-2 px-4 border-b">{training.name}</td>
                       <td className="py-2 px-4 border-b">{training.email}</td>
@@ -126,19 +127,13 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                       <td className="py-2 px-4 border-b">
                         <div className="flex justify-center gap-x-4">
                           <Link
-                            to={`/employeestrainings/details/${training.id}`}
-                            className="bg-green-100 p-1 rounded-full hover:bg-green-200"
-                          >
-                            <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
-                          </Link>
-                          <Link
-                            to={`/employeestrainings/edit/${training.id}?trainingId=${trainingId}`}
+                            to={`/trainingsemployees/edit/1?trainingId=${training.training_id}`}
                             className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
                           >
                             <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                           </Link>
                           <Link
-                            to={`/employeestrainings/delete/${training.id}?trainingId=${trainingId}`}
+                            to={`/employeestrainings/delete/${training.id}?trainingId=${training.training_id}`}
                             className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                           >
                             <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />

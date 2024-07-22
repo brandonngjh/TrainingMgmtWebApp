@@ -12,6 +12,7 @@ const router = express.Router();
 // Route for Get All Employees from database
 router.get("/", async (req, res) => {
   try {
+    console.log(`Fetching All Employees ID`);
     const employees = await getEmployees();
     return res.status(200).json(employees);
   } catch (error) {
@@ -23,6 +24,7 @@ router.get("/", async (req, res) => {
 // Route for Get One Employee from database by id
 router.get("/:id", async (req, res) => {
   try {
+    console.log(`Fetching Employee by ID: ${req.params.id}`);
     const employee = await getEmployeeByID(req.params.id);
     if (employee) {
       return res.status(200).json(employee);

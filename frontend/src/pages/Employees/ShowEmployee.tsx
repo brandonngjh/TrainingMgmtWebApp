@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom"; // Import Link from react-ro
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
 import EmployeesTrainings from "../EmployeesTrainings/EmployeesTrainings";
+import RelevantTrainings from "../RelevantTrainings/RelevantTrainings";
 
 interface Employee {
   id: string;
@@ -71,11 +72,11 @@ const ShowEmployee = () => {
                 <span className="text-xl font-semibold text-gray-500 w-1/3">Designation</span>
                 <span className="text-xl text-gray-800">{employee.designation}</span>
               </div>
-              <Link to={`/employeestrainings/create?employeeId=${employee.id}`} className="mt-4">
+              {/* <Link to={`/employeestrainings/create?employeeId=${employee.id}`} className="mt-4">
                 <button className="bg-indigo-600 text-white w-full py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
                   Assign Training
                 </button>
-              </Link>
+              </Link> */}
             </div>
           ) : (
             <div className="text-xl text-gray-500">Employee not found</div>
@@ -83,6 +84,7 @@ const ShowEmployee = () => {
         </div>
       )}
       {employee && <EmployeesTrainings employeeId={employee.id} />}
+      {employee && <RelevantTrainings employeeId={employee.id} />}
     </div>
   );
 };

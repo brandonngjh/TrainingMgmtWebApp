@@ -15,6 +15,10 @@ import Dashboard from "./pages/Dashboard/Dashboard.tsx";
 import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployeesTrainings.tsx";
 import DeleteEmployeesTrainings from "./pages/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
 import EditEmployeesTrainings from "./pages/EmployeesTrainings/EditEmployeesTrainings.tsx";
+import CreateRelevantTrainings from "./pages/RelevantTrainings/CreateRelevantTrainings.tsx";
+import CreateTrainingsEmployees from "./pages/TrainingsEmployees/CreateTrainingsEmployees.tsx";
+import EditTrainingsEmployees from "./pages/TrainingsEmployees/EditTrainingsEmployees.tsx";
+import DeleteTrainingsEmployees from "./pages/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
 
 const App = () => {
   return (
@@ -35,7 +39,11 @@ const App = () => {
       <Route path="/employeestrainings/create" element={<CreateEmployeesTrainings />} />
       <Route path="/employeestrainings/delete/:id" element={<DeleteEmployeesTrainings />} />
       <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
-      <Route path="/report" element={<ReportGenerator />} /> 
+      <Route path="/report" element={<ReportGenerator />} />
+      <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
+      <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
+      <Route path="/trainingsemployees/edit/:id" element={<EditTrainingsEmployees />} />
+      <Route path="/trainingsemployees/delete/:id" element={<DeleteTrainingsEmployees />} />
     </Routes>
   );
 };

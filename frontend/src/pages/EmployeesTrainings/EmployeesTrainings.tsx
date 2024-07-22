@@ -55,6 +55,11 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
             <h1 className="text-3xl font-bold text-gray-800">Employee Trainings</h1>
             <h2 className="text-lg text-gray-600">List of trainings for employee ID: {employeeId}</h2>
           </div>
+          <Link to={`/employeestrainings/create?employeeId=${employeeId}`} className="mt-4">
+              <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+                Add Training
+              </button>
+          </Link>
         </div>
         {loading ? (
           <Spinner />
