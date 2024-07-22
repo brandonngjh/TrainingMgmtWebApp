@@ -57,14 +57,14 @@ const Example: React.FC = () => {
   const columns = useMemo<MRT_ColumnDef<Employee>[]>(
     () => [
       {
-        accessorKey: 'employee_id',
-        header: 'ID',
-        size: 10,
-      },
-      {
         id: 'employee', // id used to define `group` column
-        header: 'Employee',
+        header: 'Employee Details',
         columns: [
+          {
+            accessorKey: 'employee_id',
+            header: 'ID',
+            size: 10,
+          },
           {
             accessorKey: 'employee_name', // Directly use the employee_name from the Employee interface
             header: 'Name',
@@ -81,13 +81,13 @@ const Example: React.FC = () => {
               </Box>
             ),
           },
+          // {
+          //   accessorKey: 'department_name', // Use the department_name field
+          //   header: 'Department',
+          //   size: 150,
+          // },
           {
-            accessorKey: 'department_name', // Use the department_name field
-            header: 'Department',
-            size: 150,
-          },
-          {
-            accessorKey: 'job_name', // Use the job_name field
+            accessorKey: 'designation', // Use the job_name field
             header: 'Designation',
             size: 150,
           },

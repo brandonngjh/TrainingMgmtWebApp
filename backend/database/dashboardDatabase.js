@@ -5,6 +5,7 @@ export async function getEmployeeDetails() {
         SELECT
             e.id AS employee_id,
             e.name AS employee_name,
+            e.designation as designation,
             d.name AS department_name,
             j.name AS job_name
         FROM employees e
