@@ -127,18 +127,22 @@ To run SQL queries directly on the MySQL database:
    ```
    git push origin <your_branch_name>
    ```
-5. **Before creating Pull Request, rebase and sync up with main branch**
+5. **Before creating Pull Request, merge and sync up with main branch**
    ```
-   git checkout <your-feature-branch>
-   git fetch origin
-   git rebase origin/main
-   
-   # Resolve any conflicts that may arise during the rebase process
-   # Manually resolve conflicts and then continue the rebase
-   git rebase --continue
+   git checkout auto-email <your_branch_name>
 
-   # (only if you have already pushed your branch before)
-   git push origin <your-feature-branch> --force
+   # Fetch the latest changes from the remote repository
+   git fetch origin
+
+   # Merge the latest changes from the main branch into your feature branch
+   git merge origin/main
+
+   # Resolve any conflicts that may arise during the merge process
+   # Manually resolve conflicts and then commit the changes
+   git commit -m "Resolve merge conflicts with main branch"
+
+   # Push the merged branch to the remote repository
+   git push origin auto-email
    ```
 7. **Create a Pull Request:**
 
