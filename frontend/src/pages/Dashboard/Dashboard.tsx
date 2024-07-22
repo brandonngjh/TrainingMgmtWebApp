@@ -1,32 +1,24 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar";
 import { Link } from 'react-router-dom';
 import './Dashboard.css'; // Import the CSS file
-import { useMemo } from 'react';
+import PercentagePieChart from './Percentage.tsx';
+import Numbers from './Numbers.tsx';
+
 
 //MRT Imports
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
-  MRT_GlobalFilterTextField,
-  MRT_ToggleFiltersButton,
 } from 'material-react-table';
 
 //Material UI Imports
 import {
   Box,
-  Button,
-  ListItemIcon,
-  MenuItem,
-  Typography,
-  lighten,
 } from '@mui/material';
-
-//Icons Imports
-import { AccountCircle, Send, Clear, Edit} from '@mui/icons-material';
 
 // Define the Employee and Training interfaces
 interface Training {
@@ -256,6 +248,10 @@ const Example: React.FC = () => {
       <div className="dashboard-content">
         <h2 className="text-3xl my-8">Dashboard Page</h2>
         <MaterialReactTable table={table} />
+        <div className="stats-container">
+          <PercentagePieChart />
+          <Numbers />
+        </div>
         <div className="dashboard-generate-button-container">
           <Link to="/report">
             <button className="dashboard-generate-button">Generate Skills Report</button>
