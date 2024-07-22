@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
+import TrainingsEmployees from "../TrainingsEmployees/TrainingsEmployees";
 
 interface Training {
   id: string;
@@ -87,6 +88,8 @@ const ShowTraining = () => {
           )}
         </div>
       )}
+       {/* <TrainingsEmployees/> */}
+       {training && <TrainingsEmployees trainingId={training.id} />}
     </div>
   );
 };

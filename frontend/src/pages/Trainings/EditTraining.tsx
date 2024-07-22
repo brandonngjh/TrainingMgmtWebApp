@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import BackButton from "../../components/BackButton";
-import Spinner from "../../components/Spinner";
-import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import { useSnackbar } from "notistack";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import BackButton from '../../components/BackButton';
+import Spinner from '../../components/Spinner';
 
 const EditTraining = () => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("INTERNAL"); // Default value
   const [validityPeriod, setValidityPeriod] = useState("");
   const [trainingProvider, setTrainingProvider] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,9 +21,9 @@ const EditTraining = () => {
       .get(`http://localhost:3000/api/trainings/${id}`)
       .then((response) => {
         const data = response.data;
-        setTitle(data.title);
-        setDescription(data.description);
-        setValidityPeriod(data.validity_period);
+        setTitle(data.title || "");
+        setDescription(data.description || "INTERNAL");
+        setValidityPeriod(data.validity_period || "");
         setTrainingProvider(data.training_provider || "");
         setLoading(false);
       })
@@ -37,15 +37,28 @@ const EditTraining = () => {
   }, [id]);
 
   const handleEditTraining = () => {
+    if (!title || !description || !validityPeriod || !trainingProvider) {
+      enqueueSnackbar("Please fill up all fields", { variant: "warning" });
+      return;
+    }
+
     const data = {
       title,
       description,
-      validity_period: validityPeriod,
+      validity_period: parseInt(validityPeriod, 10), // Ensure it's a number
       training_provider: trainingProvider,
     };
+
+    console.log(data); // Log the data being sent
+
     setLoading(true);
+
     axios
-      .put(`http://localhost:3000/api/trainings/${id}`, data)
+      .put(`http://localhost:3000/api/trainings/${id}`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Training edited successfully", { variant: "success" });
@@ -53,8 +66,8 @@ const EditTraining = () => {
       })
       .catch((error) => {
         setLoading(false);
-        enqueueSnackbar("Error", { variant: "error" });
-        console.log(error);
+        enqueueSnackbar("Error editing training", { variant: "error" });
+        console.log(error.response.data);  // Log the server response
       });
   };
 
@@ -75,26 +88,27 @@ const EditTraining = () => {
         </div>
         <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Description</label>
-          <input
-            type="text"
+          <select
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
-          />
+          >
+            <option value="INTERNAL">INTERNAL</option>
+            <option value="EXTERNAL">EXTERNAL</option>
+            <option value="OTHERS">OTHERS</option>
+          </select>
         </div>
         <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Validity Period</label>
+          <label className="text-xl mr-4 text-gray-500">Validity Period (in months)</label>
           <input
-            type="text"
+            type="number"
             value={validityPeriod}
             onChange={(e) => setValidityPeriod(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
         <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">
-            Training Provider
-          </label>
+          <label className="text-xl mr-4 text-gray-500">Training Provider</label>
           <input
             type="text"
             value={trainingProvider}

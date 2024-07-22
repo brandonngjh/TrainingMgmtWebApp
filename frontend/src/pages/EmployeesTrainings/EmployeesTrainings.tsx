@@ -4,48 +4,57 @@ import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
-import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
-import Sidebar from "../../components/Sidebar";
+import { MdOutlineDelete } from "react-icons/md";
 
-interface Employee {
+interface EmployeeTraining {
   id: string;
-  name: string;
-  email: string;
-  designation: string;
+  training_id: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  expiry_date: string;
 }
 
-const Employees = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+interface EmployeesTrainingsProps {
+  employeeId: string;
+}
+
+const formatDate = (dateString: string): string => {
+  const options: Intl.DateTimeFormatOptions = { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit' 
+  };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+
+const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) => {
+  const [employeesTrainings, setEmployeesTrainings] = useState<EmployeeTraining[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/api/employees")
+      .get(`http://localhost:3000/api/employeestrainings/employee/${employeeId}`)
       .then((response) => {
-        setEmployees(response.data);
+        setEmployeesTrainings(response.data);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [employeeId]);
 
   return (
     <div className="flex">
-      <Sidebar activeItem="Employees" />
       <div className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex-col">
-            <h1 className="text-3xl font-bold text-gray-800">Employees</h1>
-            <h2 className="text-lg text-gray-600">List of all employees</h2>
+            <h1 className="text-3xl font-bold text-gray-800">Employee Trainings</h1>
+            <h2 className="text-lg text-gray-600">List of trainings for employee ID: {employeeId}</h2>
           </div>
-          <Link to="/employees/create">
-            <div className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-              Add Employee
-            </div>
-          </Link>
         </div>
         {loading ? (
           <Spinner />
@@ -55,52 +64,46 @@ const Employees = () => {
               <thead>
                 <tr>
                   <th className="py-2 px-4 bg-gray-100 border-b">No</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b max-md:hidden">
-                    Email
-                  </th>
-                  <th className="py-2 px-4 bg-gray-100 border-b max-md:hidden">
-                    Designation
-                  </th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Training ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Status</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Start Date</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">End Date</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Expiry Date</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
                 </tr>
               </thead>
 
               <tbody>
-                {employees.map((employee, index) => (
+                {employeesTrainings.map((training, index) => (
                   <tr
-                    key={employee.id}
+                    key={training.id}
                     className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
                   >
                     <td className="py-2 px-4 border-b">{index + 1}</td>
-                    <td className="py-2 px-4 border-b">{employee.id}</td>
-                    <td className="py-2 px-4 border-b">{employee.name}</td>
-                    <td className="py-2 px-4 border-b max-md:hidden">
-                      {employee.email}
-                    </td>
-                    <td className="py-2 px-4 border-b max-md:hidden">
-                      {employee.designation}
-                    </td>
+                    <td className="py-2 px-4 border-b text-center">{training.training_id}</td>
+                    <td className="py-2 px-4 border-b text-center">{training.status}</td>
+                    <td className="py-2 px-4 border-b text-center">{formatDate(training.start_date)}</td>
+                    <td className="py-2 px-4 border-b text-center">{formatDate(training.end_date)}</td>
+                    <td className="py-2 px-4 border-b text-center">{formatDate(training.expiry_date)}</td>
 
                     <td className="py-2 px-4 border-b">
                       <div className="flex justify-center gap-x-4">
                         <Link
-                          to={`/employees/details/${employee.id}`}
+                          to={`/employeestrainings/details/${training.id}`}
                           className="bg-green-100 p-1 rounded-full hover:bg-green-200"
                         >
                           <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
                         </Link>
 
                         <Link
-                          to={`/employees/edit/${employee.id}`}
+                          to={`/employeestrainings/edit/${training.id}?employeeId=${employeeId}`}
                           className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
                         >
                           <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                         </Link>
 
                         <Link
-                          to={`/employees/delete/${employee.id}`}
+                          to={`/employeestrainings/delete/${training.id}?employeeId=${employeeId}`}
                           className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                         >
                           <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
@@ -119,4 +122,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;
+export default EmployeesTrainings;
