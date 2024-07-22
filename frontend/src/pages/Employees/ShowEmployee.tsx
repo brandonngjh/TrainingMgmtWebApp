@@ -18,12 +18,18 @@ const ShowEmployee = () => {
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/api/employees/${id}`)
+        .get(`http://localhost:3000/api/employees/${id}`, {
+          headers: {
+            'Authorization':`Bearer ` + token,
+            'Content-Type': 'application/json',
+          },
+        })
         .then((response) => {
           setEmployee(response.data);
           setLoading(false);

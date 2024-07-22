@@ -17,12 +17,18 @@ const ShowTraining = () => {
   const [training, setTraining] = useState<Training | null>(null);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/api/trainings/${id}`)
+        .get(`http://localhost:3000/api/trainings/${id}`,{
+          headers: {
+            'Authorization':`Bearer ` + token,
+            'Content-Type': 'application/json',
+          },
+        })
         .then((response) => {
           setTraining(response.data);
           setLoading(false);

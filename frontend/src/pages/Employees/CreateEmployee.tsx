@@ -14,6 +14,7 @@ const CreateEmployee = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const token = localStorage.getItem('token');
 
   const handleSaveEmployee = () => {
     const data = {
@@ -25,7 +26,12 @@ const CreateEmployee = () => {
     };
     setLoading(true);
     axios
-      .post(`http://localhost:3000/api/employees`, data)
+      .post(`http://localhost:3000/api/employees`, data, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Created successfully", {

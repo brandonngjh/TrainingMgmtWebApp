@@ -10,11 +10,17 @@ const DeleteEmployee = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-
+  const token = localStorage.getItem('token');
+  
   const handleDeleteEmployee = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/api/employees/${id}`)
+      .delete(`http://localhost:3000/api/employees/${id}`, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Deleted successfully", {

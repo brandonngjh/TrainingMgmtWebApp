@@ -1,7 +1,10 @@
 import express from "express";
 import { getEmployeeDetails, getRelevantCourses, getTrainingDates} from "../database/dashboardDatabase.js";
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
 
-const router = express.Router();
+router.use(protect);    //add this
+
 
 // Returns a massive json file containing all the entries of the employees
 
