@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
 import loginRoutes from "./routes/loginRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import './scheduler/emailScheduler.js'
 
 dotenv.config();
 
