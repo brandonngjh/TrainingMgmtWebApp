@@ -13,11 +13,11 @@ import EditTraining from "./pages/Trainings/EditTraining.tsx";
 import ReportGenerator from "./components/ReportGenerator";
 import DeleteTraining from "./pages/Trainings/DeleteTraining.tsx";
 import Dashboard from "./pages/Dashboard/Dashboard.tsx"; 
+import { AuthProvider } from "./authentication/authContext.tsx";
+import ProtectedRoute from './components/ProtectedRoute.tsx' 
 import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployeesTrainings.tsx";
 import DeleteEmployeesTrainings from "./pages/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
 import EditEmployeesTrainings from "./pages/EmployeesTrainings/EditEmployeesTrainings.tsx";
-import { AuthProvider } from "./authentication/authContext.tsx";
-import ProtectedRoute from './components/ProtectedRoute.tsx' //ignore red underline, vsc bug
 
 const App: React.FC = () => {
   return (
