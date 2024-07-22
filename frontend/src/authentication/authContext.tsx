@@ -31,7 +31,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (!isTokenExpired(token)) {
         setIsAuthenticated(true);
         console.log('Token is valid, set isAuthenticated to true');
-        navigate('/'); // Navigate if the token is valid
     } 
       else {
       console.log('Token is expired');
@@ -64,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       window.removeEventListener('keydown', resetTimeout);
       if (timeout) clearTimeout(timeout);
       };
-    }, [navigate]);
+    }, [navigate, isAuthenticated]);
 
   const isTokenExpired = (token: string) => { //checks if token expired
     try{

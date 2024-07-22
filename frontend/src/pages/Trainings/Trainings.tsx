@@ -18,11 +18,17 @@ interface Training {
 const Trainings = () => {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/api/trainings")
+      .get("http://localhost:3000/api/trainings", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         setTrainings(response.data);
         setLoading(false);
@@ -31,7 +37,7 @@ const Trainings = () => {
         console.error(error);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   return (
     <div className="flex">

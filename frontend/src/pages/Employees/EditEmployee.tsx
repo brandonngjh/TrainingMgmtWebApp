@@ -15,6 +15,7 @@ const EditEmployee = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     setLoading(true);
@@ -48,7 +49,12 @@ const EditEmployee = () => {
     };
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/employees/${id}`, data)
+      .put(`http://localhost:3000/api/employees/${id}`, data, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee edited successfully", { variant: "success" });

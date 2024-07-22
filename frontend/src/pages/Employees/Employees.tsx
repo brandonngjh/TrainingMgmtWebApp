@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from "../../authentication/axiosInstance.tsx";
 import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -20,8 +21,8 @@ const Employees = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get("http://localhost:3000/api/employees")
+    axiosInstance
+      .get("/employees")
       .then((response) => {
         setEmployees(response.data);
         setLoading(false);

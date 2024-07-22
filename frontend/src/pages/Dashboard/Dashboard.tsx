@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../authentication/axiosInstance.tsx";
 import Sidebar from "../../components/Sidebar";
 import { Link } from 'react-router-dom';
 import './Dashboard.css'; // Import the CSS file
@@ -51,10 +51,10 @@ const Example: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get<Employee[]>('http://localhost:3000/dashboard');
+        const response = await axiosInstance.get<Employee[]>('/dashboard');
         setEmployees(response.data);
       } catch (error) {
-        console.error('Error fetching employees:', error);
+        console.error('Error fetching employees: ', error);
       }
     };
 
@@ -240,6 +240,10 @@ const Example: React.FC = () => {
         left: ['mrt-row-select'],
         right: ['mrt-row-actions'],
       },
+      pagination: {
+        pageIndex: 0,
+        pageSize: 15, // Set initial rows per page value to 15
+      }
     },
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'top',

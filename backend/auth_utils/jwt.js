@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 //generate and verify tokens 
 dotenv.config({ path: '../.env' }); // Load environment variables
 
-const secret = process.env.JWT_SECRET; 
+const secret = process.env.JWT_SECRET;
 
 console.log('JWT_SECRET:', secret); // Log the secret to verify for debug
 

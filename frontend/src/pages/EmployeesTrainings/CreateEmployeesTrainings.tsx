@@ -16,6 +16,7 @@ const CreateEmployeesTrainings = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -49,6 +50,7 @@ const CreateEmployeesTrainings = () => {
       .post(`http://localhost:3000/api/employeesTrainings`, data, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization':`Bearer ` + token
         },
       })
       .then(() => {

@@ -1,6 +1,7 @@
 import {Routes, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Employees/Employees.tsx";
+import Employees from "./pages/Employees/Employees.tsx";
 import CreateEmployee from "./pages/Employees/CreateEmployee.tsx";
 import ShowEmployee from "./pages/Employees/ShowEmployee.tsx";
 import EditEmployee from "./pages/Employees/EditEmployee.tsx";
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route element={<ProtectedRoute />}>
+      <Route path="/employees" element={<Employees />} />
       <Route path="/" element={<Home />} />
       <Route path="/employees/create" element={<CreateEmployee />} />
       <Route path="/employees/details/:id" element={<ShowEmployee />} />

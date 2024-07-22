@@ -7,7 +7,7 @@ import employeesTrainingsRoutes from "./employeesTrainingsRoutes.js";
 import skillsReportRoutes from "./skillsReportRoutes.js"
 import { protect } from '../middleware/middleware.js';
 import loginRoutes from "./loginRoutes.js";
-
+import dashboardRoutes from "./dashboardRoutes.js";
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -21,5 +21,6 @@ router.use("/departments", departmentRoutes);
 router.use("/jobs", jobsRoutes);
 router.use("/employeesTrainings", employeesTrainingsRoutes, protect);
 router.use("/skillsReport", skillsReportRoutes);
+router.use("/dashboard", dashboardRoutes)
 
 export default router;

@@ -38,6 +38,7 @@ app.use('/api', (req, res, next) => {
   next();
 }, mainRoutes);
 
+
 // Unknown route handler
 app.use((req, res) => {
   console.log(`Route not found: ${req.originalUrl}`);
@@ -46,7 +47,7 @@ app.use((req, res) => {
   });
 });
 
-app.use("/dashboard", dashboardRoutes);
+// app.use("/dashboard", dashboardRoutes);
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);

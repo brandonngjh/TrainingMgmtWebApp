@@ -22,12 +22,17 @@ const ShowEmployeeTrainings = () => {
   const [employeeTrainings, setEmployeeTrainings] = useState<EmployeeTraining[]>([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/api/employeestrainings/employee/${id}`)
+        .get(`http://localhost:3000/api/employeestrainings/employee/${id}`, {
+          headers: {
+            'Authorization':`Bearer ` + token,
+          },
+        })
         .then((response) => {
           setEmployeeTrainings(response.data);
           setLoading(false);

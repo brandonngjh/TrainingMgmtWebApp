@@ -73,7 +73,7 @@ const Login: FC = () => {
               <Form.Label>Password</Form.Label>
               <Field type="password" name="password" as={Form.Control} />
             </Form.Group>
-            <Button variant="primary" type="submit" className="w-full">
+            <Button variant="primary" type="submit" className="w-full bg-indigo-500">
               Sign In
             </Button>
           </Form>

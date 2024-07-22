@@ -14,11 +14,17 @@ const EditTraining = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
-
+  const token = localStorage.getItem('token');
+  
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/trainings/${id}`)
+      .get(`http://localhost:3000/api/trainings/${id}`,{
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         const data = response.data;
         setTitle(data.title || "");

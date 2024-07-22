@@ -18,6 +18,7 @@ const EditEmployeesTrainings = () => {
   const location = useLocation();
 
   const [employeeId, setEmployeeId] = useState("");
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -28,7 +29,12 @@ const EditEmployeesTrainings = () => {
 
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employeesTrainings/training/${id}`)
+      .get(`http://localhost:3000/api/employeesTrainings/training/${id}`, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         const data = response.data;
         setTrainingId(data.training_id);
@@ -63,7 +69,12 @@ const EditEmployeesTrainings = () => {
 
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/employeesTrainings/training/${id}`, data)
+      .put(`http://localhost:3000/api/employeesTrainings/training/${id}`, data, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Training edited successfully", { variant: "success" });
