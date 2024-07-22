@@ -193,19 +193,19 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
-(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(22, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
 (22, (SELECT id FROM trainings WHERE title = 'AS 9100D AWARNESS'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'CI & IP AWARENESS'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 (21, (SELECT id FROM trainings WHERE title = '5S'), 'NA'),
 
-(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid');
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid');
 
 
 -- Getting the basic employee info
