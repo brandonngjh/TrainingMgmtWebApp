@@ -26,7 +26,7 @@ const Example: React.FC = () => {
     useEffect(() => {
       const fetchTrainings = async () => {
         try {
-          const response = await axios.get<Record<string, Training>>('http://localhost:3000/api/dashboard/numbers');
+          const response = await axios.get<Record<string, Training>>('http://localhost:3000/dashboard/numbers');
           // Convert the response into an array of Training objects
           const trainingArray = Object.keys(response.data).map(title => ({
             title,
