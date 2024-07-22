@@ -10,19 +10,12 @@ import loginRoutes from "./loginRoutes.js";
 
 const router = express.Router();
 
-//debug to check which route was accessed
-router.use((req, res, next) => {
-    console.log(`MainRoutes accessed: ${req.originalUrl}`); // Log access to mainRoutes
-    next();
-});
-
 router.use("/login", loginRoutes);
-router.use("/trainings", trainingRoutes, protect);
-router.use("/employees", employeeRoutes, protect);
-router.use("/departments", departmentRoutes, protect);
-router.use("/jobs", jobsRoutes, protect);
+router.use("/trainings", trainingRoutes);
+router.use("/employees", employeeRoutes);
+router.use("/departments", departmentRoutes);
+router.use("/jobs", jobsRoutes);
 router.use("/employeesTrainings", employeesTrainingsRoutes, protect);
-router.use("/skillsReport", skillsReportRoutes, protect);
-
+router.use("/skillsReport", skillsReportRoutes);
 
 export default router;
