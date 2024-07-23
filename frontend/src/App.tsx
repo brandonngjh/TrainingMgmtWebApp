@@ -25,10 +25,10 @@ const App: React.FC = () => {
   <AuthProvider>
     
     <Routes>
+      <Route path="/" element={<ProtectedRoute />}>
       <Route path="/login" element={<Login />} />
-      <Route element={<ProtectedRoute />}>
       <Route path="/employees" element={<Employees />} />
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Home />} /> */}
       <Route path="/employees/create" element={<CreateEmployee />} />
       <Route path="/employees/details/:id" element={<ShowEmployee />} />
       <Route path="/employees/edit/:id" element={<EditEmployee />} />

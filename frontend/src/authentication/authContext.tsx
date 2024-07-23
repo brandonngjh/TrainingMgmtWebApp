@@ -14,7 +14,7 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined); //creating context
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {  
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
   const sessionTimeout = 3600000; //1 hour
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log('Login function called, token:', token);
     localStorage.setItem('token', token);   //temporary store token
     setIsAuthenticated(true);
-    navigate('/');
+    navigate('/dashboard');
   };
 
   const logout = () => {
