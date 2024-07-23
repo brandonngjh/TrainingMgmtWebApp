@@ -58,7 +58,7 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
       <div className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex-col">
-            <h1 className="text-3xl font-bold text-gray-800">Employee Trainings</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Employee Training Sessions</h1>
             <h2 className="text-lg text-gray-600">List of trainings for employee ID: {employeeId}</h2>
           </div>
           <Link to={`/employeestrainings/create?employeeId=${employeeId}`} className="mt-4">

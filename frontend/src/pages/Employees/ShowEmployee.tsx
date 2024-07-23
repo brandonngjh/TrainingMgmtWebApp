@@ -89,8 +89,8 @@ const ShowEmployee = () => {
           )}
         </div>
       )}
-      {employee && <EmployeesTrainings employeeId={employee.id} />}
       {employee && <RelevantTrainings employeeId={employee.id} />}
+      {employee && <EmployeesTrainings employeeId={employee.id} />}
     </div>
   );
 };

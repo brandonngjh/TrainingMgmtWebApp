@@ -16,6 +16,7 @@ router.use((req, res, next) => {
     console.log(`MainRoutes accessed: ${req.originalUrl}`); // Log access to mainRoutes
     next();
 });
+
 router.use("/login", loginRoutes);
 router.use("/trainings", trainingRoutes);
 router.use("/employees", employeeRoutes);
