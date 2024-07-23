@@ -11,7 +11,7 @@ interface Employee {
   name: string;
   email: string;
   hire_date: string | null;
-  division: string;
+  // division: string;
   designation: string;
 }
 
@@ -19,12 +19,18 @@ const ShowEmployee = () => {
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/api/employees/${id}`)
+        .get(`http://localhost:3000/api/employees/${id}`, {
+          headers: {
+            'Authorization':`Bearer ` + token,
+            'Content-Type': 'application/json',
+          },
+        })
         .then((response) => {
           setEmployee(response.data);
           setLoading(false);
@@ -64,10 +70,10 @@ const ShowEmployee = () => {
                   {employee.hire_date ? employee.hire_date : "N/A"}
                 </span>
               </div>
-              <div className="flex">
+              {/* <div className="flex">
                 <span className="text-xl font-semibold text-gray-500 w-1/3">Division</span>
                 <span className="text-xl text-gray-800">{employee.division}</span>
-              </div>
+              </div> */}
               <div className="flex">
                 <span className="text-xl font-semibold text-gray-500 w-1/3">Designation</span>
                 <span className="text-xl text-gray-800">{employee.designation}</span>

@@ -9,6 +9,12 @@
   overflow: auto;
 }
 
+#dashboard-table,  .stats-container {
+  zoom: 0.7;
+}
+
+
+
 .dashboard-generate-button-container {
   background-color: #ffcccb; /* Light red container */
   padding: 10px;

@@ -10,11 +10,17 @@ const DeleteTraining = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const token = localStorage.getItem('token');
 
   const handleDeleteTraining = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/api/trainings/${id}`)
+      .delete(`http://localhost:3000/api/trainings/${id}`,{
+          headers: {
+            'Authorization':`Bearer ` + token,
+            'Content-Type': 'application/json',
+          },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Training Deleted successfully", {

@@ -1,7 +1,10 @@
 import express from "express";
 import { getEmployeeDetails, getRelevantCourses, getTrainingDates} from "../database/dashboardDatabase.js";
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
 
-const router = express.Router();
+router.use(protect);    //add this
+
 
 // Returns a massive json file containing all the entries of the employees
 
@@ -53,7 +56,7 @@ router.get("/percentage", async (req, res) => {
 
   const totalEmployees = combined.length;
   const validEmployees = combined.filter(employee =>
-    employee.relevantTrainings.every(training => training.validity === "valid")
+    employee.relevantTrainings.every(training => training.validity === "Valid")
   ).length;
 
   const percentageValidEmployees = (validEmployees / totalEmployees) * 100;
@@ -75,7 +78,7 @@ router.get("/numbers", async (req, res) => {
       acc[training.title] = { valid: 0, total: 0 };
     }
     acc[training.title].total += 1;
-    if (training.validity === "valid") {
+    if (training.validity === "Valid") {
       acc[training.title].valid += 1;
     }
     return acc;

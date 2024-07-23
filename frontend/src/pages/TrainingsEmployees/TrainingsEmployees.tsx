@@ -41,6 +41,7 @@ const formatDate = (dateString: string | null) => {
 const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) => {
   const [sessionDetails, setSessionDetails] = useState<SessionDetails[]>([]);
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     // const fetchEmployeeDetails = async (training: EmployeeTraining) => {
@@ -78,7 +79,12 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
     const fetchDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/api/employeestrainings/training/${trainingId}`);
+        const response = await axios.get(`http://localhost:3000/api/employeestrainings/training/${trainingId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
         setSessionDetails(response.data);
         setLoading(false);
       } catch (error) {

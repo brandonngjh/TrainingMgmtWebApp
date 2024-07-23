@@ -13,6 +13,7 @@ const CreateTraining = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const token = localStorage.getItem('token');
 
   const handleSaveTraining = () => {
     if (!title || !description || !validityPeriod || !trainingProvider) {
@@ -34,6 +35,7 @@ const CreateTraining = () => {
     axios
       .post(`http://localhost:3000/api/trainings`, data, {
         headers: {
+          'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
         },
       })

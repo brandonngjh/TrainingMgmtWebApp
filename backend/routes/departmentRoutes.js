@@ -6,8 +6,10 @@ import {
   deleteDepartment,
   updateDepartment,
 } from "../database/departmentDatabase.js";
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
 
-const router = express.Router();
+router.use(protect);    //add this
 
 // Route for Get All Departments from database
 router.get("/", async (req, res) => {

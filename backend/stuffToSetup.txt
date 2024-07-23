@@ -1,0 +1,2 @@
+Get-Content requirements.txt | ForEach-Object { npm install $_ }
+npm i typescript ts-node @types/node --save-dev; npx tsc --init

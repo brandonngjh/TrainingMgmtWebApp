@@ -4,7 +4,10 @@ import {
     getFilteredSkillsReport 
 } from '../database/skillsReportDatabase.js';
 
-const router = express.Router();
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
+
+router.use(protect);    //add this
 
 // GET all skills report
 router.get("/", async (req, res) => {

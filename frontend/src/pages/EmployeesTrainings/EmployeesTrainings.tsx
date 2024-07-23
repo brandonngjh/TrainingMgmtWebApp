@@ -32,11 +32,17 @@ const formatDate = (dateString: string): string => {
 const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) => {
   const [employeesTrainings, setEmployeesTrainings] = useState<EmployeeTraining[]>([]);
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employeestrainings/employee/${employeeId}`)
+      .get(`http://localhost:3000/api/employeestrainings/employee/${employeeId}`,{
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         setEmployeesTrainings(response.data);
         setLoading(false);
