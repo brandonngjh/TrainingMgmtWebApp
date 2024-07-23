@@ -68,7 +68,7 @@ const RelevantTrainings: React.FC<RelevantTrainingsProps> = ({ employeeId }) => 
           </div>
           <Link to={`/relevanttrainings/create?employeeId=${employeeId}`} className="mt-4">
             <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-              Add Training
+              Add Relevant Trainings
             </button>
           </Link>
         </div>
