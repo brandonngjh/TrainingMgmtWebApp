@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from "../../authentication/axiosInstance.tsx";
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const PercentagePieChart: React.FC = () => {
@@ -8,7 +9,7 @@ const PercentagePieChart: React.FC = () => {
   useEffect(() => {
     const fetchPercentage = async () => {
       try {
-        const response = await axios.get<{ percentageValidEmployees: string }>('http://localhost:3000/dashboard/percentage');
+        const response = await axiosInstance.get<{ percentageValidEmployees: string }>('http://localhost:3000/api/dashboard/percentage');
         setPercentage(parseFloat(response.data.percentageValidEmployees));
       } catch (error) {
         console.error('Error fetching percentage:', error);
