@@ -3,6 +3,7 @@ import { CgMoreVertical } from "react-icons/cg";
 import { FaRegUserCircle } from "react-icons/fa";
 import { LuChevronFirst, LuChevronLast } from "react-icons/lu";
 import { MdModelTraining, MdOutlineDashboard } from "react-icons/md";
+import { RiCalendarScheduleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 interface SidebarContextType {
@@ -18,6 +19,7 @@ interface SidebarItemProps {
   icon: ReactNode;
   text: string;
   active?: boolean;
+  link: string;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -26,9 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
   const [expanded, setExpanded] = useState(true);
 
   const sidebarItems = [
-    { icon: <MdOutlineDashboard size={20} />, text: "Dashboard" },
-    { icon: <FaRegUserCircle size={20} />, text: "Employees" },
-    { icon: <MdModelTraining size={20} />, text: "Trainings" },
+    { icon: <MdOutlineDashboard size={20} />, text: "Dashboard", link: '/dashboard' },
+    {icon: <RiCalendarScheduleLine size={20} />, text: "Training Sessions", link: '/sessions'},
+    { icon: <FaRegUserCircle size={20} />, text: "Employees", link: '/employees' },
+    { icon: <MdModelTraining size={20} />, text: "Trainings", link: '/trainings' },
   ];
 
   return (
@@ -62,6 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
                 icon={item.icon}
                 text={item.text}
                 active={activeItem === item.text}
+                link={item.link}
               />
             ))}
             {children}
@@ -95,6 +99,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   icon,
   text,
   active,
+  link,
 }) => {
   const context = useContext(SidebarContext);
   if (!context) {
@@ -104,7 +109,9 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   }
   const { expanded } = context;
   return (
-    <Link to={`/${text}`}>
+    // <Link to={`/${text}`}>
+    <Link to={link}>
+
       <li
         className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
           active
