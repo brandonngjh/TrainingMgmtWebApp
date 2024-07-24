@@ -76,10 +76,10 @@ router.get("/employee/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     console.log("Creating new employee training with data:", req.body);
-    const { employee_id, training_id, status, start_date, end_date, expiry_date } = req.body;
-    if (!employee_id || !training_id || !status || !start_date || !end_date || !expiry_date) {
+    const { employee_id, training_id, status, start_date, end_date } = req.body;
+    if (!employee_id || !training_id || !status || !start_date || !end_date) {
       return res.status(400).send({
-        message: "Send all required fields: employee_id, training_id, status, start_date, end_date, expiry_date",
+        message: "Send all required fields: employee_id, training_id, status, start_date, end_date",
       });
     }
     const newEmployeeTraining = await createEmployeeTraining(
@@ -88,7 +88,6 @@ router.post("/", async (req, res) => {
       status,
       start_date,
       end_date,
-      expiry_date
     );
     return res.status(201).json(newEmployeeTraining);
   } catch (error) {

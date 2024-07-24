@@ -76,7 +76,6 @@ export async function createEmployeeTraining(
   status,
   start_date,
   end_date,
-  expiry_date
 ) {
   // Check if the training ID exists before inserting
   const [trainingExists] = await pool.query(
@@ -89,8 +88,8 @@ export async function createEmployeeTraining(
   }
 
   const [result] = await pool.query(
-    "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?)",
-    [employee_id, training_id, status, start_date, end_date, expiry_date]
+    "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date) VALUES (?, ?, ?, ?, ?)",
+    [employee_id, training_id, status, start_date, end_date]
   );
   
   return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
