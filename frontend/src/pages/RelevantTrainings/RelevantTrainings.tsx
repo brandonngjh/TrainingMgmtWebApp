@@ -3,11 +3,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import { AiOutlineEdit } from "react-icons/ai";
-import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlineDelete } from "react-icons/md";
 
 interface RelevantTraining {
-  training_id: string;
+  training_id: string;     
   title: string;
   validity: string;
   validity_period: string;
@@ -20,43 +19,64 @@ interface RelevantTrainingsProps {
 const RelevantTrainings: React.FC<RelevantTrainingsProps> = ({ employeeId }) => {
   const [relevantTrainings, setRelevantTrainings] = useState<RelevantTraining[]>([]);
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
+  console.log(`Fetching Relevant Training for employe ${employeeId}`);
 
   useEffect(() => {
-    const fetchTrainingDetails = async (training_id: string) => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/trainings/${training_id}`);
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        return { title: "N/A", validity_period: "N/A" };
-      }
-    };
+    // const fetchTrainingDetails = async (training_id: string) => {
+    //   try {
+    //     const response = await axios.get(`http://localhost:3000/api/trainings/${training_id}`);
+    //     return response.data;
+    //   } catch (error) {
+    //     console.log(error);
+    //     return { title: "N/A", validity_period: "N/A" };
+    //   }
+    // };
 
-    const fetchRelevantTrainings = async () => {
+    // const fetchRelevantTrainings = async () => {
+    //   setLoading(true);
+    //   try {
+    //     const response = await axios.get(`http://localhost:3000/api/relevantTrainings/employee/${employeeId}`);
+    //     const relevantTrainingsData = await Promise.all(response.data.map(async (training: any) => {
+    //       const trainingDetails = await fetchTrainingDetails(training.training_id);
+    //       return {
+    //         training_id: training.training_id,
+    //         title: trainingDetails.title,
+    //         validity: training.validity,
+    //         validity_period: trainingDetails.validity_period,
+    //       };
+    //     }));
+    //     setRelevantTrainings(relevantTrainingsData);
+    //     setLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //     setLoading(false);
+    //   }
+    // };
+
+    // if (employeeId) {
+    //   fetchRelevantTrainings();
+    // }
+
+    const fetchDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/api/relevantTrainings/employee/${employeeId}`);
-        const relevantTrainingsData = await Promise.all(response.data.map(async (training: any) => {
-          const trainingDetails = await fetchTrainingDetails(training.training_id);
-          return {
-            training_id: training.training_id,
-            title: trainingDetails.title,
-            validity: training.validity,
-            validity_period: trainingDetails.validity_period,
-          };
-        }));
-        setRelevantTrainings(relevantTrainingsData);
+        const response = await axios.get(`http://localhost:3000/api/relevanttrainings/employee/${employeeId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        setRelevantTrainings(response.data);
         setLoading(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
-    };
-
-    if (employeeId) {
-      fetchRelevantTrainings();
     }
-  }, [employeeId]);
+    fetchDetails();
+
+  }, []);
 
   return (
     <div className="flex">
@@ -80,11 +100,11 @@ const RelevantTrainings: React.FC<RelevantTrainingsProps> = ({ employeeId }) => 
               <thead>
                 <tr>
                   <th className="py-2 px-4 bg-gray-100 border-b">No</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Training ID</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Training Title</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Validity</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Validity Period</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Training ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Training Title</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Validity</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Validity Period</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Operations</th>
                 </tr>
               </thead>
               <tbody>

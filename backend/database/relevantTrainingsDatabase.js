@@ -22,15 +22,27 @@ export async function getRelevantTrainingsById(id){
   }
 
 
-// Get relevant trainings by employee_id
-export async function getRelevantTrainingsByEmployeeId(employee_id) {
-  const [rows] = await pool.query("SELECT * FROM relevant_trainings WHERE employee_id = ?", [employee_id]);
+// Get relevant trainings by training_id
+export async function getRelevantTrainingsByTrainingId(training_id) {
+  const [rows] = await pool.query("SELECT * FROM relevant_trainings WHERE training_id = ?", [training_id]);
   return rows;
 }
 
-// Get relevant trainings by training_id
-export async function getRelevantTrainingsByTrainingId(training_id) {
-    const [rows] = await pool.query("SELECT * FROM relevant_trainings WHERE training_id = ?", [training_id]);
+// Get relevant trainings by employee_id
+export async function getRelevantTrainingsByEmployeeId(employee_id) {
+  const [rows] = await pool.query(`
+    SELECT
+      rt.training_id as training_id,
+      t.title,
+      rt.validity as validity,
+      t.validity_period as validity_period
+    FROM
+      relevant_trainings rt
+    JOIN
+      trainings t ON rt.training_id = t.id
+    WHERE
+      rt.employee_id = ?;
+  `, [employee_id]);
     return rows;
   }
 

@@ -3,7 +3,6 @@ import axios from "axios";
 import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
 import { AiOutlineEdit } from "react-icons/ai";
-import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlineDelete } from "react-icons/md";
 
 interface EmployeeTraining {
@@ -75,12 +74,12 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
               <thead>
                 <tr>
                   <th className="py-2 px-4 bg-gray-100 border-b">No</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Training ID</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Status</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Start Date</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">End Date</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Expiry Date</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Training ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Status</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Start Date</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">End Date</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Expiry Date</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Operations</th>
                 </tr>
               </thead>
 
@@ -99,12 +98,6 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
 
                     <td className="py-2 px-4 border-b">
                       <div className="flex justify-center gap-x-4">
-                        <Link
-                          to={`/employeestrainings/details/${training.id}`}
-                          className="bg-green-100 p-1 rounded-full hover:bg-green-200"
-                        >
-                          <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
-                        </Link>
 
                         <Link
                           to={`/employeestrainings/edit/${training.id}?employeeId=${employeeId}`}

@@ -76,7 +76,6 @@ export async function createEmployeeTraining(
   status,
   start_date,
   end_date,
-  expiry_date
 ) {
   // Check if the training ID exists before inserting
   const [trainingExists] = await pool.query(
@@ -89,8 +88,8 @@ export async function createEmployeeTraining(
   }
 
   const [result] = await pool.query(
-    "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?)",
-    [employee_id, training_id, status, start_date, end_date, expiry_date]
+    "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date) VALUES (?, ?, ?, ?, ?)",
+    [employee_id, training_id, status, start_date, end_date]
   );
   
   return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
@@ -110,7 +109,6 @@ export async function updateEmployeeTraining(
   status,
   start_date,
   end_date,
-  expiry_date
 ) {
   // Check if the employee training ID exists before updating
   if (!(await employeeTrainingIdExists(id))) {
@@ -118,8 +116,8 @@ export async function updateEmployeeTraining(
   }
 
   const [result] = await pool.query(
-    "UPDATE employees_trainings SET employee_id = ?, training_id = ?, status = ?, start_date = ?, end_date = ?, expiry_date = ? WHERE id = ?",
-    [employee_id, training_id, status, start_date, end_date, expiry_date, id]
+    "UPDATE employees_trainings SET employee_id = ?, training_id = ?, status = ?, start_date = ?, end_date = ? WHERE id = ?",
+    [employee_id, training_id, status, start_date, end_date, id]
   );
   return result.affectedRows > 0 ? "Update Successful" : "Update Failed";
 }

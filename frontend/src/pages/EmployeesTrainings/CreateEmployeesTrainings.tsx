@@ -11,7 +11,6 @@ const CreateEmployeesTrainings = () => {
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -28,7 +27,7 @@ const CreateEmployeesTrainings = () => {
   
   const handleSaveEmployeeTraining = () => {
     // Validate fields
-    if (!employeeId || !trainingId || !status || !startDate || !endDate || !expiryDate) {
+    if (!employeeId || !trainingId || !status || !startDate || !endDate) {
       enqueueSnackbar("Please fill out all fields", { variant: "warning" });
       return;
     }
@@ -39,7 +38,6 @@ const CreateEmployeesTrainings = () => {
       status,
       start_date: startDate,
       end_date: endDate,
-      expiry_date: expiryDate,
     };
 
     console.log(data); // Log the data being sent
@@ -118,15 +116,6 @@ const CreateEmployeesTrainings = () => {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
-          />
-        </div>
-        <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Expiry Date</label>
-          <input
-            type="date"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
