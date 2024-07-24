@@ -109,7 +109,6 @@ export async function updateEmployeeTraining(
   status,
   start_date,
   end_date,
-  expiry_date
 ) {
   // Check if the employee training ID exists before updating
   if (!(await employeeTrainingIdExists(id))) {
@@ -117,8 +116,8 @@ export async function updateEmployeeTraining(
   }
 
   const [result] = await pool.query(
-    "UPDATE employees_trainings SET employee_id = ?, training_id = ?, status = ?, start_date = ?, end_date = ?, expiry_date = ? WHERE id = ?",
-    [employee_id, training_id, status, start_date, end_date, expiry_date, id]
+    "UPDATE employees_trainings SET employee_id = ?, training_id = ?, status = ?, start_date = ?, end_date = ? WHERE id = ?",
+    [employee_id, training_id, status, start_date, end_date, id]
   );
   return result.affectedRows > 0 ? "Update Successful" : "Update Failed";
 }

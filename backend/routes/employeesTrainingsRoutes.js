@@ -112,10 +112,10 @@ router.delete("/:id", async (req, res) => {
 router.put("/training/:id", async (req, res) => {
   try {
     console.log("Updating employee training with ID:", req.params.id, "with data:", req.body);
-    const { employee_id, training_id, status, start_date, end_date, expiry_date } = req.body;
-    if (!employee_id || !training_id || !status || !start_date || !end_date || !expiry_date) {
+    const { employee_id, training_id, status, start_date, end_date } = req.body;
+    if (!employee_id || !training_id || !status || !start_date || !end_date) {
       return res.status(400).send({
-        message: "Send all required fields: employee_id, training_id, status, start_date, end_date, expiry_date",
+        message: "Send all required fields: employee_id, training_id, status, start_date, end_date",
       });
     }
     const updatedEmployeeTraining = await updateEmployeeTraining(
@@ -125,7 +125,6 @@ router.put("/training/:id", async (req, res) => {
       status,
       start_date,
       end_date,
-      expiry_date
     );
     if (updatedEmployeeTraining) {
       return res.status(200).json(updatedEmployeeTraining);
