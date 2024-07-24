@@ -10,7 +10,6 @@ const EditEmployeesTrainings = () => {
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -41,7 +40,6 @@ const EditEmployeesTrainings = () => {
         setStatus(data.status);
         setStartDate(data.start_date.split('T')[0] || "");
         setEndDate(data.end_date.split('T')[0] || "");
-        setExpiryDate(data.expiry_date.split('T')[0] || "");
         setLoading(false);
       })
       .catch((error) => {
@@ -54,7 +52,7 @@ const EditEmployeesTrainings = () => {
   }, [id, location]);
 
   const handleEditEmployeesTraining = () => {
-    if (!trainingId || !status || !startDate || !endDate || !expiryDate) {
+    if (!trainingId || !status || !startDate || !endDate) {
       enqueueSnackbar("Please fill up all fields", { variant: "warning" });
       return;
     }
@@ -64,7 +62,6 @@ const EditEmployeesTrainings = () => {
       status,
       start_date: startDate,
       end_date: endDate,
-      expiry_date: expiryDate,
     };
 
     setLoading(true);
@@ -129,15 +126,6 @@ const EditEmployeesTrainings = () => {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
-          />
-        </div>
-        <div className="my-4">
-          <label className="text-xl mr-4 text-gray-500">Expiry Date</label>
-          <input
-            type="date"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from "../../authentication/axiosInstance.tsx";
 
 //MRT Imports
 import {
@@ -9,16 +10,11 @@ import {
   type MRT_ColumnDef,
 } from 'material-react-table';
 
-//Material UI Imports
-import {
-  Box,
-} from '@mui/material';
-
 interface Training {
-    title: string;
-    numberOfEmployeesWithValid: string;
-    numberOfEmployeesWithTraining: string;
-  }
+  title: string;
+  numberOfEmployeesWithValid: string;
+  numberOfEmployeesWithTraining: string;
+}
 
 const Example: React.FC = () => {
     const [trainings, setTrainings] = useState<Training[]>([]);
@@ -26,7 +22,7 @@ const Example: React.FC = () => {
     useEffect(() => {
       const fetchTrainings = async () => {
         try {
-          const response = await axios.get<Record<string, Training>>('http://localhost:3000/dashboard/numbers');
+          const response = await axiosInstance.get<Record<string, Training>>('http://localhost:3000/api/dashboard/numbers');
           // Convert the response into an array of Training objects
           const trainingArray = Object.keys(response.data).map(title => ({
             title,
@@ -81,7 +77,7 @@ const Example: React.FC = () => {
     positionToolbarAlertBanner: 'top',
     muiPaginationProps: {
       color: 'secondary',
-      rowsPerPageOptions: [15, 30, 50],
+      rowsPerPageOptions: [15],
       shape: 'rounded',
       variant: 'outlined',
     },

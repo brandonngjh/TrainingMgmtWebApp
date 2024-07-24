@@ -31,6 +31,7 @@
     "mysql2": "^3.10.3",
     "node-schedule": "^2.1.1",
     "nodemailer": "^6.9.14",
+    "node.js": "^0.0.1-security",
     "nodemon": "^3.1.4"
   },
   "devDependencies": {

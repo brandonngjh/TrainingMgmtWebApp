@@ -265,7 +265,7 @@ const Example: React.FC = () => {
     positionToolbarAlertBanner: "top",
     muiPaginationProps: {
       color: "secondary",
-      rowsPerPageOptions: [10],
+      rowsPerPageOptions: [15],
       shape: "rounded",
       variant: "outlined",
     },

@@ -27,6 +27,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const training = await getTrainingByID(req.params.id);
+    console.log(training);
     if (training) {
       return res.status(200).json(training);
     } else {
