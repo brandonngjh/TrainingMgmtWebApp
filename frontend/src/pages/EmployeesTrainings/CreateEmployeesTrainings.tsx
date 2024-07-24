@@ -70,7 +70,7 @@ const CreateEmployeesTrainings = () => {
   return (
     <div className="p-6">
       <BackButton destination={`/employees/details/${employeeId}`} />
-      <h1 className="text-3xl font-bold text-gray-800 my-4">Create Employee Training</h1>
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Create Training Session</h1>
       {loading ? <Spinner /> : null}
       <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
         <div className="my-4">

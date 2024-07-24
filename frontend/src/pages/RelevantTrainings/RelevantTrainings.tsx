@@ -104,12 +104,12 @@ const RelevantTrainings: React.FC<RelevantTrainingsProps> = ({ employeeId }) => 
                       <td className="py-2 px-4 border-b text-center">{training.validity_period}</td>
                       <td className="py-2 px-4 border-b">
                         <div className="flex justify-center gap-x-4">
-                          <Link
+                          {/* <Link
                             to={`/relevantTrainings/details/${training.training_id}?employeeId=${employeeId}`}
                             className="bg-green-100 p-1 rounded-full hover:bg-green-200"
                           >
                             <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
-                          </Link>
+                          </Link> */}
                           <Link
                             to={`/relevantTrainings/edit/${training.training_id}?employeeId=${employeeId}`}
                             className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"

@@ -97,14 +97,14 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 my-4">Training Employees</h1>
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Training Sessions</h1>
       {loading ? (
         <Spinner />
       ) : (
         <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6">
           <div className="flex justify-between items-center mb-6">
             <div className="flex-col">
-              <h2 className="text-lg text-gray-600">List of employees for training ID: {trainingId}</h2>
+              <h2 className="text-lg text-gray-600">List of training sessions for training ID: {trainingId}</h2>
             </div>
             <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
               <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
