@@ -90,10 +90,12 @@ router.post("/", async (req, res) => {
 });
 
 // Route for Deleting a Relevant Training
-router.delete("/:employee_id/:training_id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const { employee_id, training_id } = req.params;
-    const message = await deleteRelevantTraining(employee_id, training_id);
+    console.log(`Deleting relevant training ID: ${req.params.id}`);
+    // const { employee_id, training_id } = req.params;
+    // const message = await deleteRelevantTraining(employee_id, training_id);
+    const message = await deleteRelevantTraining(req.params.id);
     return res.status(200).send({ message });
   } catch (error) {
     console.error(error.message);

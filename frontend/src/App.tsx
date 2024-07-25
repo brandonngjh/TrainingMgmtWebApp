@@ -27,6 +27,7 @@ import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployees
 import DeleteEmployeesTrainings from "./pages/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
 import EditEmployeesTrainings from "./pages/EmployeesTrainings/EditEmployeesTrainings.tsx";
 import CreateRelevantTrainings from "./pages/RelevantTrainings/CreateRelevantTrainings.tsx";
+import DeleteRelevantTraining from "./pages/RelevantTrainings/DeleteRelevantTrainings.tsx";
 import CreateTrainingsEmployees from "./pages/TrainingsEmployees/CreateTrainingsEmployees.tsx";
 import EditTrainingsEmployees from "./pages/TrainingsEmployees/EditTrainingsEmployees.tsx";
 import DeleteTrainingsEmployees from "./pages/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
@@ -65,6 +66,8 @@ const App: React.FC = () => {
       <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
 
       <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
+      <Route path="/relevanttrainings/delete/:id" element={<DeleteRelevantTraining />} />
+
       <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
       <Route path="/trainingsemployees/edit/:id" element={<EditTrainingsEmployees />} />
       <Route path="/trainingsemployees/delete/:id" element={<DeleteTrainingsEmployees />} />

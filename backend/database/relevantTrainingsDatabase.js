@@ -66,8 +66,9 @@ export async function createRelevantTraining(
 }
 
 // Delete a relevant training entry
-export async function deleteRelevantTraining(employee_id, training_id) {
-  const [result] = await pool.query("DELETE FROM relevant_trainings WHERE employee_id = ? AND training_id = ?", [employee_id, training_id]);
+export async function deleteRelevantTraining(id) {
+  console.log("Deleting relevant training ID: ",{id}, "from database")
+  const [result] = await pool.query("DELETE FROM relevant_trainings WHERE id = ?", [id]);
   return result.affectedRows > 0 ? "Delete Successful" : "Relevant training not found";
 }
 
