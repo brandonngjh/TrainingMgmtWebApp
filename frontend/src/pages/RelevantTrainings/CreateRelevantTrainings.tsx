@@ -8,7 +8,8 @@ import { useSnackbar } from "notistack";
 const CreateRelevantTrainings: React.FC = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [trainingId, setTrainingId] = useState("");
-  const [validity, setValidity] = useState("");
+  // const [validity, setValidity] = useState("NA");
+  const validity = "NA";
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -83,7 +84,7 @@ const CreateRelevantTrainings: React.FC = () => {
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
-        <div className="my-4">
+        {/* <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Validity</label>
           <select
             value={validity}
@@ -95,7 +96,7 @@ const CreateRelevantTrainings: React.FC = () => {
             <option value="Expire">Expire</option>
             <option value="NA">NA</option>
           </select>
-        </div>
+        </div> */}
         <div className="text-right">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"
