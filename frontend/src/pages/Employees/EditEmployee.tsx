@@ -9,12 +9,13 @@ const EditEmployee = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [hireDate, setHireDate] = useState("");
-  const [division, setDivision] = useState("");
+  // const [division, setDivision] = useState("");
   const [designation, setDesignation] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     setLoading(true);
@@ -24,8 +25,8 @@ const EditEmployee = () => {
         const data = response.data;
         setName(data.name);
         setEmail(data.email);
-        setHireDate(data.hire_date || "");
-        setDivision(data.division);
+        setHireDate(data.hire_date); 
+        // setDivision(data.division);
         setDesignation(data.designation);
         setLoading(false);
       })
@@ -43,12 +44,17 @@ const EditEmployee = () => {
       name,
       email,
       hire_date: hireDate,
-      division,
+      // division,
       designation,
     };
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/employees/${id}`, data)
+      .put(`http://localhost:3000/api/employees/${id}`, data, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee edited successfully", { variant: "success" });
@@ -94,7 +100,7 @@ const EditEmployee = () => {
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
-        <div className="my-4">
+        {/* <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Division</label>
           <input
             type="text"
@@ -102,7 +108,7 @@ const EditEmployee = () => {
             onChange={(e) => setDivision(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
-        </div>
+        </div> */}
         <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Designation</label>
           <input

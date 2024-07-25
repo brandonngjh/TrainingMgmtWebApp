@@ -106,7 +106,7 @@ INSERT INTO user_credentials (username, password, role) VALUES
 -- Redundant?
 INSERT INTO departments (name) VALUES ('Machining');
 INSERT INTO jobs (name, department_id)
-VALUES ( 'Job1', (SELECT id FROM departments WHERE name = 'Machining'));
+VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
 
 INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
 VALUES

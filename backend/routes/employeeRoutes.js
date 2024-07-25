@@ -7,11 +7,15 @@ import {
   updateEmployee,
 } from "../database/employeeDatabase.js";
 
-const router = express.Router();
+import { protect } from '../middleware/middleware.js'; //add this
+const router = express.Router();    
+
+router.use(protect);    //add this
 
 // Route for Get All Employees from database
 router.get("/", async (req, res) => {
   try {
+    console.log(`Fetching All Employees ID`);
     const employees = await getEmployees();
     return res.status(200).json(employees);
   } catch (error) {
@@ -23,6 +27,7 @@ router.get("/", async (req, res) => {
 // Route for Get One Employee from database by id
 router.get("/:id", async (req, res) => {
   try {
+    console.log(`Fetching Employee by ID: ${req.params.id}`);
     const employee = await getEmployeeByID(req.params.id);
     if (employee) {
       return res.status(200).json(employee);
@@ -38,22 +43,21 @@ router.get("/:id", async (req, res) => {
 // Route for adding a new Employee
 router.post("/", async (req, res) => {
   try {
+    // console.log(req.body);
     const {
       id,
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation,
     } = req.body;
-    if (!id || !name || !email || !department_id || !job_id) {
+
+    if (!id || !name || !email || !hire_date || !designation) {
       return res
         .status(400)
         .send({
           message:
-            "Send all required fields: id, name, email, department_id, job_id",
+            "Send all required fields: id, name, email, hire_date, designation",
         });
     }
     const newEmployee = await createEmployee(
@@ -61,9 +65,6 @@ router.post("/", async (req, res) => {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation
     );
     return res.status(201).json(newEmployee);
@@ -89,22 +90,20 @@ router.delete("/:id", async (req, res) => {
 
 // Route for Updating an Employee
 router.put("/:id", async (req, res) => {
+  // console.log(req.body);
   try {
     const {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation,
     } = req.body;
-    if (!name || !email || !department_id || !job_id) {
+    if (!name || !email || !hire_date || !designation) {
       return res
         .status(400)
         .send({
           message:
-            "Send all required fields: name, email, department_id, job_id",
+            "Send all required fields: id, name, email, hire_date, designation",
         });
     }
     const updatedEmployee = await updateEmployee(
@@ -112,9 +111,6 @@ router.put("/:id", async (req, res) => {
       name,
       email,
       hire_date,
-      division,
-      department_id,
-      job_id,
       designation
     );
     if (updatedEmployee) {

@@ -12,6 +12,7 @@ const DeleteEmployeesTraining = () => {
   const { id } = useParams();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -24,7 +25,12 @@ const DeleteEmployeesTraining = () => {
   const handleDeleteEmployeesTraining = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/api/employeestrainings/${id}`)
+      .delete(`http://localhost:3000/api/employeestrainings/${id}`,{
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Employee Training Deleted successfully", {

@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   getTrainings,
   getTrainingByID,
@@ -6,8 +6,11 @@ import {
   deleteTraining,
   updateTraining,
 } from "../database/trainingDatabase.js";
+import { protect } from '../middleware/middleware.js'; //add this
 
-const router = express.Router();
+const router = express.Router();    
+
+router.use(protect);    //add this
 
 // Route for Get All Trainings from database
 router.get("/", async (req, res) => {
@@ -24,6 +27,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const training = await getTrainingByID(req.params.id);
+    console.log(training);
     if (training) {
       return res.status(200).json(training);
     } else {

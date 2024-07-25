@@ -35,10 +35,16 @@ const ReportGenerator: React.FC = () => {
   const [selectedTraining, setSelectedTraining] = useState<string>(''); // State for selected training
   const [selectedValidity, setSelectedValidity] = useState<string>(''); // State for selected validity
   const [dataFetched, setDataFetched] = useState<boolean>(false); // State to track if data is fetched
-
+  const token = localStorage.getItem('token');
+  
   const fetchSkillsReport = async () => {
     try {
-      const response = await axios.get<SkillReport[]>('http://localhost:3000/api/skillsReport');
+      const response = await axios.get<SkillReport[]>('http://localhost:3000/api/skillsReport',{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
       setSkillsReport(response.data);
       setDataFetched(true); // Update state to indicate data is fetched
     } catch (error) {
@@ -48,7 +54,12 @@ const ReportGenerator: React.FC = () => {
 
   const fetchTrainings = async () => {
     try {
-      const response = await axios.get<Training[]>('http://localhost:3000/api/trainings');
+      const response = await axios.get<Training[]>('http://localhost:3000/api/trainings', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
       setTrainings(response.data);
     } catch (error) {
       console.error('Error fetching trainings', error);
@@ -57,7 +68,12 @@ const ReportGenerator: React.FC = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get<Job[]>('http://localhost:3000/api/jobs');
+      const response = await axios.get<Job[]>('http://localhost:3000/api/jobs', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
       setJobs(response.data);
     } catch (error) {
       console.error('Error fetching jobs', error);

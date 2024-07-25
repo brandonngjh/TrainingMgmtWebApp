@@ -4,13 +4,21 @@ import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
 import loginRoutes from "./routes/loginRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-import './scheduler/emailScheduler.js'
+import pool from "./database/database.js";
+import morgan from "morgan";
+import "./scheduler/emailScheduler.js";
 
-dotenv.config();
-
+dotenv.config({ path: "../.env" }); //.env contains JWT key
+console.log("JWT_SECRET in index.js:", process.env.JWT_SECRET);
 const app = express();
+
+// middlewares
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Enable CORS for all requests
+app.use(morgan("dev")); // Log all requests to the console for debug
+
+const PORT = process.env.PORT || 3000; //both are 3000, but added OR syntax to avoid error
 
 // Option 2: Allow Custom Origins
 // app.use(
@@ -26,11 +34,28 @@ app.get("/", (req, res) => {
   return res.status(234).send("Welcome To Training Management App");
 });
 
-app.use("/api", mainRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/", loginRoutes);
+app.use(
+  "/api",
+  (req, res, next) => {
+    console.log("MainRoutes middleware"); // Log every request to the mainRoutes middleware
+    next();
+  },
+  mainRoutes
+);
 
-const PORT = 3000;
-app.listen(PORT, () => {
+// Unknown route handler
+app.use((req, res) => {
+  console.log(`Route not found: ${req.originalUrl}`);
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+
+// app.use("/dashboard", dashboardRoutes);
+
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
+  const connection = await pool.getConnection();
+  console.log("Database connection successful");
+  connection.release();
 });
