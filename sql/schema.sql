@@ -4,46 +4,17 @@ USE training_app;
 CREATE TABLE user_credentials (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL
-);
-
--- TODO: REDUNDANT, REMOVE
-CREATE TABLE departments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- TODO: REDUNDANT, REMOVE
-CREATE TABLE jobs (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    department_id BIGINT,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
-);
-
-
-CREATE TABLE employees (
-    id BIGINT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL DEFAULT 'temp@gmail.com',
-    hire_date DATE,
-    designation VARCHAR(255),
-
-    -- Redundant?
-    division VARCHAR(255),
-    department_id BIGINT,
-    job_id BIGINT,
-    FOREIGN KEY (department_id) REFERENCES departments(id),
-    FOREIGN KEY (job_id) REFERENCES jobs(id)
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
     validity_period INT,
-    training_provider VARCHAR(255)
+    training_provider VARCHAR(255),
+
+    -- REDUNDANT, DO NOT USE
+    description VARCHAR(255)
 );
 
 CREATE TABLE relevant_trainings (
@@ -55,11 +26,27 @@ CREATE TABLE relevant_trainings (
     FOREIGN KEY (training_id) REFERENCES trainings(id)
 );
 
+CREATE TABLE employees (
+id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL DEFAULT 'temp@gmail.com',
+    designation VARCHAR(255),
+
+    -- REDUNDANT, DO NOT USE
+    hire_date DATE,
+    division VARCHAR(255),
+    department_id BIGINT,
+    job_id BIGINT,
+    FOREIGN KEY (department_id) REFERENCES departments(id),
+    FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+
 CREATE TABLE employees_trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    session_id BIGINT,
     employee_id BIGINT,
     training_id BIGINT,
-    status ENUM('Completed', 'Scheduled') NOT NULL,
+    status ENUM('Completed', 'Scheduled') DEFAULT 'Scheduled',
     start_date DATE,
     end_date DATE,
     expiry_date DATE,
@@ -68,45 +55,34 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
-CREATE TABLE skills_report (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    employee_id BIGINT NOT NULL,
-    employee_name VARCHAR(255) NOT NULL,
-    department_name VARCHAR(255) NOT NULL,
-    job_name VARCHAR(255) NOT NULL,
-    training_course VARCHAR(255) NOT NULL,
-    validity VARCHAR(50) NOT NULL,
-    UNIQUE (employee_id, training_course)
-);
-
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
-CREATE INDEX idx_employee_id ON skills_report(employee_id);
+-- CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
--- Stored procedure to enroll an employee in a training
-DELIMITER $$
-CREATE PROCEDURE EnrollEmployeeInTraining (
-    IN p_employee_id BIGINT,
-    IN p_training_id BIGINT,
-    IN p_start_date DATE,
-    IN p_end_date DATE
-)
-BEGIN
-    INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
-    VALUES (p_employee_id, p_training_id, 'Scheduled', p_start_date, p_end_date);
-END $$
-DELIMITER ;
+--------- REDUNDANT, DO NOT USE
 
-INSERT INTO user_credentials (username, password, role) VALUES
-('admin', 'admin', 'admin'),
-('hr', 'hr', 'hr'),
-('hod', 'hod', 'hod');
+CREATE TABLE departments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
 
--- Redundant?
+CREATE TABLE jobs (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    department_id BIGINT,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
 INSERT INTO departments (name) VALUES ('Machining');
-INSERT INTO jobs (name, department_id)
-VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
+INSERT INTO jobs (name, department_id) VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
+
+--------- END REDUNDANT
+
+INSERT INTO user_credentials (username, password) VALUES
+('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y'),
+('hr', '$2a$10$Pc6Q5Kq7yaLvJomBGrqcCuDGm2N4ipUJwvdwaUvhUPU7.D7nSL1S.'),
+('hod', '$2a$10$AvHTqnNYfW9HDPWWO7/TlOFPziB31crYB.cu.rxy1lWLW6v2hFPSG');
 
 INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
 VALUES
@@ -205,57 +181,81 @@ VALUES
 (2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'valid'),
 (2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA');
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA')
 
 
-INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
+INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
 
-(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
-(22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-02'),
+(1, 2, (SELECT id FROM trainings WHERE title = '5S'), 'Completed', '2022-10-01', '2022-10-02', '2024-10-02'),
+(2, 22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-02'),
+(3, 504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Completed', '2022-11-30', '2022-12-05', '2024-12-05'),
+(4, 587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Completed', '2022-11-30', '2022-12-05', '2023-12-05'),
+(5, 21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-06-10', '2024-06-14', '2025-06-14'),
+(6, 23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Completed', '2023-06-10', '2024-06-14', '2025-06-14'),
+(7, 23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2023-08-15', '2023-08-29', '2024-08-29'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-16', '2024-01-18', '2025-01-18'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2023-06-10', '2024-06-14', '2025-06-14'),
-(21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29'),
+(8, 21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Completed', '2024-01-16', '2024-01-18', '2025-01-18'),
+(9, 504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Completed', '2024-02-18', '2024-02-22', '2025-02-22'),
+(10, 587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Completed', '2024-02-18', '2024-02-22', '2025-02-22'),
+(11, 504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2024-04-24', '2024-04-26', '2025-04-26'),
+(11, 587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2024-04-24', '2024-04-26', '2025-04-26'),
+(12, 2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Completed', '2024-05-01', '2024-05-10', '2025-05-10'),
 
-(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Completed', '2022-11-30', '2022-12-05', '2024-12-05'),
-(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2024-04-24', '2024-04-26', '2025-04-26'),
-(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Completed', '2024-02-18', '2024-02-22', '2025-02-22'),
+(13, 21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29'),
+(13, 2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29');
+(14, 22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
+(14, 2, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
+(15, 22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20')
 
-(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Completed', '2023-06-10', '2024-06-14', '2025-06-14'),
-(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2023-08-15', '2023-08-29', '2024-08-29'),
+-- Stored procedure to enroll an employee in a training
+-- DELIMITER $$
+-- CREATE PROCEDURE EnrollEmployeeInTraining (
+--     IN p_employee_id BIGINT,
+--     IN p_training_id BIGINT,
+--     IN p_start_date DATE,
+--     IN p_end_date DATE
+-- )
+-- BEGIN
+--     INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date)
+--     VALUES (p_employee_id, p_training_id, 'Scheduled', p_start_date, p_end_date);
+-- END $$
+-- DELIMITER ;
 
-(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Completed', '2022-11-30', '2022-12-05', '2023-12-05'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Completed', '2024-04-24', '2024-04-26', '2025-04-26'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Completed', '2024-02-18', '2024-02-22', '2025-02-22'),
-
-(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Completed', '2024-05-01', '2024-05-10', '2025-05-10'),
-(2, (SELECT id FROM trainings WHERE title = '5S'), 'Completed', '2022-10-01', '2022-10-02', '2024-10-02'),
-(2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20');
+-- CREATE TABLE skills_report (
+--     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--     employee_id BIGINT NOT NULL,
+--     employee_name VARCHAR(255) NOT NULL,
+--     department_name VARCHAR(255) NOT NULL,
+--     job_name VARCHAR(255) NOT NULL,
+--     training_course VARCHAR(255) NOT NULL,
+--     validity VARCHAR(50) NOT NULL,
+--     UNIQUE (employee_id, training_course)
+-- );
 
 -- Populate the skills_report table
-INSERT INTO skills_report (employee_id, employee_name, department_name, job_name, training_course, validity)
-SELECT
-    e.id AS employee_id,
-    e.name AS employee_name,
-    d.name AS department_name,
-    j.name AS job_name,
-    t.title AS training_course,
-    rt.validity AS validity
-FROM
-    employees e
-JOIN
-    departments d ON e.department_id = d.id
-JOIN
-    jobs j ON e.job_id = j.id
-JOIN
-    employees_trainings et ON e.id = et.employee_id
-JOIN
-    trainings t ON et.training_id = t.id
-JOIN
-    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
-ON DUPLICATE KEY UPDATE
-    employee_name = VALUES(employee_name),
-    department_name = VALUES(department_name),
-    job_name = VALUES(job_name),
-    training_course = VALUES(training_course),
-    validity = VALUES(validity);
+-- INSERT INTO skills_report (employee_id, employee_name, department_name, job_name, training_course, validity)
+-- SELECT
+--     e.id AS employee_id,
+--     e.name AS employee_name,
+--     d.name AS department_name,
+--     j.name AS job_name,
+--     t.title AS training_course,
+--     rt.validity AS validity
+-- FROM
+--     employees e
+-- JOIN
+--     departments d ON e.department_id = d.id
+-- JOIN
+--     jobs j ON e.job_id = j.id
+-- JOIN
+--     employees_trainings et ON e.id = et.employee_id
+-- JOIN
+--     trainings t ON et.training_id = t.id
+-- JOIN
+--     relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+-- ON DUPLICATE KEY UPDATE
+--     employee_name = VALUES(employee_name),
+--     department_name = VALUES(department_name),
+--     job_name = VALUES(job_name),
+--     training_course = VALUES(training_course),
+--     validity = VALUES(validity);

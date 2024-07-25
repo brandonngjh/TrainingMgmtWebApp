@@ -3,7 +3,7 @@ import pool from "./database.js";
 export async function getTrainingSessions() {
     const [rows] = await pool.query(`
         SELECT
-            ts.id AS session_id,
+            ts.session_id AS session_id,
             ts.status AS status,
             ts.start_date AS start_date,
             ts.end_date AS end_date,
