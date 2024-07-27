@@ -4,7 +4,6 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "mocha"
@@ -26,20 +25,21 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.10.3",
     "node-schedule": "^2.1.1",
-    "nodemailer": "^6.9.14",
     "node.js": "^0.0.1-security",
+    "nodemailer": "^6.9.14",
     "nodemon": "^3.1.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
     "chai": "^5.1.1",
     "mocha": "^10.6.0",
-    "sinon": "^18.0.0"
+    "sinon": "^18.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
   }
 }
