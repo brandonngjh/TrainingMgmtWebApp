@@ -8,8 +8,6 @@ import './ReportGenerator.css';  // Adjust the import based on your directory st
 interface SkillReport {
   employee_id: number;
   employee_name: string;
-  department_name: string;
-  job_name: string;
   training_course: string;
   validity: string;
 }
@@ -21,17 +19,9 @@ interface Training {
   training_provider: string;
 }
 
-interface Job {
-  id: number;
-  name: string;
-  department_id: number;
-}
-
 const ReportGenerator: React.FC = () => {
   const [skillsReport, setSkillsReport] = useState<SkillReport[]>([]);
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [jobs, setJobs] = useState<Job[]>([]); // State for jobs
-  const [selectedJob, setSelectedJob] = useState<string>(''); // State for selected job
   const [selectedTraining, setSelectedTraining] = useState<string>(''); // State for selected training
   const [selectedValidity, setSelectedValidity] = useState<string>(''); // State for selected validity
   const [dataFetched, setDataFetched] = useState<boolean>(false); // State to track if data is fetched
@@ -66,24 +56,6 @@ const ReportGenerator: React.FC = () => {
     }
   };
 
-  const fetchJobs = async () => {
-    try {
-      const response = await axios.get<Job[]>('http://localhost:3000/api/jobs', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      setJobs(response.data);
-    } catch (error) {
-      console.error('Error fetching jobs', error);
-    }
-  };
-
-  const handleJobChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedJob(event.target.value);
-  };
-
   const handleTrainingChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedTraining(event.target.value);
   };
@@ -105,7 +77,6 @@ const ReportGenerator: React.FC = () => {
   
     // Filter skills report based on selected criteria
     const filteredReports = skillsReport.filter(report => 
-      (selectedJob ? report.job_name === selectedJob : true) &&
       (selectedTraining ? report.training_course === selectedTraining : true) &&
       (selectedValidity ? report.validity === selectedValidity : true)
     );
@@ -113,14 +84,12 @@ const ReportGenerator: React.FC = () => {
     const rows = filteredReports.map(report => [
       report.employee_id,
       report.employee_name,
-      report.department_name,
-      report.job_name,
       report.training_course,
       report.validity,
     ]);
   
     autoTable(doc, {
-      head: [['ID', 'Name', 'Department', 'Job', 'Training', 'Validity']],
+      head: [['ID', 'Name', 'Training', 'Validity']],
       body: rows,
       startY: y,
     });
@@ -130,12 +99,10 @@ const ReportGenerator: React.FC = () => {
 
   useEffect(() => {
     fetchTrainings();
-    fetchJobs();
   }, []);
 
   // Filter skills report based on selected criteria
   const filteredReports = skillsReport.filter(report => 
-    (selectedJob ? report.job_name === selectedJob : true) &&
     (selectedTraining ? report.training_course === selectedTraining : true) &&
     (selectedValidity ? report.validity === selectedValidity : true)
   );
@@ -149,13 +116,6 @@ const ReportGenerator: React.FC = () => {
           <button onClick={fetchSkillsReport}>Fetch Skills Report</button>
 
           <div className="select-container">
-            <select value={selectedJob} onChange={handleJobChange}>
-              <option value="">All Jobs</option>
-              {jobs.map((job, index) => (
-                <option key={index} value={job.name}>{job.name}</option>
-              ))}
-            </select>
-
             <select value={selectedTraining} onChange={handleTrainingChange}>
               <option value="">All Trainings</option>
               {trainings.map((training, index) => (
@@ -183,8 +143,6 @@ const ReportGenerator: React.FC = () => {
                 <tr>
                 <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
                 <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
-                <th className="py-2 px-4 bg-gray-100 border-b">Department</th>
-                <th className="py-2 px-4 bg-gray-100 border-b">Job</th>
                 <th className="py-2 px-4 bg-gray-100 border-b">Training</th>
                 <th className="py-2 px-4 bg-gray-100 border-b">Validity</th>
                 </tr>
@@ -200,12 +158,6 @@ const ReportGenerator: React.FC = () => {
                     </td>
                     <td className="py-2 px-4 border-b">
                       {report.employee_name}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {report.department_name}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {report.job_name}
                     </td>
                     <td className="py-2 px-4 border-b">
                       {report.training_course}
