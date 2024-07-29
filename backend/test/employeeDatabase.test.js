@@ -12,7 +12,7 @@ jest.mock('../database/database.js', () => ({
     query: jest.fn()
 }))
 
-describe('Unit Test: employeeDatabase.js Functions', () => {
+describe('Unit Test: Employee Database Functions', () => {
     afterEach(() => {
         jest.clearAllMocks();
     })
