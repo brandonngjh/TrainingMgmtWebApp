@@ -2,20 +2,15 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 import axios from 'axios';
-import ReportGenerator from './ReportGenerator.tsx';
+import ReportGenerator from './ReportGenerator';
 
 // Mock the axios module
 jest.mock('axios');
 
 // Define the mock implementations
-const mockGet = axios.get as jest.Mock;
+const mockGet = axios.get as jest.Mock<any>;
 
 describe('ReportGenerator', () => {
-  const mockJobs = [
-    { id: 1, name: 'Production', department_id: 1 },
-    { id: 2, name: 'Machining', department_id: 2 }
-  ];
-
   const mockTrainings = [
     { id: 1, title: 'Safety Training', description: 'Description 1', training_provider: 'Provider 1' },
     { id: 2, title: 'Quality Training', description: 'Description 2', training_provider: 'Provider 2' }
@@ -25,8 +20,6 @@ describe('ReportGenerator', () => {
     { 
       employee_id: 1, 
       employee_name: 'John Doe', 
-      department_name: 'Machining', 
-      job_name: 'Production', 
       training_course: 'Safety Training', 
       validity: 'Valid' 
     }
@@ -35,8 +28,6 @@ describe('ReportGenerator', () => {
   beforeEach(() => {
     mockGet.mockImplementation((url: string) => {
       switch (url) {
-        case 'http://localhost:3000/api/jobs':
-          return Promise.resolve({ data: mockJobs });
         case 'http://localhost:3000/api/trainings':
           return Promise.resolve({ data: mockTrainings });
         case 'http://localhost:3000/api/skillsReport':
@@ -51,16 +42,15 @@ describe('ReportGenerator', () => {
     render(<ReportGenerator />);
     expect(screen.getByText('Skills Report Generator')).toBeInTheDocument();
     expect(screen.getByText('Fetch Skills Report')).toBeInTheDocument();
-    expect(screen.getByText('Generate PDF')).toBeInTheDocument();
+    expect(screen.getByText('Download Skills Report PDF')).toBeInTheDocument();
   });
 
-  it('should fetch and display jobs, trainings, and skills report', async () => {
+  it('should fetch and display trainings and skills report', async () => {
     render(<ReportGenerator />);
     fireEvent.click(screen.getByText('Fetch Skills Report'));
 
     await waitFor(() => {
       // Check if the fetched data is displayed correctly
-      expect(screen.getByText('Production')).toBeInTheDocument();
       expect(screen.getByText('Safety Training')).toBeInTheDocument();
       expect(screen.getByText('Valid')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -73,20 +63,20 @@ describe('ReportGenerator', () => {
 
     await waitFor(() => {
       fireEvent.change(screen.getByRole('combobox', { name: '' }), {
-        target: { value: 'Production' }
+        target: { value: 'Safety Training' }
       });
     });
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.queryByText('Machining')).not.toBeInTheDocument();
+    expect(screen.queryByText('Quality Training')).not.toBeInTheDocument();
   });
 
-  it('should generate PDF when Generate PDF button is clicked', async () => {
+  it('should generate PDF when Download Skills Report PDF button is clicked', async () => {
     const { container } = render(<ReportGenerator />);
     fireEvent.click(screen.getByText('Fetch Skills Report'));
 
     await waitFor(() => {
-      fireEvent.click(screen.getByText('Generate PDF'));
+      fireEvent.click(screen.getByText('Download Skills Report PDF'));
     });
 
     // Check if the PDF generation function was called (assuming you have a mock for jsPDF)
