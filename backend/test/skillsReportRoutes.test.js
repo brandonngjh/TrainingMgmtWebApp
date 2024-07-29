@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
+
 import request from "supertest";
 import express from "express";
 import skillsReportRoutes from "../routes/skillsReportRoutes";
