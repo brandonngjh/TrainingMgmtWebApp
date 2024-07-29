@@ -18,14 +18,13 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         { employee_id: 2, employee_name: 'Jane Smith', training_course: 'Quality Training', validity: 'Expired' },
         { employee_id: 3, employee_name: 'Alice Johnson', training_course: 'Safety Training', validity: 'NA' },
         { employee_id: 4, employee_name: 'Bob Brown', training_course: 'Leadership Training', validity: 'Valid' },
-        { employee_id: 5, employee_name: 'Charlie Black', training_course: 'Quality Training', validity: 'NA' },
-        { employee_id: 6, employee_name: 'Diana White', training_course: 'Leadership Training', validity: 'Expired' },
     ];
 
     test('getSkillsReport - should fetch all skills report data', async () => {
         pool.query.mockResolvedValueOnce([mockSkillsReportData]);
 
         const result = await getSkillsReport();
+        console.log('getSkillsReport result:', result);
         expect(result).toEqual(mockSkillsReportData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String));
     });
@@ -43,6 +42,7 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
+        console.log('getFilteredSkillsReport result (training and validity):', result); // Add this line
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training', 'Valid']);
     });
@@ -61,6 +61,7 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
+        console.log('getFilteredSkillsReport result (training only):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training']);
     });
@@ -79,6 +80,7 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
+        console.log('getFilteredSkillsReport result (validity only):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Valid']);
     });

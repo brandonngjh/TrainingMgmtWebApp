@@ -1,10 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
-
 import request from "supertest";
 import express from "express";
 import skillsReportRoutes from "../routes/skillsReportRoutes";
-import { protect } from '../middleware/middleware.js'; 
 
 jest.mock("../database/skillsReportDatabase", () => ({
   getSkillsReport: jest.fn(),
@@ -24,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use("/skills-report", skillsReportRoutes);
 
-describe("Integration Test: skillsReportRoutes.js", () => {
+describe("Integration Test: Skills Report Routes", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
