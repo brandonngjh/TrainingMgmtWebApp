@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 //generate and verify tokens 
-dotenv.config({ path: '../.env' }); // Load environment variables
+dotenv.config({ path: './.env' }); // Load environment variables
 
 const secret = process.env.JWT_SECRET;
 
