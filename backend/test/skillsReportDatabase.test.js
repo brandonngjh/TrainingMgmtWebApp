@@ -1,40 +1,98 @@
-import { expect } from 'chai';
-import { getSkillsReport, getFilteredSkillsReport } from '../database/skillsReportDatabase.js';
+import pool from "../database/database.js";
+import {
+  getSkillsReport,
+  getFilteredSkillsReport,
+} from "../database/skillsReportDatabase.js";
 
-describe('Database Integration Tests', function() {
+jest.mock('../database/database.js', () => ({
+    query: jest.fn()
+}))
 
-  describe('getSkillsReport', () => {
-    it('should return all skills report', async () => {
-      const result = await getSkillsReport();
-      
-      const skill = result[0];
+describe('Unit Test: skillsReportDatabase.js Functions', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    })
 
-      expect(skill).to.have.property('employee_id');
-      expect(skill).to.have.property('employee_name');
-      expect(skill).to.have.property('training_course');
-      expect(skill).to.have.property('validity');
+    const mockSkillsReportData = [
+        { employee_id: 1, employee_name: 'John Doe', training_course: 'Safety Training', validity: 'Valid' },
+        { employee_id: 2, employee_name: 'Jane Smith', training_course: 'Quality Training', validity: 'Expired' },
+        { employee_id: 3, employee_name: 'Alice Johnson', training_course: 'Safety Training', validity: 'NA' },
+        { employee_id: 4, employee_name: 'Bob Brown', training_course: 'Leadership Training', validity: 'Valid' },
+        { employee_id: 5, employee_name: 'Charlie Black', training_course: 'Quality Training', validity: 'NA' },
+        { employee_id: 6, employee_name: 'Diana White', training_course: 'Leadership Training', validity: 'Expired' },
+    ];
+
+    test('getSkillsReport - should fetch all skills report data', async () => {
+        pool.query.mockResolvedValueOnce([mockSkillsReportData]);
+
+        const result = await getSkillsReport();
+        expect(result).toEqual(mockSkillsReportData);
+        expect(pool.query).toHaveBeenCalledWith(expect.any(String));
     });
-  });
 
-  describe('getFilteredSkillsReport', () => {
+    test('getFilteredSkillsReport - should fetch filtered skills report data by training and validity', async () => {
+        const expectedData = [
+            { employee_id: 1, employee_name: 'John Doe', training_course: 'Safety Training', validity: 'Valid' },
+        ];
 
-    it('should return filtered skills report by training', async () => {
-      const result = await getFilteredSkillsReport({ training: 'SAFETY AWARENESS (PPE)' });
-      
-      const skill = result[0];
+        pool.query.mockResolvedValueOnce([expectedData]);
 
-      expect(skill).to.have.property('training_course', 'SAFETY AWARENESS (PPE)');
-      // Add more properties and values based on the expected filtered result
+        const filterParams = {
+            training: 'Safety Training',
+            validity: 'Valid'
+        };
+
+        const result = await getFilteredSkillsReport(filterParams);
+        expect(result).toEqual(expectedData);
+        expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training', 'Valid']);
     });
 
-    it('should return filtered skills report by validity', async () => {
-      const result = await getFilteredSkillsReport({ validity: 'Valid' });
-      
-      const skill = result[0];
+    test('getFilteredSkillsReport - should fetch filtered skills report data by training only', async () => {
+        const expectedData = [
+            { employee_id: 1, employee_name: 'John Doe', training_course: 'Safety Training', validity: 'Valid' },
+            { employee_id: 3, employee_name: 'Alice Johnson', training_course: 'Safety Training', validity: 'NA' },
+        ];
 
-      expect(skill).to.have.property('validity', 'Valid');
-      // Add more properties and values based on the expected filtered result
+        pool.query.mockResolvedValueOnce([expectedData]);
+
+        const filterParams = {
+            training: 'Safety Training',
+            validity: ''
+        };
+
+        const result = await getFilteredSkillsReport(filterParams);
+        expect(result).toEqual(expectedData);
+        expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training']);
     });
-  });
 
+    test('getFilteredSkillsReport - should fetch filtered skills report data by validity only', async () => {
+        const expectedData = [
+            { employee_id: 1, employee_name: 'John Doe', training_course: 'Safety Training', validity: 'Valid' },
+            { employee_id: 4, employee_name: 'Bob Brown', training_course: 'Leadership Training', validity: 'Valid' },
+        ];
+
+        pool.query.mockResolvedValueOnce([expectedData]);
+
+        const filterParams = {
+            training: '',
+            validity: 'Valid'
+        };
+
+        const result = await getFilteredSkillsReport(filterParams);
+        expect(result).toEqual(expectedData);
+        expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Valid']);
+    });
+
+    test('getFilteredSkillsReport - should fetch all skills report data when no filters are applied', async () => {
+        pool.query.mockResolvedValueOnce([mockSkillsReportData]);
+
+        const filterParams = {
+            training: '',
+            validity: ''
+        };
+
+        const result = await getFilteredSkillsReport(filterParams);
+        expect(result).toEqual(mockSkillsReportData);
+        expect(pool.query).toHaveBeenCalledWith(expect.any(String), []);
+    });
 });
