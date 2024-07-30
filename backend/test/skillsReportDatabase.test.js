@@ -42,7 +42,7 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
-        console.log('getFilteredSkillsReport result (training and validity):', result); // Add this line
+        console.log('getFilteredSkillsReport result (training and validity):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training', 'Valid']);
     });
