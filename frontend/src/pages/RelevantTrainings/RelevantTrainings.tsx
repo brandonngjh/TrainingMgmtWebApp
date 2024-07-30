@@ -130,18 +130,21 @@ const RelevantTrainings: React.FC<RelevantTrainingsProps> = ({ employeeId }) => 
                           >
                             <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
                           </Link> */}
+
                           <Link
                             to={`/relevantTrainings/edit/${training.training_id}?employeeId=${employeeId}`}
                             className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
                           >
                             <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                           </Link>
+
                           <Link
                             to={`/relevantTrainings/delete/${training.training_id}?employeeId=${employeeId}`}
                             className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                           >
                             <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
                           </Link>
+
                         </div>
                       </td>
                     </tr>

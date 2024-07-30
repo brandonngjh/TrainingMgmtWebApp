@@ -4,6 +4,7 @@ import {
   getRelevantTrainingsById,
   getRelevantTrainingsByTrainingId,
   getRelevantTrainingsByEmployeeId,
+  getRelevantTrainingsByEmployeeTrainingId,
   createRelevantTraining,
   deleteRelevantTraining,
   updateRelevantTraining,
@@ -69,6 +70,24 @@ router.get("/training/:training_id", async (req, res) => {
     }
   });
 
+// Route for Get relevant training by employee and training by ID
+router.get("/:employee_id/:training_id", async (req, res) => {
+  try {
+    console.log(`Fetching relevant training by employee ID: ${req.params.employee_id} and training ID: ${req.params.training_id}`);
+    const { employee_id, training_id } = req.params;
+    const relevantTraining = await getRelevantTrainingsByEmployeeTrainingId(employee_id, training_id); // Adjust this function to take both parameters
+    if (relevantTraining) {
+      return res.status(200).json(relevantTraining);
+    } else {
+      return res.status(404).send({ message: "Relevant training not found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
+
+
 // Route for adding a new Relevant Training
 router.post("/", async (req, res) => {
   try {
@@ -104,16 +123,19 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Route for Updating a Relevant Training
-router.put("/:employee_id/:training_id", async (req, res) => {
+router.put("/:employeeId/:trainingId/", async (req, res) => {
   try {
-    const { employee_id, training_id } = req.params;
-    const { validity } = req.body;
-    if (!validity) {
+    const { employeeId, trainingId } = req.params;
+    const { training_id: currentTrainingId } = req.body;
+
+    // This check seems out of place if we're not dealing with 'validity'
+    if (!currentTrainingId) {
       return res.status(400).send({
-        message: "Send all required fields: validity",
+        message: "currentTrainingId is required",
       });
     }
-    const updatedTraining = await updateRelevantTraining(employee_id, training_id, validity);
+
+    const updatedTraining = await updateRelevantTraining(employeeId, trainingId, currentTrainingId);
     if (updatedTraining) {
       return res.status(200).json(updatedTraining);
     } else {
@@ -121,11 +143,9 @@ router.put("/:employee_id/:training_id", async (req, res) => {
     }
   } catch (error) {
     console.error(error.message);
-    if (error.message.includes("does not exist")) {
-      return res.status(404).send({ message: error.message });
-    }
     return res.status(500).send({ message: error.message });
   }
 });
+
 
 export default router;

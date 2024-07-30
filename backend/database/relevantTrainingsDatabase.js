@@ -46,6 +46,12 @@ export async function getRelevantTrainingsByEmployeeId(employee_id) {
     return rows;
   }
 
+// Get relevant trainings by employee_id and training_id
+export async function getRelevantTrainingsByEmployeeTrainingId(employee_id, training_id,) {
+  const [rows] = await pool.query("SELECT * FROM relevant_trainings WHERE employee_id = ? AND training_id = ?", [employee_id, training_id]);
+  return rows;
+}
+
 // Create a new relevant training entry
 export async function createRelevantTraining(
     employee_id, 
@@ -73,15 +79,30 @@ export async function deleteRelevantTraining(id) {
 }
 
 // Update an existing relevant training entry
-export async function updateRelevantTraining(employee_id, training_id, validity) {
+export async function updateRelevantTraining(employeeId, oldTrainingId, newTrainingId) {
   // Check if the relevant training entry exists before updating
-  if (!(await relevantTrainingExists(employee_id, training_id))) {
-    throw new Error(`Relevant training for employee_id ${employee_id} and training_id ${training_id} does not exist`);
+  if (!(await relevantTrainingExists(employeeId, oldTrainingId))) {
+    throw new Error(`Relevant training for employeeId ${employeeId} and trainingId ${oldTrainingId} does not exist`);
   }
 
-  const [result] = await pool.query(
-    "UPDATE relevant_trainings SET validity = ? WHERE employee_id = ? AND training_id = ?",
-    [validity, employee_id, training_id]
-  );
-  return result.affectedRows > 0 ? getRelevantTrainingsByEmployeeId(employee_id) : null;
+  // Check for potential conflicts with the new training ID
+  if (await relevantTrainingExists(employeeId, newTrainingId)) {
+    throw new Error(`Training ID ${newTrainingId} already exists for employeeId ${employeeId}`);
+  }
+
+  try {
+    const [result] = await pool.query(
+      "UPDATE relevant_trainings SET training_id = ? WHERE employee_id = ? AND training_id = ?",
+      [newTrainingId, employeeId, oldTrainingId]
+    );
+
+    if (result.affectedRows > 0) {
+      return await getRelevantTrainingsByEmployeeId(employeeId);
+    } else {
+      throw new Error(`Failed to update relevant training for employeeId ${employeeId} and trainingId ${oldTrainingId}`);
+    }
+  } catch (error) {
+    console.error("Database error:", error.message);
+    throw error; // Re-throw error to be caught by the route handler
+  }
 }

@@ -31,6 +31,7 @@ import DeleteRelevantTraining from "./pages/RelevantTrainings/DeleteRelevantTrai
 import CreateTrainingsEmployees from "./pages/TrainingsEmployees/CreateTrainingsEmployees.tsx";
 import EditTrainingsEmployees from "./pages/TrainingsEmployees/EditTrainingsEmployees.tsx";
 import DeleteTrainingsEmployees from "./pages/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
+import EditRelevantTrainings from "./pages/RelevantTrainings/EditRelevantTrainings.tsx";
 
 const App: React.FC = () => {
   return (
@@ -67,6 +68,7 @@ const App: React.FC = () => {
 
       <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
       <Route path="/relevanttrainings/delete/:id" element={<DeleteRelevantTraining />} />
+      <Route path="/relevanttrainings/edit/:trainingId" element={<EditRelevantTrainings />} />
 
       <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
       <Route path="/trainingsemployees/edit/:id" element={<EditTrainingsEmployees />} />
