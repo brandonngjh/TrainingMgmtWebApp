@@ -1,46 +1,18 @@
 import express from "express";
-import { getTrainingSessions, createTrainingSession } from "../database/trainingSessionDatabase.js";
+import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession } from "../database/trainingSessionDatabase.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 
 router.use(protect);    //add this
 
 router.get("/", async (req, res) => {
-    const all = await getTrainingSessions();
-    const trainingSessionsDict = {};
-    
-    all.forEach(session => {
-      // if trianingSessionsDict does not have the session id, create populate the trainingsessiondict with the details of the session
-      if (!trainingSessionsDict[session.session_id]) {
-        trainingSessionsDict[session.session_id] = {
-          session_id: session.session_id,
-          start_date: session.start_date,
-          end_date: session.end_date,
-          expiry_date: session.expiry_date,
-          training_title: session.training_title,
-          training_id: session.training_id,
-          employees: [
-            {
-              employee_id: session.employee_id,
-              employee_name: session.employee_name,
-              designation: session.designation,
-              status: session.status,
-            }
-          ]
-        };
-      }
-      // just add the employee details to the employees attribute of the session
-      else {
-        trainingSessionsDict[session.session_id].employees.push({
-          employee_id: session.employee_id,
-          employee_name: session.employee_name,
-          designation: session.designation,
-          status: session.status,
-        });
-      }
-    });
-
+    const trainingSessionsDict = await getAllTrainingSessions();
     return res.status(200).send(trainingSessionsDict);
+})
+
+router.get("/:session_id", async (req, res) => {
+    const trainingSession = await getTrainingSession(req.params.session_id);
+    return res.status(200).send(trainingSession);
 })
 
 router.post("/", async(req, res) => {
@@ -52,30 +24,34 @@ router.post("/", async(req, res) => {
           });
         }
 
-        const trainingSessions = [];
-        for (const employee_id of employee_ids) {
-          const newTraining = await createTrainingSession(
-            employee_id,
-            training_id,
-            status,
-            start_date,
-            end_date
-          );
-          trainingSessions.push(newTraining);
-        }
-
-        // const newTraining = await createTrainingSession(
-        //     employee_id,
-        //     training_id,
-        //     status,
-        //     start_date,
-        //     end_date,
-        // );
-        return res.status(201).json(trainingSessions);
+        const trainingSession = await createTrainingSession(
+          employee_ids,
+          training_id,
+          status,
+          start_date,
+          end_date
+        );
+        return res.status(201).send({ message: "Training session created successfully" });
+        // return res.status(201).json(trainingSession);
       } catch (error) {
         console.error(error.message);
         return res.status(500).send({ message: error.message });
     }
+})
+
+router.delete("/:session_id", async (req, res) => {
+    try {
+        const session_id = req.params.session_id;
+        if (!session_id) {
+          return res.status(400).send({ message: "Send session_id in the params" });
+        }
+    
+        const deletedTrainingSession = await deleteTrainingSession(session_id);
+        return res.status(200).json(deletedTrainingSession);
+      } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ message: error.message });
+      }
 })
 
 export default router;
