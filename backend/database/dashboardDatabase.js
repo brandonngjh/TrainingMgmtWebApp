@@ -41,3 +41,85 @@ export async function getTrainingDates() {
     `);
     return rows;
 }
+
+export async function getCombinedEmployeeTrainingDetails() {
+    const [employeeDetails, relevantTrainings, trainingDates] = await Promise.all([
+        getEmployeeDetails(),
+        getRelevantCourses(),
+        getTrainingDates()
+    ]);
+
+    const combined = employeeDetails.map((employee) => {
+        const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
+        const relevantDates = trainingDates.filter(training => training.employee_id === employee.employee_id);
+      
+        employee.relevantTrainings = employeeTrainings.map(training => {
+            const matchingDate = relevantDates.find(date => date.title === training.title);
+            return {
+                validity: training.validity,
+                title: training.title,
+                latest_end_date: matchingDate ? matchingDate.latest_end_date : null,
+                expiry_date: matchingDate ? matchingDate.expiry_date : null,
+                scheduled_date: matchingDate ? matchingDate.scheduled_date : null
+            }
+        })
+      
+        return employee;
+    });
+
+    return combined;
+}
+
+export async function getPercentageValidEmployees() {
+    const [employeeDetails, relevantTrainings] = await Promise.all([
+        getEmployeeDetails(),
+        getRelevantCourses()
+      ]);
+    
+      const combined = employeeDetails.map((employee) => {
+        const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
+    
+        employee.relevantTrainings = employeeTrainings.length > 0 ? employeeTrainings.map(training => ({
+          validity: training.validity,
+          title: training.title
+        })) : [{ validity: null, title: null }];
+    
+        return employee;
+      });
+    
+      const totalEmployees = combined.length;
+      const validEmployees = combined.filter(employee =>
+        employee.relevantTrainings.every(training => training.validity === "Valid")
+      ).length;
+    
+      const percentageValidEmployees = (validEmployees / totalEmployees) * 100;
+
+      return percentageValidEmployees.toFixed(2);
+}
+
+export async function getTrainingStats() {
+    const [relevantTrainings] = await Promise.all([
+        getRelevantCourses(),
+      ]);
+    
+      const trainingStats = relevantTrainings.reduce((acc, training) => {
+        if (!acc[training.title]) {
+          acc[training.title] = { valid: 0, total: 0 };
+        }
+        acc[training.title].total += 1;
+        if (training.validity === "Valid") {
+          acc[training.title].valid += 1;
+        }
+        return acc;
+      }, {});
+    
+      const trainingStatsJson = Object.keys(trainingStats).reduce((result, title) => {
+        result[title] = {
+          numberOfEmployeesWithValid: trainingStats[title].valid.toString(),
+          numberOfEmployeesWithTraining: trainingStats[title].total.toString()
+        };
+        return result;
+      }, {});
+
+      return trainingStatsJson;
+}
