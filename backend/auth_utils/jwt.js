@@ -11,11 +11,20 @@ if (!secret) {
     throw new Error('JWT secret is not defined');
 }
 
-export const generateToken = (user) => {
-    return jwt.sign({ id: user.id, username: user.username }, secret, { expiresIn: '1h' });
+export const generateToken = (user, expiresIn = '1h') => {
+    if (user.id == null || user.username == null || user.id < 1 || typeof user.username !== 'string' 
+        || !/^[\w]+$/.test(user.username) || /^\d+$/.test(user.username) ) {
+        throw new Error('Invalid user data');
+    }
+
+    return jwt.sign({ id: user.id, username: user.username }, secret, { expiresIn});
     // console.log('Generated token:', token);
 };
 
 export const verifyToken = (token) => {
-    return jwt.verify(token, secret);
+    try {
+        return jwt.verify(token, secret);
+    }catch(error){
+        throw error;
+    }
 };

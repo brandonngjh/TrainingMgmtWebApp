@@ -31,7 +31,8 @@
     "node-schedule": "^2.1.1",
     "node.js": "^0.0.1-security",
     "nodemailer": "^6.9.14",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
@@ -42,12 +43,5 @@
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
-  },
-  
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    }
   }
 }

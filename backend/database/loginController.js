@@ -7,6 +7,10 @@ import { generateToken } from '../auth_utils/jwt.js';
 export const login = async (req, res) => {
     const { username, password } = req.body;
 
+    if (!username || !password) {
+        return res.status(401).json({ message: 'Missing username or password' });
+    }
+
     try {
         const [rows] = await pool.query('SELECT * FROM user_credentials WHERE username = ?', [username]);
         const user = rows[0];
