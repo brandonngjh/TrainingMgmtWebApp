@@ -30,10 +30,6 @@ jest.mock('../auth_utils/jwt.js', () => ({
     app.use("/login", loginRoutes);
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
 describe("Unit Test: login Routes", () => {
     afterEach(() => {
       jest.clearAllMocks();
@@ -103,22 +99,3 @@ describe("Unit Test: login Routes", () => {
 })
 
 
-// test("POST /login - should handle login failure due to invalid username and password", async () => {
-//     login.mockImplementation((req, res) => {
-//         if (req.body.username === "correctuser" && req.body.password === "correctpass") {
-//             res.json({ token: "mock-token" });  //mock correct user credentials
-//           } else {
-//             res.status(401).json({ message: "Invalid username or password" });
-//           }
-//     });
-
-//     const res = await request(app)
-//     .post("/login")
-//     .send({ username: "incorrectuser", password: "incorrectpassword" });
-
-//     expect(res.status).toBe(401);
-//     expect(res.body).toEqual({ message: "Invalid username or password" });
-//     expect(login).toHaveBeenCalled();
-// const callArgs = login.mock.calls[0][0]; // Get the first call's arguments
-// expect(callArgs.body).toEqual({ username: "incorrectuser", password: "incorrectpassword" });
-// });
