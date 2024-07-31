@@ -104,7 +104,6 @@ export async function deleteEmployeeTraining(id) {
 // Update an existing employee training
 export async function updateEmployeeTraining(
   id,
-  employee_id,
   training_id,
   status,
   start_date,
@@ -116,8 +115,8 @@ export async function updateEmployeeTraining(
   }
 
   const [result] = await pool.query(
-    "UPDATE employees_trainings SET employee_id = ?, training_id = ?, status = ?, start_date = ?, end_date = ? WHERE id = ?",
-    [employee_id, training_id, status, start_date, end_date, id]
+    "UPDATE employees_trainings SET training_id = ?, status = ?, start_date = ?, end_date = ? WHERE id = ?",
+    [training_id, status, start_date, end_date, id]
   );
   return result.affectedRows > 0 ? "Update Successful" : "Update Failed";
 }
