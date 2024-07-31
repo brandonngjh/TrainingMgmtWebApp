@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession } from "../database/trainingSessionDatabase.js";
+import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession } from "../database/trainingSessionDatabase.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 
@@ -17,6 +17,7 @@ router.get("/:session_id", async (req, res) => {
 
 router.post("/", async(req, res) => {
     try {
+        console.log(req.body)
         const { employee_ids, training_id, status, start_date, end_date } = req.body;
         if (!employee_ids || !training_id || !status || !start_date || !end_date) {
           return res.status(400).send({
@@ -31,12 +32,39 @@ router.post("/", async(req, res) => {
           start_date,
           end_date
         );
-        return res.status(201).send({ message: "Training session created successfully" });
-        // return res.status(201).json(trainingSession);
+        // return res.status(201).send({ message: "Training session created successfully" });
+        return res.status(201).json(trainingSession);
       } catch (error) {
         console.error(error.message);
         return res.status(500).send({ message: error.message });
     }
+})
+
+router.put("/:session_id", async (req, res) => {
+    try {
+      console.log(req.body)
+      const { employee_ids, training_id, status, start_date, end_date } = req.body;
+      const session_id = req.params.session_id;
+      if (!session_id || !employee_ids || !training_id || !status || !start_date || !end_date) {
+        return res.status(400).send({
+          message: "Send required fields: session_id, employee_ids, training_id, status, start_date, end_date",
+        });
+      }
+
+      const trainingSession = await updateTrainingSession(
+        session_id,
+        employee_ids,
+        training_id,
+        status,
+        start_date,
+        end_date
+      );
+      // return res.status(201).send({ message: "Training session created successfully" });
+      return res.status(201).json(trainingSession);
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).send({ message: error.message });
+  }
 })
 
 router.delete("/:session_id", async (req, res) => {

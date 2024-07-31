@@ -82,35 +82,54 @@ export async function getTrainingSession(session_id) {
 }
 
 export async function createTrainingSession(
-    employee_ids,
-    training_id,
-    status,
-    start_date,
-    end_date
-  ) {
+  employee_ids,
+  training_id,
+  status,
+  start_date,
+  end_date,
+  session_id = null
+) {
+  let newMaxSessionId;
 
+  if (session_id) {
+    newMaxSessionId = session_id;
+  } else {
     const [maxSessionIdResult] = await pool.query(
       "SELECT MAX(session_id) AS maxSessionId FROM employees_trainings"
     );
-    const newMaxSessionId = maxSessionIdResult[0].maxSessionId + 1;
-
-    const [trainingValidityPeriod] = await pool.query(
-      "SELECT validity_period FROM trainings WHERE id = ?",
-      [training_id]
-    );
-    const validityPeriod = trainingValidityPeriod[0].validity_period;
-
-    for (const employee_id of employee_ids) {
-      await pool.query(
-        "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? MONTH))",
-        [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
-      );
-    }
-
-    const trainingSession = await getTrainingSession(newMaxSessionId);
-    return trainingSession;
-    // return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
+    newMaxSessionId = maxSessionIdResult[0].maxSessionId + 1;
   }
+
+  const [trainingValidityPeriod] = await pool.query(
+    "SELECT validity_period FROM trainings WHERE id = ?",
+    [training_id]
+  );
+  const validityPeriod = trainingValidityPeriod[0].validity_period;
+
+  for (const employee_id of employee_ids) {
+    await pool.query(
+      "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? MONTH))",
+      [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
+    );
+  }
+
+  const trainingSession = await getTrainingSession(newMaxSessionId);
+  return trainingSession;
+  // return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
+}
+
+export async function updateTrainingSession(
+  session_id,
+  employee_ids,
+  training_id,
+  status,
+  start_date,
+  end_date
+) {
+  await deleteTrainingSession(session_id);
+  const trainingSession = await createTrainingSession(employee_ids, training_id, status, start_date, end_date, session_id);
+  return trainingSession;
+}
 
 export async function deleteTrainingSession(session_id) {
     const [result] = await pool.query(

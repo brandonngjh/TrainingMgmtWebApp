@@ -54,7 +54,7 @@ const Example: React.FC = () => {
   const [sessions, setSessions] = useState<TrainingSession[]>([]);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchSessions = async () => {
       try {
         const response = await axiosInstance.get<{[key: string]: TrainingSession}>("/sessions");
         const data = response.data;
@@ -65,7 +65,7 @@ const Example: React.FC = () => {
       }
     };
 
-    fetchEmployees();
+    fetchSessions();
   }, []);
 
   // Define columns
@@ -225,9 +225,19 @@ const Example: React.FC = () => {
         <h2 className="text-3xl my-8">Training Sessions Page</h2>
         <Link to={`/sessions/create`} className="mt-4">
             <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-              Create Training Session
+              Create Session
             </button>
-          </Link>
+        </Link>
+        <Link to={`/sessions/edit`} className="mt-4">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Edit Session
+            </button>
+        </Link>
+        <Link to={`/sessions/delete`} className="mt-4">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Delete Session
+            </button>
+        </Link>
         <div id="dashboard-table">
           <MaterialReactTable table={table} />
         </div>
