@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
@@ -153,12 +153,14 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                           >
                             <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                           </Link>
+
                           <Link
-                            to={`/employeestrainings/delete/${session.session_id}?trainingId=${session.training_id}`}
+                            to={`/trainingsemployees/delete/${session.session_id}?trainingId=${session.training_id}`}
                             className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                           >
                             <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
                           </Link>
+
                         </div>
                       </td>
                     </tr>
