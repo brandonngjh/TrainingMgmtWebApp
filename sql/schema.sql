@@ -72,14 +72,10 @@ CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
 -- CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
---------- REDUNDANT, DO NOT USE
-
-
 
 INSERT INTO departments (name) VALUES ('Machining');
-INSERT INTO jobs (name, department_id) VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
 
---------- END REDUNDANT
+INSERT INTO jobs (name, department_id) VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
 
 INSERT INTO user_credentials (username, password) VALUES
 ('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y'),
@@ -139,24 +135,24 @@ VALUES
 
 INSERT INTO trainings (title, description, validity_period)
 VALUES
-    ('AS 9100D AWARNESS', 'EXTERNAL', 365),
-    ('COUNTERFEIT', 'INTERNAL', 365),
-    ('FOD', 'INTERNAL', 365),
-    ('IQA TRAINING AS9100D', 'EXTERNAL', 365),
-    ('SAFETY AWARENESS (PPE)', 'INTERNAL', 365),
-    ('MEASUREMENT AND CALIBRATION', 'INTERNAL', 365),
-    ('MACHINING PHASE 1', 'INTERNAL', 365),
-    ('MACHINING PHASE 2', 'INTERNAL', 365),
-    ('DEBURING AND BUFFING', 'INTERNAL', 720),
-    ('PROCESS MANAGEMENT PLANNING', 'INTERNAL', 720),
-    ('NC PROGRAMME', 'INTERNAL', 720),
-    ('GD&T', 'INTERNAL', 720),
-    ('5S', 'INTERNAL', 720);
-    -- ('ENGINEERING MANAGEMENT', 'INTERNAL', 365),
-    -- ('TOOLS (JIG & FITURES)', 'INTERNAL', 365),
-    -- ('DRAWING INTERPERTATION', 'INTERNAL', 365),
-    -- ('QUALITY AWARNESS', 'INTERNAL', 365),
-    -- ('MES SYSTEM', 'INTERNAL', 365);
+    ('AS 9100D AWARNESS', 'EXTERNAL', 6),
+    ('COUNTERFEIT', 'INTERNAL', 6),
+    ('FOD', 'INTERNAL', 12),
+    ('IQA TRAINING AS9100D', 'EXTERNAL', 12),
+    ('SAFETY AWARENESS (PPE)', 'INTERNAL', 12),
+    ('MEASUREMENT AND CALIBRATION', 'INTERNAL', 6),
+    ('MACHINING PHASE 1', 'INTERNAL', 12),
+    ('MACHINING PHASE 2', 'INTERNAL', 6),
+    ('DEBURING AND BUFFING', 'INTERNAL', 6),
+    ('PROCESS MANAGEMENT PLANNING', 'INTERNAL', 12),
+    ('NC PROGRAMME', 'INTERNAL', 8),
+    ('GD&T', 'INTERNAL', 12),
+    ('5S', 'INTERNAL', 12),
+    ('ENGINEERING MANAGEMENT', 'INTERNAL', 12),
+    ('TOOLS (JIG & FITURES)', 'INTERNAL', 12),
+    ('DRAWING INTERPERTATION', 'INTERNAL', 12),
+    ('QUALITY AWARNESS', 'INTERNAL', 6),
+    ('MES SYSTEM', 'INTERNAL', 6);
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
@@ -182,8 +178,8 @@ VALUES
 
 (2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'valid'),
 (2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
-(2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA');
-(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA')
+(2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
+(22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA');
 
 
 INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
