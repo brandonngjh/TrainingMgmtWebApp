@@ -138,3 +138,35 @@ export async function deleteTrainingSession(session_id) {
     );
     return { affectedRows: result.affectedRows }; // Return basic result info
 }
+
+export async function markAttendance(session_id, employee_ids) {
+
+  var [trainingIdRow] = await pool.query(
+    "SELECT training_id FROM employees_trainings WHERE session_id = ?",
+    [session_id]
+  );
+
+  var [sessionIdRow] = await pool.query(
+    "SELECT validity_period FROM trainings WHERE id = ?",
+    [trainingIdRow[0].training_id]
+  );
+  const validityPeriod = sessionIdRow[0].validity_period;
+
+  for (const employee_id of employee_ids) {
+    const [result] = await pool.query(
+      `UPDATE employees_trainings et 
+        SET status = 'completed',
+        expiry_date = DATE_ADD(et.end_date, INTERVAL ? MONTH)
+        WHERE session_id = ? AND employee_id = ?`,
+      [validityPeriod, session_id, employee_id]
+    );
+
+    await pool.query(
+      `UPDATE relevant_trainings rt
+        SET validity = 'Valid'
+        WHERE rt.employee_id = ? AND rt.training_id = ?`,
+      [employee_id, trainingIdRow[0].training_id]
+    )
+  }
+  return getTrainingSession(session_id); // Return basic result info
+}

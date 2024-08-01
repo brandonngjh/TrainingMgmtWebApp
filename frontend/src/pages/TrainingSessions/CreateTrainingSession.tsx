@@ -20,7 +20,7 @@ interface Training {
     description: string;
     validity_period: string;
     training_provider: string | null;
-  }
+}
 
 const CreateTrainingSession: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]); // For populating the multiselect list
@@ -35,15 +35,8 @@ const CreateTrainingSession: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation();
+  // const location = useLocation();
   const token = localStorage.getItem('token');
-
-
-//   useEffect(() => {
-//     const params = new URLSearchParams(location.search);
-//     const trainingIdFromURL = params.get("trainingId") || "";
-//     setTrainingId(trainingIdFromURL);
-//   }, [location]);
 
     useEffect(() => {
         setLoading(true);
