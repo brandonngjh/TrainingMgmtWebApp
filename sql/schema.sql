@@ -163,7 +163,7 @@ VALUES
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
-(22, {SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'}, 'valid')
+(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
 
 (21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
 (21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
