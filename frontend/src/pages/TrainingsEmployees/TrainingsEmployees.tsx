@@ -106,11 +106,11 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
             <div className="flex-col">
               <h2 className="text-lg text-gray-600">List of training sessions for training ID: {trainingId}</h2>
             </div>
-            <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
+            {/* <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
               <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
                 Add Sessions
               </button>
-            </Link>
+            </Link> */}
           </div>
           {sessionDetails.length === 0 ? (
             <div className="text-xl text-gray-500">No employees found for this training</div>
