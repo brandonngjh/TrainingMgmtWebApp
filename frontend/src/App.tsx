@@ -73,7 +73,7 @@ const App: React.FC = () => {
       <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
 
       <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
-      <Route path="/relevanttrainings/delete/:id" element={<DeleteRelevantTraining />} />
+      <Route path="/relevanttrainings/delete/:trainingId" element={<DeleteRelevantTraining />} />
       <Route path="/relevanttrainings/edit/:trainingId" element={<EditRelevantTrainings />} />
 
       <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
