@@ -3,11 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
 import axios from "axios";
+import axiosInstance from "../../authentication/axiosInstance";
 import { useSnackbar } from "notistack";
+import Select from 'react-select';
+
+interface Training {
+  id: string;
+  title: string;
+  description: string;
+  validity_period: string;
+  training_provider: string | null;
+}
+
 
 const CreateRelevantTrainings: React.FC = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [trainingId, setTrainingId] = useState("");
+  const [trainings, setTrainings] = useState<Training[]>([]);
   // const [validity, setValidity] = useState("NA");
   const validity = "NA";
   const [loading, setLoading] = useState(false);
@@ -21,6 +33,17 @@ const CreateRelevantTrainings: React.FC = () => {
     if (employeeIdFromURL) {
       setEmployeeId(employeeIdFromURL);
     }
+
+    axiosInstance
+      .get("http://localhost:3000/api/trainings")
+      .then((response) => {
+        const trainings = response.data;
+        setTrainings(trainings);
+      })
+      .catch((error) => {
+        console.log(error.response.data);  // Log the server response
+      });
+
   }, [location]);
   
   const handleSaveRelevantTraining = () => {
@@ -76,6 +99,21 @@ const CreateRelevantTrainings: React.FC = () => {
           />
         </div>
         <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Training</label>
+          <Select
+            onChange={(newValue) => {
+              if (newValue !== null) {
+                setTrainingId(newValue.value); // Set to empty string or any default value as need
+              }
+            }}
+            options={trainings.map((training) => ({
+              value: training.id,
+              label: training.title,
+            }))}
+          />
+        </div>
+
+        {/* <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Training ID</label>
           <input
             type="text"
@@ -83,7 +121,7 @@ const CreateRelevantTrainings: React.FC = () => {
             onChange={(e) => setTrainingId(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
-        </div>
+        </div> */}
         {/* <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Validity</label>
           <select
@@ -97,7 +135,7 @@ const CreateRelevantTrainings: React.FC = () => {
             <option value="NA">NA</option>
           </select>
         </div> */}
-        <div className="text-right">
+        <div className="text-right pt-48">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"
             onClick={handleSaveRelevantTraining}

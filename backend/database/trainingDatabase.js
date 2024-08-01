@@ -22,6 +22,12 @@ export async function getTrainingByID(id) {
   return rows[0];
 }
 
+export async function getTrainingNames() {
+  const [rows] = await pool.query("SELECT title FROM trainings");
+  const trainingNames = rows.map(row => row.title);
+  return trainingNames;
+}
+
 // Create a new training
 export async function createTraining(
   title, 

@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession } from "../database/trainingSessionDatabase.js";
+import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession, markAttendance } from "../database/trainingSessionDatabase.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 
@@ -80,6 +80,26 @@ router.delete("/:session_id", async (req, res) => {
         console.error(error.message);
         return res.status(500).send({ message: error.message });
       }
+})
+
+router.post("/attendance", async(req, res) => {
+    try {
+        console.log(req.body)
+        const { session_id, employee_ids } = req.body;
+        if (!session_id || !employee_ids) {
+          return res.status(400).send({
+            message: "Send required fields: session_id, employee_ids",
+          });
+        }
+        const trainingSession = await markAttendance(
+          session_id,
+          employee_ids
+        );
+        return res.status(201).json(trainingSession);
+      } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ message: error.message });
+    }
 })
 
 export default router;
