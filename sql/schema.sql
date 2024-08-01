@@ -17,13 +17,16 @@ CREATE TABLE trainings (
     description VARCHAR(255)
 );
 
-CREATE TABLE relevant_trainings (
+CREATE TABLE departments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    employee_id BIGINT,
-    training_id BIGINT,
-    validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
-    FOREIGN KEY (employee_id) REFERENCES employees(id),
-    FOREIGN KEY (training_id) REFERENCES trainings(id)
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE jobs (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    department_id BIGINT,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 CREATE TABLE employees (
@@ -55,6 +58,15 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
+CREATE TABLE relevant_trainings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT,
+    training_id BIGINT,
+    validity ENUM('Valid', 'Expired', 'NA') DEFAULT 'NA',
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id)
+);
+
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
@@ -62,17 +74,7 @@ CREATE INDEX idx_training_title ON trainings(title);
 
 --------- REDUNDANT, DO NOT USE
 
-CREATE TABLE departments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
 
-CREATE TABLE jobs (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    department_id BIGINT,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
-);
 
 INSERT INTO departments (name) VALUES ('Machining');
 INSERT INTO jobs (name, department_id) VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));

@@ -6,10 +6,10 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const DeleteRelevantTraining = () => {
+  const { trainingId } = useParams();
   const [employeeId, setEmployeeId] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
   const token = localStorage.getItem('token');
@@ -25,7 +25,7 @@ const DeleteRelevantTraining = () => {
   const handleDeleteRelevantTraining = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/api/relevanttrainings/${id}`,{
+      .delete(`http://localhost:3000/api/relevanttrainings/${employeeId}/${trainingId}`,{
         headers: {
           'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
