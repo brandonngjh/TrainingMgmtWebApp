@@ -5,7 +5,7 @@ dotenv.config({ path: './.env' }); // Load environment variables
 
 const secret = process.env.JWT_SECRET;
 
-console.log('JWT_SECRET:', secret); // Log the secret to verify for debug
+// console.log('JWT_SECRET:', secret); // Log the secret to verify for debug
 
 if (!secret) {
     throw new Error('JWT secret is not defined');
