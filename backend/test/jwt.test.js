@@ -50,8 +50,8 @@ describe('generateToken', () => {
         )
         
     });
-
-    it('should accept valid input', () => {
+    // valid regions
+    it('should accept valid input', () => {     //boundary testing with fast-check
         fc.assert(
             fc.property(fc.integer({min: 1}), fc.string({minLength: 1}).filter(str => whitespace.test(str) && !digits.test(str)), (id, username) => {
                 const user = {id, username};
@@ -65,10 +65,10 @@ describe('generateToken', () => {
             })
         )
     })
-
-    it('should throw error if invalid input', () => {
+    // invalid region
+    it('should throw error if invalid input', () => {   //boundary testing with fast-check
         fc.assert(
-            fc.property(fc.integer({min: 1}), fc.string({minLength: 1}), (id, username) => {
+            fc.property(fc.integer(), fc.string(), (id, username) => {
                 const user = {id, username};
                 if (user.id == null || user.username == null || user.id < 1 || typeof user.username !== 'string'
                     || !/^[\w]+$/.test(user.username) || /^\d+$/.test(user.username)) {
