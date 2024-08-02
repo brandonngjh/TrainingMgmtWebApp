@@ -68,11 +68,11 @@ describe('generateToken', () => {
 
     it('should throw error if invalid input', () => {
         fc.assert(
-            fc.property(fc.integer({min: 1}), fc.string({minLength: 1}).filter(str => whitespace.test(str) && !digits.test(str)),  fc.integer({ min: 1 }), (id, username, tamperedId) => {
+            fc.property(fc.integer({min: 1}), fc.string({minLength: 1}), (id, username) => {
                 const user = {id, username};
                 if (user.id == null || user.username == null || user.id < 1 || typeof user.username !== 'string'
                     || !/^[\w]+$/.test(user.username) || /^\d+$/.test(user.username)) {
-                    expect(() => generateToken(user)).toThrow('Invalid user input');
+                    expect(() => generateToken(user)).toThrow('Invalid user data');
                 }
             })
         )
