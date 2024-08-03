@@ -46,15 +46,6 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
-CREATE TABLE skills_report (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    employee_id BIGINT NOT NULL,
-    employee_name VARCHAR(255) NOT NULL,
-    training_course VARCHAR(255) NOT NULL,
-    validity VARCHAR(50) NOT NULL,
-    UNIQUE (employee_id, training_course)
-);
-
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
@@ -150,25 +141,25 @@ INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
-(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
+(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 
-(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'valid'),
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Valid'),
 
-(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
-(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
+(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
+(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
 
-(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'expired'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'valid'),
+(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Expired'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Valid'),
 
-(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'valid'),
+(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Valid'),
 (2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA');
 
@@ -195,23 +186,3 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 (2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Completed', '2024-05-01', '2024-05-10', '2025-05-10'),
 (2, (SELECT id FROM trainings WHERE title = '5S'), 'Completed', '2022-10-01', '2022-10-02', '2024-10-02'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20');
-
--- Populate the skills_report table
-INSERT INTO skills_report (employee_id, employee_name, training_course, validity)
-SELECT
-    e.id AS employee_id,
-    e.name AS employee_name,
-    t.title AS training_course,
-    rt.validity AS validity
-FROM
-    employees e
-JOIN
-    employees_trainings et ON e.id = et.employee_id
-JOIN
-    trainings t ON et.training_id = t.id
-JOIN
-    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
-ON DUPLICATE KEY UPDATE
-    employee_name = VALUES(employee_name),
-    training_course = VALUES(training_course),
-    validity = VALUES(validity);
