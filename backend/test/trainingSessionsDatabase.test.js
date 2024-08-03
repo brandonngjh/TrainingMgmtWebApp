@@ -43,6 +43,12 @@ describe('Unit Test: Training Session Database Functions', () => {
     expect(result).toEqual(mockTrainingSessions);
   });
 
+  test('getTrainingSessions - should handle database errors', async () => {
+    pool.query.mockRejectedValueOnce(new Error('Database error'));
+
+    await expect(getTrainingSessions()).rejects.toThrow('Database error');
+  });
+
   test('createTrainingSession - should insert a new training session and return result info', async () => {
     const mockResult = { insertId: 1, affectedRows: 1 };
     pool.query.mockResolvedValueOnce([mockResult]);
@@ -53,5 +59,11 @@ describe('Unit Test: Training Session Database Functions', () => {
       [1, 1, 'Scheduled', '2024-07-01', '2024-07-07']
     );
     expect(result).toEqual(mockResult);
+  });
+
+  test('createTrainingSession - should handle database errors', async () => {
+    pool.query.mockRejectedValueOnce(new Error('Database error'));
+
+    await expect(createTrainingSession(1, 1, 'Scheduled', '2024-07-01', '2024-07-07')).rejects.toThrow('Database error');
   });
 });
