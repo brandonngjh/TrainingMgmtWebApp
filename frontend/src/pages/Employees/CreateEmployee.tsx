@@ -59,6 +59,7 @@ const CreateEmployee = () => {
             value={id}
             onChange={(e) => setID(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-id"
           />
         </div>
         <div className="my-4">
@@ -68,6 +69,7 @@ const CreateEmployee = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+              data-test="input-name"
             />
         </div>
         <div className="my-4">
@@ -77,6 +79,7 @@ const CreateEmployee = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-email"
           />
         </div>
         <div className="my-4">
@@ -86,6 +89,7 @@ const CreateEmployee = () => {
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-designation"
           />
         </div>
         <div className="my-4">
@@ -95,12 +99,14 @@ const CreateEmployee = () => {
             value={hireDate}
             onChange={(e) => setHireDate(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-hire-date"
           />
         </div>
         <div className="text-right">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"
             onClick={handleSaveEmployee}
+            data-test="save-button"
           >
             Save
           </button>
