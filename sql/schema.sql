@@ -8,34 +8,12 @@ CREATE TABLE user_credentials (
     role VARCHAR(50) NOT NULL
 );
 
--- TODO: REDUNDANT, REMOVE
-CREATE TABLE departments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- TODO: REDUNDANT, REMOVE
-CREATE TABLE jobs (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    department_id BIGINT,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
-);
-
-
 CREATE TABLE employees (
     id BIGINT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL DEFAULT 'temp@gmail.com',
     hire_date DATE,
-    designation VARCHAR(255),
-
-    -- Redundant?
-    division VARCHAR(255),
-    department_id BIGINT,
-    job_id BIGINT,
-    FOREIGN KEY (department_id) REFERENCES departments(id),
-    FOREIGN KEY (job_id) REFERENCES jobs(id)
+    designation VARCHAR(255)
 );
 
 CREATE TABLE trainings (
@@ -68,9 +46,19 @@ CREATE TABLE employees_trainings (
     INDEX (employee_id, training_id)
 );
 
+CREATE TABLE skills_report (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT NOT NULL,
+    employee_name VARCHAR(255) NOT NULL,
+    training_course VARCHAR(255) NOT NULL,
+    validity VARCHAR(50) NOT NULL,
+    UNIQUE (employee_id, training_course)
+);
+
 -- Additional Indexes for performance
 CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
+CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 -- Stored procedure to enroll an employee in a training
 DELIMITER $$
@@ -91,65 +79,60 @@ INSERT INTO user_credentials (username, password, role) VALUES
 ('hr', 'hr', 'hr'),
 ('hod', 'hod', 'hod');
 
--- Redundant?
-INSERT INTO departments (name) VALUES ('Machining');
-INSERT INTO jobs (name, department_id)
-VALUES ( 'Production', (SELECT id FROM departments WHERE name = 'Machining'));
-
-INSERT INTO employees (id, name, email, department_id, division, job_id, designation)
+INSERT INTO employees (id, name, email, hire_date, designation)
 VALUES
-    (294, 'Robert Destreza', 'robert@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Machining HOD'),
-    (523, 'Ashikin Binti Ibrahim', 'ashikin@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production/MES Planner'),
-    (897, 'Min Htet Kyaw', 'min@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assitant Planner'),
-    (923, 'Myat Naing Maw', 'myat@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Material Planner'),
-    (969, 'Ernest Bryan Buenacida', 'ernest@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'MES Planner'),
-    (363, 'Mangawang Benjo Tejada', 'mangawang@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Supervisor (Machining)'),
-    (875, 'Fery Suwandri Wijaya', 'fery@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Big Format Leader'),
-    (878, 'Heri Nurul Huda', 'heri@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Big Format Machinist Setter'),
-    (968, 'Franclin Cole Vitug', 'franclin@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (530, 'Danial Haikal Bin Badrol Sham', 'danial@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Fanuc Leader/Machinist'),
-    (862, 'Dileep Kumar', 'dileep@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Fanuc Machinist Setter'),
-    (815, 'Zaw Lin Naing', 'zaw@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (694, 'Khaing Soe Wai', 'khaing@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (937, 'Tin Lin Aung', 'tin@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (811, 'Gopinathan Nair Anish Kumar', 'gopinathan@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Slim3N Leader/Machinist'),
-    (510, 'Chand Dhan Bahadur', 'chand@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (680, 'Gauj Kazi', 'gauj@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (894, 'San Ko Win', 'san@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (539, 'Bashir Muhammad', 'bashir@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (781, 'Kottaisamy Arjunan', 'kottaisamy@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'PS105 Leader/Machinist'),
-    (802, 'Basanta Rai', 'basanta@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (682, 'Mir Rabby Saddam', 'mir@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (944, 'Tham Wai Seng', 'tham@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'J300 Machinist Setter'),
-    (895, 'Kaung Khant Zaw', 'kaung@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'CNC Machine Operator'),
-    (2, 'See Seng Giap', 'see@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Production Supervisor (Conventional)'),
-    (23, 'Muhamad Al Amin Bin Md Surep', 'muhamadal@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer Leader'),
-    (392, 'Muhammad Riduan Bin Mohd Misman', 'muhammadriduan@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
-    (645, 'Mohd Shahrul Nizam Bin Nordin', 'mohdshahrul@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
-    (790, 'Aung Myint Thein', 'aung@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
-    (490, 'Surindra Mahato', 'surindra@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Buffer'),
-    (349, 'Manlabian Ernesto JR Ramon', 'manlabian@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Tool Crib Leader'),
-    (805, 'Mahesh Nepali', 'mahesh@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Tooling operator'),
-    (678, 'Hossain MD Jubayer', 'hossain@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Conventional Grinding'),
-    (703, 'Myo Min Oo', 'myo@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Saw cut'),
-    (733, 'Phyo That Hlaing', 'phyo@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
-    (832, 'Aktaruzzaman Md', 'aktaruzzaman@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
-    (838, 'Rayhan Md', 'rayhan@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Chip Cleaner'),
-    (177, 'Muhammad Syafiq Bin Abdul Razak', 'muhammadsyafiq@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assembly Leader'),
-    (587, 'Jaiswal Pashupati Nath', 'jaiswal@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Assembly'),
-    (69, 'Mohd Sapuan Bin Othmar', 'mohdsapuan@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance Leader'),
-    (812, 'Htet Wai Oo', 'htet@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance'),
-    (693, 'Kyaw San Htwe', 'kyaw@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance'),
-    (833, 'Hosion MD Saddam', 'hosion@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
-    (935, 'Thein Kyaw', 'thein@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
-    (978, 'Rukesh a/l Ravendran', 'rukesh@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Machinist'),
-    (504, 'Sah Fulgendra', 'sah@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
-    (22, 'Brandon', 'brandon@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction'),
-    (21, 'Bob', 'bob@example.com', (SELECT id FROM departments WHERE name = 'Machining'), 'Production', (SELECT id FROM jobs WHERE name = 'Production'), 'Maintenance/Construction');
+    (294, 'Robert Destreza', 'robert@example.com', '2022-01-15', 'Production Machining HOD'),
+    (523, 'Ashikin Binti Ibrahim', 'ashikin@example.com', '2021-05-20', 'Production/MES Planner'),
+    (897, 'Min Htet Kyaw', 'min@example.com', '2020-08-10', 'Assistant Planner'),
+    (923, 'Myat Naing Maw', 'myat@example.com', '2019-11-30', 'Material Planner'),
+    (969, 'Ernest Bryan Buenacida', 'ernest@example.com', '2020-07-25', 'MES Planner'),
+    (363, 'Mangawang Benjo Tejada', 'mangawang@example.com', '2021-03-10', 'Production Supervisor (Machining)'),
+    (875, 'Fery Suwandri Wijaya', 'fery@example.com', '2019-06-15', 'Big Format Leader'),
+    (878, 'Heri Nurul Huda', 'heri@example.com', '2018-09-01', 'Big Format Machinist Setter'),
+    (968, 'Franclin Cole Vitug', 'franclin@example.com', '2020-04-20', 'CNC Machine Operator'),
+    (530, 'Danial Haikal Bin Badrol Sham', 'danial@example.com', '2021-11-05', 'Fanuc Leader/Machinist'),
+    (862, 'Dileep Kumar', 'dileep@example.com', '2018-12-30', 'Fanuc Machinist Setter'),
+    (815, 'Zaw Lin Naing', 'zaw@example.com', '2019-01-18', 'CNC Machine Operator'),
+    (694, 'Khaing Soe Wai', 'khaing@example.com', '2020-02-25', 'CNC Machine Operator'),
+    (937, 'Tin Lin Aung', 'tin@example.com', '2019-05-14', 'CNC Machine Operator'),
+    (811, 'Gopinathan Nair Anish Kumar', 'gopinathan@example.com', '2021-07-07', 'Slim3N Leader/Machinist'),
+    (510, 'Chand Dhan Bahadur', 'chand@example.com', '2018-11-11', 'CNC Machine Operator'),
+    (680, 'Gauj Kazi', 'gauj@example.com', '2019-08-22', 'CNC Machine Operator'),
+    (894, 'San Ko Win', 'san@example.com', '2021-09-09', 'CNC Machine Operator'),
+    (539, 'Bashir Muhammad', 'bashir@example.com', '2020-10-20', 'CNC Machine Operator'),
+    (781, 'Kottaisamy Arjunan', 'kottaisamy@example.com', '2018-03-30', 'PS105 Leader/Machinist'),
+    (802, 'Basanta Rai', 'basanta@example.com', '2019-04-18', 'CNC Machine Operator'),
+    (682, 'Mir Rabby Saddam', 'mir@example.com', '2021-06-24', 'CNC Machine Operator'),
+    (944, 'Tham Wai Seng', 'tham@example.com', '2020-12-15', 'J300 Machinist Setter'),
+    (895, 'Kaung Khant Zaw', 'kaung@example.com', '2019-07-19', 'CNC Machine Operator'),
+    (2, 'See Seng Giap', 'see@example.com', '2020-11-23', 'Production Supervisor (Conventional)'),
+    (23, 'Muhamad Al Amin Bin Md Surep', 'muhamadal@example.com', '2021-03-14', 'Buffer Leader'),
+    (392, 'Muhammad Riduan Bin Mohd Misman', 'muhammadriduan@example.com', '2022-02-28', 'Buffer'),
+    (645, 'Mohd Shahrul Nizam Bin Nordin', 'mohdshahrul@example.com', '2021-12-10', 'Buffer'),
+    (790, 'Aung Myint Thein', 'aung@example.com', '2020-05-20', 'Buffer'),
+    (490, 'Surindra Mahato', 'surindra@example.com', '2021-08-09', 'Buffer'),
+    (349, 'Manlabian Ernesto JR Ramon', 'manlabian@example.com', '2018-01-15', 'Tool Crib Leader'),
+    (805, 'Mahesh Nepali', 'mahesh@example.com', '2021-04-22', 'Tooling operator'),
+    (678, 'Hossain MD Jubayer', 'hossain@example.com', '2020-09-18', 'Conventional Grinding'),
+    (703, 'Myo Min Oo', 'myo@example.com', '2019-12-12', 'Saw cut'),
+    (733, 'Phyo That Hlaing', 'phyo@example.com', '2021-01-24', 'Chip Cleaner'),
+    (832, 'Aktaruzzaman Md', 'aktaruzzaman@example.com', '2020-06-13', 'Chip Cleaner'),
+    (838, 'Rayhan Md', 'rayhan@example.com', '2021-10-08', 'Chip Cleaner'),
+    (177, 'Muhammad Syafiq Bin Abdul Razak', 'muhammadsyafiq@example.com', '2021-11-28', 'Assembly Leader'),
+    (587, 'Jaiswal Pashupati Nath', 'jaiswal@example.com', '2019-04-25', 'Assembly'),
+    (69, 'Mohd Sapuan Bin Othmar', 'mohdsapuan@example.com', '2018-07-16', 'Maintenance Leader'),
+    (812, 'Htet Wai Oo', 'htet@example.com', '2020-03-22', 'Maintenance'),
+    (693, 'Kyaw San Htwe', 'kyaw@example.com', '2019-08-11', 'Maintenance'),
+    (833, 'Hosion MD Saddam', 'hosion@example.com', '2021-07-19', 'Maintenance/Construction'),
+    (935, 'Thein Kyaw', 'thein@example.com', '2020-10-21', 'Maintenance/Construction'),
+    (978, 'Rukesh a/l Ravendran', 'rukesh@example.com', '2021-12-30', 'Machinist'),
+    (504, 'Sah Fulgendra', 'sah@example.com', '2020-11-03', 'Maintenance/Construction'),
+    (22, 'Brandon', 'brandon@example.com', '2021-09-27', 'Maintenance/Construction'),
+    (21, 'Bob', 'bob@example.com', '2020-04-14', 'Maintenance/Construction');
 
 INSERT INTO trainings (title, description, validity_period)
 VALUES
-    ('AS 9100D AWARNESS', 'EXTERNAL', 365),
+    ('AS 9100D AWARENESS', 'EXTERNAL', 365),
     ('COUNTERFEIT', 'INTERNAL', 365),
     ('FOD', 'INTERNAL', 365),
     ('IQA TRAINING AS9100D', 'EXTERNAL', 365),
@@ -162,41 +145,34 @@ VALUES
     ('NC PROGRAMME', 'INTERNAL', 720),
     ('GD&T', 'INTERNAL', 720),
     ('5S', 'INTERNAL', 720);
-    -- ('ENGINEERING MANAGEMENT', 'INTERNAL', 365),
-    -- ('TOOLS (JIG & FITURES)', 'INTERNAL', 365),
-    -- ('DRAWING INTERPERTATION', 'INTERNAL', 365),
-    -- ('QUALITY AWARNESS', 'INTERNAL', 365),
-    -- ('MES SYSTEM', 'INTERNAL', 365);
 
 INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
-(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
+(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 
-(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'valid'),
 
-(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
-(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
+(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
+(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
 
-(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Expired'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Valid'),
+(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'expired'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'valid'),
 
-(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Valid'),
-(2, (SELECT id FROM trainings WHERE title = '5S'), 'Valid'),
+(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'valid'),
+(2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA');
 
-
 INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
-
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
 (22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20'),
 (22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Completed', '2022-10-01', '2022-10-02', '2023-11-02'),
@@ -220,3 +196,22 @@ INSERT INTO employees_trainings (employee_id, training_id, status, start_date, e
 (2, (SELECT id FROM trainings WHERE title = '5S'), 'Completed', '2022-10-01', '2022-10-02', '2024-10-02'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20');
 
+-- Populate the skills_report table
+INSERT INTO skills_report (employee_id, employee_name, training_course, validity)
+SELECT
+    e.id AS employee_id,
+    e.name AS employee_name,
+    t.title AS training_course,
+    rt.validity AS validity
+FROM
+    employees e
+JOIN
+    employees_trainings et ON e.id = et.employee_id
+JOIN
+    trainings t ON et.training_id = t.id
+JOIN
+    relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+ON DUPLICATE KEY UPDATE
+    employee_name = VALUES(employee_name),
+    training_course = VALUES(training_course),
+    validity = VALUES(validity);

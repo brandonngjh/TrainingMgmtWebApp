@@ -3,4 +3,5 @@ export default {
   transform: {
     "^.+\\.js$": "babel-jest",
   },
+  maxWorkers: 1,
 };
