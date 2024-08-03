@@ -21,24 +21,18 @@ export async function getEmployeeByID(id) {
   return rows[0];
 }
 
-// Create a new employee with a specified ID
-export async function createEmployee(
-  id,
-  name,
-  email,
-  hire_date,
-  designation
-) {
+export async function createEmployee(id, name, email, hire_date, designation) {
   // Check if the employee ID already exists
   if (await employeeIdExists(id)) {
     throw new Error(`Employee with id ${id} already exists`);
   }
 
-  const [result] = await pool.query(
+  await pool.query(
     "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?)",
     [id, name, email, hire_date, designation]
   );
-  return getEmployeeByID(result.insertId);
+
+  return getEmployeeByID(id);
 }
 
 // Delete an employee

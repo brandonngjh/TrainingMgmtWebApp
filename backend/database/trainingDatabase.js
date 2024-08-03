@@ -23,15 +23,11 @@ export async function getTrainingByID(id) {
 
 // Create a new training
 export async function createTraining(title, description, validity_period, training_provider) {
-  
-  // Log the parameters to the console
-  console.log("Creating training with:", { title, description, validity_period, training_provider });
-
   const [result] = await pool.query(
     "INSERT INTO trainings (title, description, validity_period, training_provider) VALUES (?, ?, ?, ?)",
     [title, description, validity_period, training_provider]
   );
-  // return getTrainingByID(result.insertId);
+  return getTrainingByID(result.insertId);
 }
 
 // Delete a training
