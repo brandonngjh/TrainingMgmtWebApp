@@ -14,18 +14,18 @@ app.use("/training-sessions", trainingSessionRoutes);
 async function backupData() {
   const [backupEmployees] = await pool.query("SELECT * FROM employees");
   const [backupTrainings] = await pool.query("SELECT * FROM trainings");
-  const [backupTrainingSessions] = await pool.query("SELECT * FROM employees_trainings");
+  const [backupTrainingSessions] = await pool.query(
+    "SELECT * FROM employees_trainings"
+  );
   return { backupEmployees, backupTrainings, backupTrainingSessions };
 }
 
 async function restoreData(originalData) {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM trainings");
-  await pool.query("DELETE FROM employees");
-
-  await pool.query(`ALTER TABLE employees AUTO_INCREMENT = 1`);
-  await pool.query(`ALTER TABLE trainings AUTO_INCREMENT = 1`);
-  await pool.query(`ALTER TABLE employees_trainings AUTO_INCREMENT = 1`);
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE trainings");
+  await pool.query("TRUNCATE TABLE employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
   for (const row of originalData.backupEmployees) {
     await pool.query(
@@ -37,64 +37,58 @@ async function restoreData(originalData) {
   for (const row of originalData.backupTrainings) {
     await pool.query(
       "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
-      [
-        row.id,
-        row.title,
-        row.description,
-        row.validity_period,
-        row.training_provider,
-      ]
+      [row.id, row.title, row.description, row.validity_period, row.training_provider]
     );
   }
 
   for (const row of originalData.backupTrainingSessions) {
     await pool.query(
       "INSERT INTO employees_trainings (id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [
-        row.id,
-        row.employee_id,
-        row.training_id,
-        row.status,
-        row.start_date,
-        row.end_date,
-        row.expiry_date,
-      ]
+      [row.id, row.employee_id, row.training_id, row.status, row.start_date, row.end_date, row.expiry_date]
     );
   }
 }
 
 async function setup() {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM trainings");
-  await pool.query("DELETE FROM employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE trainings");
+  await pool.query("TRUNCATE TABLE employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
-  await pool.query(`ALTER TABLE employees AUTO_INCREMENT = 1`);
-  await pool.query(`ALTER TABLE trainings AUTO_INCREMENT = 1`);
-  await pool.query(`ALTER TABLE employees_trainings AUTO_INCREMENT = 1`);
+  await pool.query(
+    "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
+    [1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer',
+     2, 'Jane Smith', 'jane@example.com', '2023-07-28', 'Manager']
+  );
 
-  await pool.query(`INSERT INTO employees (id, name, email, hire_date, designation) VALUES 
-    (1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer'),
-    (2, 'Jane Smith', 'jane@example.com', '2023-07-28', 'Manager')`);
-
-  await pool.query(`INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES 
-    (1, 'Safety Training', 'Safety procedures', 365, 'Provider A')`);
+  await pool.query(
+    "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
+    [1, 'Safety Training', 'Safety procedures', 365, 'Provider A']
+  );
 }
 
 describe("Integration Test: Training Sessions Routes", () => {
   let originalData;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     originalData = await backupData();
+  });
+
+  afterAll(async () => {
+    await restoreData(originalData);
+    await pool.end()
+  });
+
+  beforeEach(async () => {
     await setup();
   });
 
-  afterEach(async () => {
-    await restoreData(originalData);
-  });
-
   test("GET /training-sessions - should fetch all training sessions", async () => {
-    await pool.query(`INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES 
-      (1, 1, 'Completed', '2024-07-01', '2024-07-07', '2025-07-07')`);
+    await pool.query(
+      "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?)",
+      [1, 1, 'Completed', '2024-07-01', '2024-07-07', '2025-07-07']
+    );
 
     const mockTrainingSessions = [
       {
