@@ -9,8 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["jest", "@testing-library/jest-dom"]
+    "jsx": "react-jsx"
   },
   "include": ["vite.config.ts"]
 }
