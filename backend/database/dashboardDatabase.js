@@ -8,6 +8,11 @@ export async function getEmployeeDetails() {
             e.designation as designation
         FROM employees e
     `);
+
+    if (!rows || rows.length === 0) {
+      throw new Error('No employee details found');
+    }
+
     return rows;
 }
 
@@ -22,6 +27,11 @@ export async function getRelevantCourses() {
         JOIN relevant_trainings rt ON t.id = rt.training_id
         ORDER BY rt.employee_id;
     `);
+
+    if (!rows || rows.length === 0) {
+      throw new Error('No relevant courses found');
+    }
+    
     return rows;
 }
 
@@ -39,6 +49,11 @@ export async function getTrainingDates() {
         GROUP BY et.employee_id, et.training_id
         ORDER BY et.employee_id, et.training_id;
     `);
+
+    if (!rows || rows.length === 0) {
+      throw new Error('No training dates found');
+    }
+
     return rows;
 }
 

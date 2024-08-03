@@ -48,22 +48,38 @@ describe('Test: Dashboard Routes', () => {
         ]
       }
     ];
-
     dashboardDatabase.getCombinedEmployeeTrainingDetails.mockResolvedValue(mockCombinedEmployeeTrainingDetails);
-
     const response = await request(app).get('/dashboard');
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockCombinedEmployeeTrainingDetails);
   });
 
+  test('GET /dashboard should handle null values', async () => {
+    dashboardDatabase.getCombinedEmployeeTrainingDetails.mockResolvedValue(null);
+    const response = await request(app).get('/dashboard');
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: 'No combined employee training details found' });
+  });
+
+  test('GET /dashboard should handle empty array', async () => {
+    dashboardDatabase.getCombinedEmployeeTrainingDetails.mockResolvedValue([]);
+    const response = await request(app).get('/dashboard');
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: 'No combined employee training details found' });
+  });
+
   test('GET /dashboard/percentage should return percentage of valid employees', async () => {
     dashboardDatabase.getPercentageValidEmployees.mockResolvedValue('50.00');
-
     const response = await request(app).get('/dashboard/percentage');
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ percentageValidEmployees: '50.00' });
+  });
+
+  test('GET /dashboard/percentage should handle null values', async () => {
+    dashboardDatabase.getPercentageValidEmployees.mockResolvedValue(null);
+    const response = await request(app).get('/dashboard/percentage');
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: 'Error calculating percentage of valid employees' });
   });
 
   test('GET /dashboard/numbers should return training stats', async () => {
@@ -77,13 +93,17 @@ describe('Test: Dashboard Routes', () => {
             numberOfEmployeesWithTraining: '2'
         }
     };
-
     dashboardDatabase.getTrainingStats.mockResolvedValue(mockTrainingStats);
-
     const response = await request(app).get('/dashboard/numbers');
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockTrainingStats);
+  });
+
+  test('GET /dashboard/numbers should handle null values', async () => {
+    dashboardDatabase.getTrainingStats.mockResolvedValue(null);
+    const response = await request(app).get('/dashboard/numbers');
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: 'No training stats found' });
   });
 
   test('GET /dashboard/employeeDetails should return employee details', async () => {

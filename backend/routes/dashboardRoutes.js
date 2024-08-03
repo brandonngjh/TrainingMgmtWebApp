@@ -10,11 +10,17 @@ router.use(protect);    //add this
 
 router.get("/", async (req, res) => {
   const combinedEmployeeTrainingDetails = await getCombinedEmployeeTrainingDetails();
+  if (!Array.isArray(combinedEmployeeTrainingDetails) || combinedEmployeeTrainingDetails.length === 0) {
+    return res.status(500).send({ message: 'No combined employee training details found' });
+  }
   return res.status(200).send(combinedEmployeeTrainingDetails);
 });
 
 router.get("/percentage", async (req, res) => {
   const percentageValidEmployees = await getPercentageValidEmployees();
+  if (percentageValidEmployees === null) {
+    return res.status(500).send({ message: 'Error calculating percentage of valid employees' });
+  }
   return res.status(200).send({
     percentageValidEmployees: percentageValidEmployees
   });
@@ -22,6 +28,9 @@ router.get("/percentage", async (req, res) => {
 
 router.get("/numbers", async (req, res) => {
   const trainingStatsJson = await getTrainingStats();
+  if (typeof trainingStatsJson !== 'object' || trainingStatsJson === null) {
+    return res.status(500).send({ message: 'No training stats found' });
+  }
   res.status(200).json(trainingStatsJson);
 });
 
