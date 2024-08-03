@@ -23,9 +23,11 @@ async function backupData() {
 }
 
 async function restoreData(originalData) {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM relevant_trainings");
-  await pool.query("DELETE FROM trainings");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE relevant_trainings");
+  await pool.query("TRUNCATE TABLE trainings");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
   for (const row of originalData.backupTrainings) {
     await pool.query(
@@ -64,24 +66,34 @@ async function restoreData(originalData) {
 }
 
 async function setup() {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM relevant_trainings");
-  await pool.query("DELETE FROM trainings");
-  await pool.query(`INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES 
-    (1, 'AS 9100D AWARENESS', 'EXTERNAL', 365, 'Provider A')`);
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE relevant_trainings");
+  await pool.query("TRUNCATE TABLE trainings");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
+
+  await pool.query(
+    "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
+    [1, 'AS 9100D AWARENESS', 'EXTERNAL', 365, 'Provider A']
+  );
 }
 
 describe("Integration Test: Training Routes", () => {
   let originalData;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     originalData = await backupData();
+  });
+
+  afterAll(async () => {
+    await restoreData(originalData);
+    await pool.end();
+  });
+
+  beforeEach(async () => {
     await setup();
   });
 
-  afterEach(async () => {
-    await restoreData(originalData);
-  });
 
   test("GET /trainings - should fetch all trainings", async () => {
     const res = await request(app).get("/trainings");

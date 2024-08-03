@@ -19,9 +19,11 @@ async function backupData() {
 }
 
 async function restoreData(originalData) {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM relevant_trainings");
-  await pool.query("DELETE FROM employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE relevant_trainings");
+  await pool.query("TRUNCATE TABLE employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
   for (const row of originalData.backupEmployees) {
     await pool.query(
@@ -46,23 +48,32 @@ async function restoreData(originalData) {
 }
 
 async function setup() {
-  await pool.query("DELETE FROM employees_trainings");
-  await pool.query("DELETE FROM relevant_trainings");
-  await pool.query("DELETE FROM employees");
-  await pool.query(`INSERT INTO employees (id, name, email, hire_date, designation) VALUES 
-    (1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer')`);
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("TRUNCATE TABLE employees_trainings");
+  await pool.query("TRUNCATE TABLE relevant_trainings");
+  await pool.query("TRUNCATE TABLE employees");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
+
+  await pool.query(
+    "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?)",
+    [1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer']
+  );
 }
 
 describe("Integration Test: Employee Routes", () => {
   let originalData;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     originalData = await backupData();
-    await setup();
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await restoreData(originalData);
+    await pool.end();
+  });
+
+  beforeEach(async () => {
+    await setup();
   });
 
   test("GET /employees - should fetch all employees", async () => {
