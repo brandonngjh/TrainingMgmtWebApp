@@ -35,3 +35,26 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('login', (username, password) => {
+  return cy.request({
+    method: 'POST',
+    url: 'http://localhost:3000/api/login',
+    body: {
+      username,
+      password
+    },
+  }).then((response) => {
+    if (response.status === 200) {
+      window.localStorage.setItem('token', response.body.token);
+    } else {
+      throw new Error('Failed to log in');
+    }
+  });
+});
+
+Cypress.Commands.add('restoreSession', () => {
+  cy.session('login-session', () => {
+    cy.login('admin', 'admin');
+  });
+});
