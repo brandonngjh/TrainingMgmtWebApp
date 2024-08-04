@@ -24,31 +24,27 @@ export async function getTrainingByID(id) {
 
 export async function getTrainingNames() {
   const [rows] = await pool.query("SELECT title FROM trainings");
-  const trainingNames = rows.map(row => row.title);
+  const trainingNames = rows.map((row) => row.title);
   return trainingNames;
 }
 
 // Create a new training
 export async function createTraining(
-  title, 
-  description, 
-  validity_period, 
+  title,
+  description,
+  validity_period,
   training_provider
 ) {
-  
-  // Log the parameters to the console
-  console.log("Creating training with:", { title, description, validity_period, training_provider });
-
   const [result] = await pool.query(
     "INSERT INTO trainings (title, description, validity_period, training_provider) VALUES (?, ?, ?, ?)",
     [title, description, validity_period, training_provider]
   );
-  // return getTrainingByID(result.insertId);
+  return getTrainingByID(result.insertId);
 }
 
 // Delete a training
 export async function deleteTraining(id) {
-  console.log("Deleting training ID: ",{id})
+  console.log("Deleting training ID: ", { id });
   const [result] = await pool.query("DELETE FROM trainings WHERE id = ?", [id]);
   return result.affectedRows > 0 ? "Delete Successful" : "Training not found";
 }
@@ -66,9 +62,13 @@ export async function updateTraining(
     throw new Error(`Training with id ${id} does not exist`);
   }
 
-   // Log the parameters to the console
-   console.log("Updating training to:", { title, description, validity_period, training_provider });
-
+  // Log the parameters to the console
+  console.log("Updating training to:", {
+    title,
+    description,
+    validity_period,
+    training_provider,
+  });
 
   const [result] = await pool.query(
     "UPDATE trainings SET title = ?, description = ?, validity_period = ?, training_provider = ? WHERE id = ?",

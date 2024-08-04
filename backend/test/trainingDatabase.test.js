@@ -48,11 +48,14 @@ describe('Unit Test: Training Database Functions', () => {
 
   test('createTraining - should create a new training', async () => {
     pool.query.mockResolvedValueOnce([{ insertId: 1 }]);
-    const result = await createTraining('Safety Training', 'Safety procedures', '1 year', 'Provider A');
+    const mockTraining = { id: 1, title: 'Safety Training', description: 'Safety procedures', validity_period: 365, training_provider: 'Provider A' };
+    pool.query.mockResolvedValueOnce([[mockTraining]]);
+    const result = await createTraining('Safety Training', 'Safety procedures', 365, 'Provider A');
     expect(pool.query).toHaveBeenCalledWith(
       "INSERT INTO trainings (title, description, validity_period, training_provider) VALUES (?, ?, ?, ?)",
-      ['Safety Training', 'Safety procedures', '1 year', 'Provider A']
+      ['Safety Training', 'Safety procedures', 365, 'Provider A']
     );
+    expect(result).toEqual(mockTraining);
   });
 
   test('deleteTraining - should delete a training and return success message', async () => {
@@ -69,7 +72,7 @@ describe('Unit Test: Training Database Functions', () => {
 
   test('updateTraining - should throw an error if training ID does not exist', async () => {
     pool.query.mockResolvedValueOnce([[{ count: 0 }]]);
-    await expect(updateTraining(1, 'Safety Training', 'Safety procedures', '1 year', 'Provider A'))
+    await expect(updateTraining(1, 'Safety Training', 'Safety procedures', 365, 'Provider A'))
       .rejects
       .toThrow('Training with id 1 does not exist');
   });
@@ -77,8 +80,9 @@ describe('Unit Test: Training Database Functions', () => {
   test('updateTraining - should update an existing training', async () => {
     pool.query.mockResolvedValueOnce([[{ count: 1 }]]);
     pool.query.mockResolvedValueOnce([{ affectedRows: 1 }]);
-    pool.query.mockResolvedValueOnce([[{ id: 1, title: 'Safety Training' }]]);
-    const result = await updateTraining(1, 'Safety Training', 'Safety procedures', '1 year', 'Provider A');
-    expect(result).toEqual({ id: 1, title: 'Safety Training' });
+    const mockTraining = { id: 1, title: 'Safety Training', description: 'Safety procedures', validity_period: 365, training_provider: 'Provider A' };
+    pool.query.mockResolvedValueOnce([[mockTraining]]);
+    const result = await updateTraining(1, 'Safety Training', 'Safety procedures', 365, 'Provider A');
+    expect(result).toEqual(mockTraining);
   });
 });
