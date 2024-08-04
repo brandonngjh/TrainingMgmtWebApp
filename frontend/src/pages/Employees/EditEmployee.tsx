@@ -20,12 +20,17 @@ const EditEmployee = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employees/${id}`)
+      .get(`http://localhost:3000/api/employees/${id}`, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         const data = response.data;
         setName(data.name);
         setEmail(data.email);
-        setHireDate(data.hire_date); 
+        setHireDate(formatDate(data.hire_date)); 
         // setDivision(data.division);
         setDesignation(data.designation);
         setLoading(false);
@@ -39,13 +44,26 @@ const EditEmployee = () => {
       });
   }, [id]);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  };
+
   const handleEditEmployee = () => {
+    if (!name || !email || !hireDate || !designation) {
+      enqueueSnackbar("Please fill up all fields", { variant: "warning" });
+      return;
+    }
+
     const data = {
-      name,
-      email,
+      name: name,
+      email: email,
       hire_date: hireDate,
       // division,
-      designation,
+      designation: designation,
     };
     setLoading(true);
     axios

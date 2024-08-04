@@ -6,6 +6,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const EditEmployeesTrainings = () => {
+  const { id } = useParams();
   const [trainingId, setTrainingId] = useState("");
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -13,7 +14,6 @@ const EditEmployeesTrainings = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams();
   const location = useLocation();
 
   const [employeeId, setEmployeeId] = useState("");
@@ -28,7 +28,7 @@ const EditEmployeesTrainings = () => {
 
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employeesTrainings/training/${id}`, {
+      .get(`http://localhost:3000/api/employeesTrainings/${id}`, {
         headers: {
           'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
@@ -59,14 +59,14 @@ const EditEmployeesTrainings = () => {
 
     const data = {
       training_id: trainingId,
-      status,
+      status: status,
       start_date: startDate,
       end_date: endDate,
     };
 
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/employeesTrainings/training/${id}`, data, {
+      .put(`http://localhost:3000/api/employeesTrainings/${id}`, data, {
         headers: {
           'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
@@ -90,6 +90,14 @@ const EditEmployeesTrainings = () => {
       <h1 className="text-3xl font-bold text-gray-800 my-4">Edit Employee Training</h1>
       {loading ? <Spinner /> : null}
       <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Employee ID</label>
+          <input
+            type="text"
+            value={employeeId}
+            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+          />
+        </div>
         <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Training ID</label>
           <input
