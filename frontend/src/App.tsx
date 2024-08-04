@@ -22,14 +22,19 @@ import DeleteTraining from "./pages/Trainings/DeleteTraining.tsx";
 
 import TrainingSession from "./pages/TrainingSessions/TrainingSession.tsx";
 import CreateTrainingSession from "./pages/TrainingSessions/CreateTrainingSession.tsx";
+import { SessionSelector, EditTrainingSession } from "./pages/TrainingSessions/EditTrainingSession.tsx";
+import DeleteTrainingSession from "./pages/TrainingSessions/DeleteTrainingSession.tsx";
+import MarkAttendance from "./pages/TrainingSessions/MarkAttendance.tsx";
 
 import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployeesTrainings.tsx";
 import DeleteEmployeesTrainings from "./pages/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
 import EditEmployeesTrainings from "./pages/EmployeesTrainings/EditEmployeesTrainings.tsx";
 import CreateRelevantTrainings from "./pages/RelevantTrainings/CreateRelevantTrainings.tsx";
+import DeleteRelevantTraining from "./pages/RelevantTrainings/DeleteRelevantTrainings.tsx";
 import CreateTrainingsEmployees from "./pages/TrainingsEmployees/CreateTrainingsEmployees.tsx";
 import EditTrainingsEmployees from "./pages/TrainingsEmployees/EditTrainingsEmployees.tsx";
 import DeleteTrainingsEmployees from "./pages/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
+import EditRelevantTrainings from "./pages/RelevantTrainings/EditRelevantTrainings.tsx";
 
 const App: React.FC = () => {
   return (
@@ -46,13 +51,16 @@ const App: React.FC = () => {
 
       <Route path="/sessions" element={<TrainingSession />} />
       <Route path="/sessions/create" element={<CreateTrainingSession/>} />
+      <Route path="/sessions/edit" element={<SessionSelector/>} />
+      <Route path="/sessions/:id" element={<EditTrainingSession />} />
+      <Route path="/sessions/delete/" element={<DeleteTrainingSession />} />
+      <Route path="/sessions/markattendance" element={<MarkAttendance />} />
 
       <Route path="/employees" element={<Employees />} />
       <Route path="/employees/create" element={<CreateEmployee />} />
       <Route path="/employees/details/:id" element={<ShowEmployee />} />
       <Route path="/employees/edit/:id" element={<EditEmployee />} />
       <Route path="/employees/delete/:id" element={<DeleteEmployee />} />
-
 
       <Route path="/trainings" element={<Trainings />} />
       <Route path="/trainings/create" element={<CreateTraining />} />
@@ -65,9 +73,12 @@ const App: React.FC = () => {
       <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
 
       <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
+      <Route path="/relevanttrainings/delete/:trainingId" element={<DeleteRelevantTraining />} />
+      <Route path="/relevanttrainings/edit/:trainingId" element={<EditRelevantTrainings />} />
+
       <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
       <Route path="/trainingsemployees/edit/:id" element={<EditTrainingsEmployees />} />
-      <Route path="/trainingsemployees/delete/:id" element={<DeleteTrainingsEmployees />} />
+      <Route path="/trainingsemployees/delete/:sessionId" element={<DeleteTrainingsEmployees />} />
       
     </Routes>
     

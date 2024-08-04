@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getTrainings,
+  getTrainingNames,
   getTrainingByID,
   createTraining,
   deleteTraining,
@@ -22,6 +23,16 @@ router.get("/", async (req, res) => {
     return res.status(500).send({ message: error.message });
   }
 });
+
+router.get("/names", async (req, res) => {
+  try {
+    const trainingNames = await getTrainingNames();
+    return res.status(200).json(trainingNames);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+})
 
 // Route for Get One Training from database by id
 router.get("/:id", async (req, res) => {

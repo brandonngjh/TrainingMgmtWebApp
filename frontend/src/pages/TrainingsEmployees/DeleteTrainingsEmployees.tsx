@@ -6,10 +6,10 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const DeleteTrainingsEmployees = () => {
+  const { sessionId } = useParams();
   const [trainingId, setTrainingId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { id } = useParams();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -24,7 +24,7 @@ const DeleteTrainingsEmployees = () => {
   const handleDeleteTrainingEmployee = () => {
     setLoading(true);
     axios
-      .delete(`http://localhost:3000/api/employeesTrainings/${id}`)
+      .delete(`http://localhost:3000/api/employeesTrainings/${sessionId}`)
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Training Employee deleted successfully", {
