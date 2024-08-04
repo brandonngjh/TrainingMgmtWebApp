@@ -24,7 +24,7 @@ describe('Report Generator Page', () => {
       });
   
       cy.get('table').should('be.visible');
-      cy.get('table thead tr th').should('have.length', 4); // Ensure the table has the correct number of columns
+      cy.get('table thead tr th').should('have.length', 4);
     });
   
     it('should fetch and display training options', () => {
@@ -35,25 +35,20 @@ describe('Report Generator Page', () => {
       });
   
       cy.get('[data-test=training-select]').should('exist').within(() => {
-        cy.get('option').should('have.length.greaterThan', 1); // Ensure there are multiple options
+        cy.get('option').should('have.length.greaterThan', 1); 
       });
     });
   
     it('should filter report based on selected training and validity', () => {
-      // Intercept the skills report fetch
       cy.intercept('GET', 'http://localhost:3000/api/skillsReport').as('getSkillsReport');
       
       cy.get('[data-test=fetch-report-button]').click();
       cy.wait('@getSkillsReport');
-      
-      // Select a training option
-      cy.get('[data-test=training-select]').select('Some Training Title');
+      cy.get('[data-test=training-select]').select('SAFETY AWARENESS (PPE)');
       cy.get('[data-test=validity-select]').select('Valid');
-      
-      // Assert the table reflects the selected filters
       cy.get('table tbody tr').each(($row) => {
         cy.wrap($row).within(() => {
-          cy.get('td').eq(2).should('contain', 'Some Training Title');
+          cy.get('td').eq(2).should('contain', 'SAFETY AWARENESS (PPE)');
           cy.get('td').eq(3).should('contain', 'Valid');
         });
       });
@@ -61,8 +56,6 @@ describe('Report Generator Page', () => {
   
     it('should generate a PDF report', () => {
       cy.get('[data-test=generate-report-button]').click();
-      
-      // Ensure PDF generation logic works (this part is mostly about UI interaction, actual PDF content is tested in unit tests)
       cy.window().document().then((doc) => {
         const pdfBlob = doc.querySelector('iframe')?.src;
         expect(pdfBlob).to.exist;
