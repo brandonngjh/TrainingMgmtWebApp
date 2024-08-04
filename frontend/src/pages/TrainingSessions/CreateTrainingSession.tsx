@@ -5,7 +5,7 @@ import Spinner from "../../components/Spinner";
 import axios from "axios";
 import axiosInstance from "../../authentication/axiosInstance";
 import { useSnackbar } from "notistack";
-import Select, { MultiValue } from 'react-select';
+import Select from 'react-select';
 
 interface Employee {
     id: string;
@@ -20,12 +20,13 @@ interface Training {
     description: string;
     validity_period: string;
     training_provider: string | null;
-  }
+}
 
 const CreateTrainingSession: React.FC = () => {
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]); // For populating the multiselect list
     const [trainings, setTrainings] = useState<Training[]>([]);
-  const [employeeId, setEmployeeId] = useState<string[]>([]);
+  // States which employees (by their ids) the training is being created for
+  const [employeeIds, setEmployeeIds] = useState<string[]>([]); 
   const [trainingId, setTrainingId] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
@@ -34,15 +35,8 @@ const CreateTrainingSession: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation();
+  // const location = useLocation();
   const token = localStorage.getItem('token');
-
-
-//   useEffect(() => {
-//     const params = new URLSearchParams(location.search);
-//     const trainingIdFromURL = params.get("trainingId") || "";
-//     setTrainingId(trainingIdFromURL);
-//   }, [location]);
 
     useEffect(() => {
         setLoading(true);
@@ -74,7 +68,7 @@ const CreateTrainingSession: React.FC = () => {
   const handleSaveTrainingSessions = () => {
 
     const data = {
-        employee_ids: employeeId,
+        employee_ids: employeeIds,
         training_id: trainingId,
         status,
         start_date: startDate,
@@ -84,19 +78,13 @@ const CreateTrainingSession: React.FC = () => {
 
 
     // Validate fields
-    if (!employeeId || !trainingId || !status || !startDate || !endDate) {
+    if (!employeeIds || !trainingId || !status || !startDate || !endDate) {
       enqueueSnackbar("Please fill out all fields", { variant: "warning" });
       return;
     }
 
     setLoading(true);
 
-    // axios
-    //   .post(`http://localhost:3000/api/employeesTrainings`, data, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   })
     axios
     .post(`http://localhost:3000/api/sessions/`, data, {
       headers: {
@@ -131,7 +119,7 @@ const CreateTrainingSession: React.FC = () => {
                 isMulti
                 onChange={(newValue) => {
                     if (newValue !== null) {
-                      setEmployeeId(newValue.map((employee) => employee.value)); // Set to empty string or any default value as need
+                      setEmployeeIds(newValue.map((employee) => employee.value)); // Set to empty string or any default value as need
                     }
                   }}
                 options={employees.map((employee) => ({

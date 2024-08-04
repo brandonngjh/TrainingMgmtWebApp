@@ -33,33 +33,39 @@ import { Box } from "@mui/material";
 //   relevantTrainings: Training[];
 // }
 
+interface Employee {
+    employee_id : number;
+    employee_name : string;
+    designation : string;
+    status : string;
+}
+
 interface TrainingSession {
     session_id : number;
-    training_title : string;
-    training_id : number;
-    status : string;
     start_date : string;
     end_date : string;
     expiry_date : string;
-    employee_id : number,
-    employee_name : string,
-    designation : string
+    training_title : string;
+    training_id : number;
+    employees : Employee[];
 }
 
 const Example: React.FC = () => {
   const [sessions, setSessions] = useState<TrainingSession[]>([]);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchSessions = async () => {
       try {
-        const response = await axiosInstance.get<TrainingSession[]>("/sessions");
-        setSessions(response.data);
+        const response = await axiosInstance.get<{[key: string]: TrainingSession}>("/sessions");
+        const data = response.data;
+        const sessionsArray: TrainingSession[] = Object.values(data);
+        setSessions(sessionsArray);
       } catch (error) {
         console.error("Error fetching training sessions: ", error);
       }
     };
 
-    fetchEmployees();
+    fetchSessions();
   }, []);
 
   // Define columns
@@ -71,29 +77,56 @@ const Example: React.FC = () => {
         header: "Session ID"
     },
       {
-        id: "employee", // id used to define `group` column
+        id: "employee",
         header: "Employee Details",
         columns: [
           {
-            accessorKey: "employee_id",
+            accessorFn: (session) => session.employees.map(employee => employee.employee_id).join(", "),
+            id: "employee_id",
             header: "Employee ID",
-            // size: 1,
+            Cell: ({row}) => (
+              <Box>
+                {row.original.employees.map((employee, index) => (
+                  <div 
+                    key = {index}
+                    style={{
+                      backgroundColor:
+                        index % 2 === 0
+                          ? "transparent"
+                          : "rgba(227,227,227,0.8)",
+                      padding: "4px",
+                      margin: "2px 0",
+                    }}
+                  >
+                    {employee.employee_id}
+                  </div>
+                ))}
+              </Box>
+            )
           },
           {
-            accessorKey: "employee_name", // Directly use the employee_name from the Employee interface
+            accessorFn: (session) => session.employees.map(employee => employee.employee_name).join(", "),
+            id: "employee_name",
             header: "Employee Name",
-            size: 200,
-            // Cell: ({ renderedCellValue }) => (
-            //   <Box
-            //     sx={{
-            //       display: "flex",
-            //       alignItems: "center",
-            //       gap: "1rem",
-            //     }}
-            //   >
-            //     <span>{renderedCellValue}</span>
-            //   </Box>
-            // ),
+            Cell: ({row}) => (
+              <Box>
+                {row.original.employees.map((employee, index) => (
+                  <div 
+                    key = {index}
+                    style={{
+                      backgroundColor:
+                        index % 2 === 0
+                          ? "transparent"
+                          : "rgba(227,227,227,0.8)",
+                      padding: "4px",
+                      margin: "2px 0",
+                    }}
+                  >
+                    {employee.employee_name}
+                  </div>
+                ))}
+              </Box>
+            )
           },
         ],
       },
@@ -101,13 +134,33 @@ const Example: React.FC = () => {
         id: "session_details",
         header: "Session Details",
         columns : [
+          {
+            accessorFn: (session) => session.employees.map(employee => employee.employee_name).join(", "),
+            id: "status",
+            header: "Status",
+            Cell: ({row}) => (
+              <Box>
+                {row.original.employees.map((employee, index) => (
+                  <div 
+                    key = {index}
+                    style={{
+                      backgroundColor:
+                        index % 2 === 0
+                          ? "transparent"
+                          : "rgba(227,227,227,0.8)",
+                      padding: "4px",
+                      margin: "2px 0",
+                    }}
+                  >
+                    {employee.status}
+                  </div>
+                ))}
+              </Box>
+            )
+          },
             {
                 accessorKey: "training_title",
                 header: "Training"
-            },
-            {
-            accessorKey: "status",
-            header: "Status"
             },
             {
             // accessorKey: "start_date",
@@ -172,9 +225,24 @@ const Example: React.FC = () => {
         <h2 className="text-3xl my-8">Training Sessions Page</h2>
         <Link to={`/sessions/create`} className="mt-4">
             <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-              Create Training Session
+              Create Session
             </button>
-          </Link>
+        </Link>
+        <Link to={`/sessions/edit`} className="mt-4">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Edit Session
+            </button>
+        </Link>
+        <Link to={`/sessions/delete`} className="mt-4">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Delete Session
+            </button>
+        </Link>
+        <Link to={`/sessions/markattendance`} className="mt-4">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+              Mark Attendance
+            </button>
+        </Link>
         <div id="dashboard-table">
           <MaterialReactTable table={table} />
         </div>

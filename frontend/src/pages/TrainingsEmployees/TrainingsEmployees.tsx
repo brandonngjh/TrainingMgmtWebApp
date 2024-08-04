@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
@@ -106,11 +106,11 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
             <div className="flex-col">
               <h2 className="text-lg text-gray-600">List of training sessions for training ID: {trainingId}</h2>
             </div>
-            <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
+            {/* <Link to={`/trainingsemployees/create?trainingId=${trainingId}`} className="mt-4">
               <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
                 Add Sessions
               </button>
-            </Link>
+            </Link> */}
           </div>
           {sessionDetails.length === 0 ? (
             <div className="text-xl text-gray-500">No employees found for this training</div>
@@ -153,12 +153,14 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                           >
                             <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                           </Link>
+
                           <Link
-                            to={`/employeestrainings/delete/${session.session_id}?trainingId=${session.training_id}`}
+                            to={`/trainingsemployees/delete/${session.session_id}?trainingId=${session.training_id}`}
                             className="bg-red-100 p-1 rounded-full hover:bg-red-200"
                           >
                             <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
                           </Link>
+
                         </div>
                       </td>
                     </tr>
