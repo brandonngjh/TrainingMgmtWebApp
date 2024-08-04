@@ -54,9 +54,9 @@ CREATE INDEX idx_training_title ON trainings(title);
 -- CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 INSERT INTO user_credentials (username, password) VALUES
-('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y'),
-('hr', '$2a$10$Pc6Q5Kq7yaLvJomBGrqcCuDGm2N4ipUJwvdwaUvhUPU7.D7nSL1S.'),
-('hod', '$2a$10$AvHTqnNYfW9HDPWWO7/TlOFPziB31crYB.cu.rxy1lWLW6v2hFPSG');
+('admin', 'admin'),
+('hr', 'hr'),
+('hod', 'hod');
 
 INSERT INTO employees (id, name, email, hire_date, designation)
 VALUES
@@ -153,7 +153,7 @@ VALUES
 (587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Valid'),
 
 (2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Valid'),
-(2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
+(2, (SELECT id FROM trainings WHERE title = '5S'), 'Valid'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA');
 
@@ -174,7 +174,7 @@ INSERT INTO employees_trainings (session_id, employee_id, training_id, status, s
 (12, 2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Completed', '2024-05-01', '2024-05-10', '2025-05-10'),
 
 (13, 21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29'),
-(13, 2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29');
+(13, 2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'Scheduled', '2024-08-15', '2024-08-29', '2025-08-29'),
 (14, 22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
 (14, 2, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Scheduled', '2024-09-01', '2024-09-29', '2025-09-29'),
 (15, 22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Scheduled', '2024-09-15', '2024-10-20', '2025-10-20');
