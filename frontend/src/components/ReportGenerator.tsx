@@ -111,40 +111,40 @@ const ReportGenerator: React.FC = () => {
     <div className="flex">
       <Sidebar activeItem="Skills Report Generator" />
       <div className="flex-1">
-        <h2 className= "text-3xl my-8">Skills Report Generator</h2>
+        <h2 data-test="report-generator-header" className="text-3xl my-8">Skills Report Generator</h2>
         <div className="button-container">
-          <button onClick={fetchSkillsReport}>Fetch Skills Report</button>
-
+          <button data-test="fetch-report-button" onClick={fetchSkillsReport}>Fetch Skills Report</button>
+  
           <div className="select-container">
-            <select value={selectedTraining} onChange={handleTrainingChange}>
+            <select data-test="training-select" value={selectedTraining} onChange={handleTrainingChange}>
               <option value="">All Trainings</option>
               {trainings.map((training, index) => (
                 <option key={index} value={training.title}>{training.title}</option>
               ))}
             </select>
-
-            <select value={selectedValidity} onChange={handleValidityChange}>
+  
+            <select data-test="validity-select" value={selectedValidity} onChange={handleValidityChange}>
               <option value="">All Validities</option>
               <option value="Valid">Valid</option>
               <option value="Expired">Expired</option>
               <option value="NA">NA</option>
             </select>
           </div>
-
+  
           <div className="generate-button-container">
-            <button onClick={generatePDF}>Download Skills Report PDF</button>
+            <button data-test="generate-report-button" onClick={generatePDF}>Download Skills Report PDF</button>
           </div>
         </div>
-
+  
         {dataFetched && (
           <>
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
-                <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
-                <th className="py-2 px-4 bg-gray-100 border-b">Training</th>
-                <th className="py-2 px-4 bg-gray-100 border-b">Validity</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Name</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Training</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b">Validity</th>
                 </tr>
               </thead>
               <tbody>
