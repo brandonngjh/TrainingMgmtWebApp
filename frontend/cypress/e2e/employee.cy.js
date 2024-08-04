@@ -38,7 +38,7 @@ describe("Employees Page", () => {
     });
 
     cy.url().should("include", "/employees");
-    cy.contains("Employee Created successfully");
+    cy.contains("Employee created successfully");
     cy.contains("John Doe").should("be.visible");
   });
 
@@ -70,7 +70,7 @@ describe("Employees Page", () => {
   });
 
   it("should view employee details", () => {
-    cy.contains("tr", "Jane Doe").find("[data-test=edit-employee-998]").click();
+    cy.contains("tr", "Jane Doe").find("[data-test=view-employee-998]").click();
 
     cy.url().should("include", "/employees/details/");
     cy.contains("Employee Details").should("be.visible");
@@ -84,15 +84,10 @@ describe("Employees Page", () => {
     );
 
     cy.get("table")
-      .contains("td", "John Doe")
+      .contains("td", "Jane Doe")
       .parent("tr")
       .find("[data-test=delete-employee-998]")
       .click();
-    //   cy.get("table")
-    //   .contains("td", "Jane Doe")
-    //   .parent("tr")
-    //   .find("[data-test=delete-employee-998]")
-    //   .click();
     cy.url().should("include", "/employees/delete/");
 
     cy.contains("Are you sure you want to delete this employee?").should(
@@ -109,5 +104,4 @@ describe("Employees Page", () => {
     cy.contains("Employee Deleted successfully");
     cy.contains("Jane Doe").should("not.exist");
   });
-  
 });

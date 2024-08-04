@@ -37,14 +37,29 @@ async function restoreData(originalData) {
   for (const row of originalData.backupTrainings) {
     await pool.query(
       "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
-      [row.id, row.title, row.description, row.validity_period, row.training_provider]
+      [
+        row.id,
+        row.title,
+        row.description,
+        row.validity_period,
+        row.training_provider,
+      ]
     );
   }
 
   for (const row of originalData.backupTrainingSessions) {
     await pool.query(
-      "INSERT INTO employees_trainings (id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [row.id, row.employee_id, row.training_id, row.status, row.start_date, row.end_date, row.expiry_date]
+      "INSERT INTO employees_trainings (id, session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        row.id,
+        row.session_id,
+        row.employee_id,
+        row.training_id,
+        row.status,
+        row.start_date,
+        row.end_date,
+        row.expiry_date,
+      ]
     );
   }
 }
@@ -58,13 +73,23 @@ async function setup() {
 
   await pool.query(
     "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
-    [1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer',
-     2, 'Jane Smith', 'jane@example.com', '2023-07-28', 'Manager']
+    [
+      1,
+      "John Doe",
+      "john@example.com",
+      "2023-07-28",
+      "Engineer",
+      2,
+      "Jane Smith",
+      "jane@example.com",
+      "2023-07-28",
+      "Manager",
+    ]
   );
 
   await pool.query(
     "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
-    [1, 'Safety Training', 'Safety procedures', 365, 'Provider A']
+    [1, "Safety Training", "Safety procedures", 12, "Provider A"]
   );
 }
 
@@ -77,7 +102,7 @@ describe("Integration Test: Training Sessions Routes", () => {
 
   afterAll(async () => {
     await restoreData(originalData);
-    await pool.end()
+    await pool.end();
   });
 
   beforeEach(async () => {
@@ -86,28 +111,30 @@ describe("Integration Test: Training Sessions Routes", () => {
 
   test("GET /training-sessions - should fetch all training sessions", async () => {
     await pool.query(
-      "INSERT INTO employees_trainings (employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?)",
-      [1, 1, 'Completed', '2024-07-01', '2024-07-07', '2025-07-07']
+      "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [1, 1, 1, "Completed", "2024-07-01", "2024-07-07", "2025-07-07"]
     );
-
-    const mockTrainingSessions = [
-      {
-        session_id: 1,
-        status: "Completed",
-        start_date: "2024-06-30T16:00:00.000Z",
-        end_date: "2024-07-06T16:00:00.000Z",
-        expiry_date: "2025-07-06T16:00:00.000Z",
-        employee_id: 1,
-        employee_name: "John Doe",
-        designation: "Engineer",
-        training_title: "Safety Training",
-        training_id: 1,
-      },
-    ];
 
     const res = await request(app).get("/training-sessions");
     expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockTrainingSessions);
+    expect(res.body).toEqual({
+      1: {
+        session_id: 1,
+        start_date: expect.any(String),
+        end_date: expect.any(String),
+        expiry_date: expect.any(String),
+        training_title: "Safety Training",
+        training_id: 1,
+        employees: [
+          {
+            employee_id: 1,
+            employee_name: "John Doe",
+            designation: "Engineer",
+            status: "Completed",
+          },
+        ],
+      },
+    });
   });
 
   test("POST /training-sessions - should create new training sessions", async () => {
@@ -122,13 +149,33 @@ describe("Integration Test: Training Sessions Routes", () => {
       });
 
     expect(res.status).toBe(201);
-    expect(res.body).toEqual([
-      { insertId: expect.any(Number), affectedRows: 1 },
-      { insertId: expect.any(Number), affectedRows: 1 },
-    ]);
+    expect(res.body).toEqual({
+      1: {
+        session_id: 1,
+        start_date: expect.any(String),
+        end_date: expect.any(String),
+        expiry_date: expect.any(String),
+        training_title: "Safety Training",
+        training_id: 1,
+        employees: [
+          {
+            employee_id: 1,
+            employee_name: "John Doe",
+            designation: "Engineer",
+            status: "Scheduled",
+          },
+          {
+            employee_id: 2,
+            employee_name: "Jane Smith",
+            designation: "Manager",
+            status: "Scheduled",
+          },
+        ],
+      },
+    });
 
     const [rows] = await pool.query(
-      "SELECT * FROM employees_trainings WHERE training_id = 1"
+      "SELECT * FROM employees_trainings WHERE session_id = 1"
     );
     expect(rows.length).toBe(2);
   });

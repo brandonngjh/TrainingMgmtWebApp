@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const CreateEmployee = () => {
-  const [id, setID] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [hireDate, setHireDate] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [id, setID] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [hireDate, setHireDate] = useState<string>("");
+  const [designation, setDesignation] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const token = localStorage.getItem('token');
@@ -21,20 +21,20 @@ const CreateEmployee = () => {
       id,
       name,
       email,
-      hire_date: hireDate,
+      hire_date: formatDate(hireDate),
       designation,
     };
     setLoading(true);
     axios
       .post(`http://localhost:3000/api/employees`, data, {
         headers: {
-          'Authorization':`Bearer ` + token,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })
       .then(() => {
         setLoading(false);
-        enqueueSnackbar("Employee Created successfully", {
+        enqueueSnackbar("Employee created successfully", {
           variant: "success",
         });
         navigate("/employees");
@@ -44,6 +44,14 @@ const CreateEmployee = () => {
         enqueueSnackbar("Error", { variant: "error" });
         console.log(error);
       });
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2); // Add leading zero
+    const day = (`0${date.getDate()}`).slice(-2); // Add leading zero
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -95,7 +103,7 @@ const CreateEmployee = () => {
         <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Hire Date</label>
           <input
-            type="text"
+            type="date"
             value={hireDate}
             onChange={(e) => setHireDate(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"

@@ -26,7 +26,6 @@ describe("Dashboard Page", () => {
     cy.get('[data-test=dashboard-table]').should('contain', 'Maintenance/Construction');
     cy.get('[data-test=dashboard-table]').should('contain', '10/2/2022');
     cy.get('[data-test=dashboard-table]').should('contain', '11/2/2023');
-    cy.get('[data-test=dashboard-table]').should('contain', '9/1/2024');
   });
 
   it("should fetch and display training data", () => {

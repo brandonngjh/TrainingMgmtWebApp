@@ -30,7 +30,7 @@ const EditEmployee = () => {
         const data = response.data;
         setName(data.name);
         setEmail(data.email);
-        setHireDate(data.hire_date); 
+        setHireDate(formatDate(data.hire_date)); 
         // setDivision(data.division);
         setDesignation(data.designation);
         setLoading(false);
@@ -43,6 +43,14 @@ const EditEmployee = () => {
         console.log(error);
       });
   }, [id]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  };
 
   const handleEditEmployee = () => {
     if (!name || !email || !hireDate || !designation) {
