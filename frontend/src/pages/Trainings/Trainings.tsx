@@ -63,8 +63,8 @@ const Trainings = () => {
                   <th className="py-2 px-4 bg-gray-100 border-b">ID</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Title</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Description</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b">
-                    Validity Period
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">
+                    Validity Period (Month)
                   </th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Provider</th>
                   <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>

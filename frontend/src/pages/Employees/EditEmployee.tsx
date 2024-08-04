@@ -20,7 +20,12 @@ const EditEmployee = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employees/${id}`)
+      .get(`http://localhost:3000/api/employees/${id}`, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
       .then((response) => {
         const data = response.data;
         setName(data.name);
@@ -40,12 +45,17 @@ const EditEmployee = () => {
   }, [id]);
 
   const handleEditEmployee = () => {
+    if (!name || !email || !hireDate || !designation) {
+      enqueueSnackbar("Please fill up all fields", { variant: "warning" });
+      return;
+    }
+
     const data = {
-      name,
-      email,
+      name: name,
+      email: email,
       hire_date: hireDate,
       // division,
-      designation,
+      designation: designation,
     };
     setLoading(true);
     axios

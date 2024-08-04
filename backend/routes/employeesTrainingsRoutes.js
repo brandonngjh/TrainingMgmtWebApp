@@ -109,28 +109,32 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Route for Updating an Employee Training
-router.put("/training/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    console.log("Updating employee training with ID:", req.params.id, "with data:", req.body);
-    const { employee_id, training_id, status, start_date, end_date } = req.body;
-    if (!employee_id || !training_id || !status || !start_date || !end_date) {
+    const { id } = req.params;
+    const { training_id, status, start_date, end_date } = req.body;
+    console.log("Updating employee training with ID:", id , "with data:", req.body);
+
+    if (!training_id || !status || !start_date || !end_date) {
       return res.status(400).send({
         message: "Send all required fields: employee_id, training_id, status, start_date, end_date",
       });
     }
+
     const updatedEmployeeTraining = await updateEmployeeTraining(
-      req.params.id,
-      employee_id,
+      id,
       training_id,
       status,
       start_date,
       end_date,
     );
+
     if (updatedEmployeeTraining) {
       return res.status(200).json(updatedEmployeeTraining);
     } else {
       return res.status(404).send({ message: "Employee training not found" });
     }
+
   } catch (error) {
     console.error(error.message);
     return res.status(500).send({ message: error.message });
