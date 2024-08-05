@@ -1,4 +1,3 @@
-import React from "react";
 import axiosInstance from "../../authentication/axiosInstance.tsx";
 import { useEffect, useState, useMemo } from "react";
 import Sidebar from "../../components/Sidebar";
@@ -97,14 +96,12 @@ const Example: React.FC = () => {
         columns: [
           {
             accessorFn: (row) =>
-              row.relevantTrainings
-                .map((training) => training.title)
-                .join(", "),
+              row.relevantTrainings.map((training) => training.title).join(", "),
             id: "trainingTitles",
             header: "Relevant Trainings",
             size: 300,
             Cell: ({ row }) => (
-              <Box>
+              <Box data-test="training-titles">
                 {row.original.relevantTrainings.map((training, index) => (
                   <div
                     key={index}
@@ -139,7 +136,7 @@ const Example: React.FC = () => {
             header: "Last Completed Date",
             size: 200,
             Cell: ({ row }) => (
-              <Box>
+              <Box data-test="training-latest-end-dates">
                 {row.original.relevantTrainings.map((training, index) => (
                   <div
                     key={index}
@@ -176,7 +173,7 @@ const Example: React.FC = () => {
             header: "Certification End Date",
             size: 250,
             Cell: ({ row }) => (
-              <Box>
+              <Box data-test="training-expiry-dates">
                 {row.original.relevantTrainings.map((training, index) => (
                   <div
                     key={index}
@@ -209,7 +206,7 @@ const Example: React.FC = () => {
             header: "Next Scheduled Date",
             size: 200,
             Cell: ({ row }) => (
-              <Box>
+              <Box data-test="scheduled-training-dates">
                 {row.original.relevantTrainings.map((training, index) => (
                   <div
                     key={index}
@@ -272,16 +269,16 @@ const Example: React.FC = () => {
   });
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container" data-test="dashboard-container">
       <Sidebar activeItem="Dashboard" />
-      <div className="dashboard-content">
-        <h2 className="text-3xl my-8">Dashboard Page</h2>
-        <div id="dashboard-table">
+      <div className="dashboard-content" data-test="dashboard-content">
+        <h2 className="text-3xl my-8" data-test="dashboard-header">Dashboard Page</h2>
+        <div id="dashboard-table" data-test="dashboard-table">
           <MaterialReactTable table={table} />
         </div>
         <div className="dashboard-generate-button-container">
           <Link to="/report">
-            <button className="dashboard-generate-button">
+            <button className="dashboard-generate-button" data-test="dashboard-generate-button">
               Generate Skills Report
             </button>
           </Link>

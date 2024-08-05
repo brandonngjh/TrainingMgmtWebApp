@@ -28,7 +28,7 @@ const EditTraining = () => {
       .then((response) => {
         const data = response.data;
         setTitle(data.title || "");
-        setDescription(data.description || "INTERNAL");
+        setDescription(data.description || "INTERNAL");   // default value
         setValidityPeriod(data.validity_period || "");
         setTrainingProvider(data.training_provider || "");
         setLoading(false);
@@ -62,6 +62,7 @@ const EditTraining = () => {
     axios
       .put(`http://localhost:3000/api/trainings/${id}`, data, {
         headers: {
+          'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
         },
       })
