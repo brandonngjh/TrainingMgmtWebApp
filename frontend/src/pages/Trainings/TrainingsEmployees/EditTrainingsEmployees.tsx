@@ -1,45 +1,41 @@
 import { useState, useEffect } from "react";
-import BackButton from "../../components/BackButton";
-import Spinner from "../../components/Spinner";
+import BackButton from "../../../components/BackButton";
+import Spinner from "../../../components/Spinner";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-const EditEmployeesTrainings = () => {
-  const { id } = useParams();
-  const [trainingId, setTrainingId] = useState("");
-  const [status, setStatus] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [loading, setLoading] = useState(false);
+const EditTrainingsEmployees = () => {
+  const [employeeId, setEmployeeId] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [expiryDate, setExpiryDate] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { id } = useParams();
   const location = useLocation();
 
-  const [employeeId, setEmployeeId] = useState("");
-  const token = localStorage.getItem('token');
+  const [trainingId, setTrainingId] = useState<string>("");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const employeeIdFromURL = params.get("employeeId");
-    if (employeeIdFromURL) {
-      setEmployeeId(employeeIdFromURL);
+    const trainingIdFromURL = params.get("trainingId");
+    if (trainingIdFromURL) {
+      setTrainingId(trainingIdFromURL);
     }
 
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/employeesTrainings/${id}`, {
-        headers: {
-          'Authorization':`Bearer ` + token,
-          'Content-Type': 'application/json',
-        },
-      })
+      .get(`http://localhost:3000/api/employeesTrainings/${id}`)
       .then((response) => {
         const data = response.data;
-        setTrainingId(data.training_id);
+        setEmployeeId(data.employee_id);
         setStatus(data.status);
         setStartDate(data.start_date.split('T')[0] || "");
         setEndDate(data.end_date.split('T')[0] || "");
+        setExpiryDate(data.expiry_date.split('T')[0] || "");
         setLoading(false);
       })
       .catch((error) => {
@@ -49,45 +45,42 @@ const EditEmployeesTrainings = () => {
         });
         console.log(error);
       });
-  }, [id, location]);
+  }, [id, location, enqueueSnackbar]);
 
-  const handleEditEmployeesTraining = () => {
-    if (!trainingId || !status || !startDate || !endDate) {
+  const handleEditTrainingEmployee = () => {
+    if (!employeeId || !status || !startDate || !endDate || !expiryDate) {
       enqueueSnackbar("Please fill up all fields", { variant: "warning" });
       return;
     }
 
     const data = {
+      employee_id: employeeId,
       training_id: trainingId,
-      status: status,
+      status,
       start_date: startDate,
       end_date: endDate,
+      expiry_date: expiryDate,
     };
 
     setLoading(true);
     axios
-      .put(`http://localhost:3000/api/employeesTrainings/${id}`, data, {
-        headers: {
-          'Authorization':`Bearer ` + token,
-          'Content-Type': 'application/json',
-        },
-      })
+      .put(`http://localhost:3000/api/employeesTrainings/${id}`, data)
       .then(() => {
         setLoading(false);
-        enqueueSnackbar("Employee Training edited successfully", { variant: "success" });
-        navigate(`/employees/details/${employeeId}`);
+        enqueueSnackbar("Training Employee edited successfully", { variant: "success" });
+        navigate(`/trainings/details/${trainingId}`);
       })
       .catch((error) => {
         setLoading(false);
-        enqueueSnackbar("Error editing employee training", { variant: "error" });
+        enqueueSnackbar("Error editing training employee", { variant: "error" });
         console.log(error);
       });
   };
 
   return (
     <div className="p-6">
-      <BackButton destination={`/employees/details/${employeeId}`} />
-      <h1 className="text-3xl font-bold text-gray-800 my-4">Edit Employee Training</h1>
+      <BackButton destination={`/trainings/details/${trainingId}`} />
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Edit Training Session</h1>
       {loading ? <Spinner /> : null}
       <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
         <div className="my-4">
@@ -95,6 +88,7 @@ const EditEmployeesTrainings = () => {
           <input
             type="text"
             value={employeeId}
+            onChange={(e) => setEmployeeId(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
@@ -103,7 +97,7 @@ const EditEmployeesTrainings = () => {
           <input
             type="text"
             value={trainingId}
-            onChange={(e) => setTrainingId(e.target.value)}
+            readOnly
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
@@ -137,10 +131,19 @@ const EditEmployeesTrainings = () => {
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Expiry Date</label>
+          <input
+            type="date"
+            value={expiryDate}
+            onChange={(e) => setExpiryDate(e.target.value)}
+            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+          />
+        </div>
         <div className="text-right">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"
-            onClick={handleEditEmployeesTraining}
+            onClick={handleEditTrainingEmployee}
           >
             Save
           </button>
@@ -150,4 +153,4 @@ const EditEmployeesTrainings = () => {
   );
 };
 
-export default EditEmployeesTrainings;
+export default EditTrainingsEmployees;

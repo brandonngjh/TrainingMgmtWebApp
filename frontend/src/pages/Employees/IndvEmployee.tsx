@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
-import EmployeesTrainings from "../EmployeesTrainings/EmployeesTrainings";
+import EmployeesTrainings from "./EmployeesTrainings/EmployeesTrainings";
 import RelevantTrainings from "../RelevantTrainings/RelevantTrainings";
 
 interface Employee {

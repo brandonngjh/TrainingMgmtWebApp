@@ -114,7 +114,7 @@ const EditTraining = () => {
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
-        <div className="my-4">
+        {/* <div className="my-4">
           <label className="text-xl mr-4 text-gray-500">Training Provider</label>
           <input
             type="text"
@@ -122,7 +122,7 @@ const EditTraining = () => {
             onChange={(e) => setTrainingProvider(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
-        </div>
+        </div> */}
         <div className="text-right">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"

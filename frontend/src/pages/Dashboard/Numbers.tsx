@@ -51,7 +51,7 @@ const Example: React.FC = () => {
           },
         {
           accessorKey: 'numberOfEmployeesWithTraining',
-          header: 'Total Employees',
+          header: 'Relevant Employees',
           size: 100,
         },
       ],
