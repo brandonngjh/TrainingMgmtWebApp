@@ -107,6 +107,19 @@ export async function createTrainingSession(
   const validityPeriod = trainingValidityPeriod[0].validity_period;
 
   for (const employee_id of employee_ids) {
+    // Write sql to check if this training id has been defined for this employee id in the relevant_trainings table. If not, add it.
+    const [relevantTrainingExistsResult] = await pool.query(
+      "SELECT COUNT(*) as count FROM relevant_trainings WHERE employee_id = ? AND training_id = ?",
+      [employee_id, training_id]
+    );
+    // console.log(relevantTrainingExists);
+    if (relevantTrainingExistsResult[0].count === 0) {
+      await pool.query(
+        "INSERT INTO relevant_trainings (employee_id, training_id) VALUES (?, ?)",
+        [employee_id, training_id]
+      );
+    }
+
     await pool.query(
       "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? MONTH))",
       [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
