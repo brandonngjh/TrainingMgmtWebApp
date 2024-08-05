@@ -1,7 +1,7 @@
 import pool from "./database.js";
 
 export async function getEmployeeDetails() {
-    const [rows] = await pool.query(`
+    const result = await pool.query(`
         SELECT
             e.id AS employee_id,
             e.name AS employee_name,
@@ -9,15 +9,17 @@ export async function getEmployeeDetails() {
         FROM employees e
     `);
 
-    if (!rows || rows.length === 0) {
+    if (!result || result.length === 0) {
       throw new Error('No employee details found');
     }
+
+    const [rows] = result;
 
     return rows;
 }
 
 export async function getRelevantCourses() {
-    const [rows] = await pool.query(`
+    const result = await pool.query(`
         SELECT
             rt.employee_id,
             rt.training_id,
@@ -28,15 +30,17 @@ export async function getRelevantCourses() {
         ORDER BY rt.employee_id;
     `);
 
-    if (!rows || rows.length === 0) {
+    if (!result || result.length === 0) {
       throw new Error('No relevant courses found');
     }
+
+    const [rows] = result;
     
     return rows;
 }
 
 export async function getTrainingDates() {
-    const [rows] = await pool.query(`
+    const result = await pool.query(`
         SELECT
             et.employee_id,
             et.training_id,
@@ -50,9 +54,11 @@ export async function getTrainingDates() {
         ORDER BY et.employee_id, et.training_id;
     `);
 
-    if (!rows || rows.length === 0) {
+    if (!result || result.length === 0) {
       throw new Error('No training dates found');
     }
+
+    const [rows] = result;
 
     return rows;
 }

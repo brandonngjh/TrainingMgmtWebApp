@@ -37,7 +37,7 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getEmployeeDetails - should throw error for null values', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getEmployeeDetails()).rejects.toThrow('No employee details found');
     });
 
@@ -53,7 +53,7 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getRelevantCourses - should throw error for null values', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getRelevantCourses()).rejects.toThrow('No relevant courses found');
     });
 
@@ -69,7 +69,7 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getTrainingDates - should throw error for null values', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getTrainingDates()).rejects.toThrow('No training dates found');
     });
 
@@ -117,20 +117,20 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getCombinedEmployeeTrainingDetails - should throw error when getEmployeeDetails returns null', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getCombinedEmployeeTrainingDetails()).rejects.toThrow('No employee details found');
     });
 
     test('getCombinedEmployeeTrainingDetails - should throw error when getRelevantCourses returns null', async () => {
         pool.query.mockResolvedValueOnce([mockEmployeeDetails]);
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getCombinedEmployeeTrainingDetails()).rejects.toThrow('No relevant courses found');
     });
 
     test('getCombinedEmployeeTrainingDetails - should throw error when getTrainingDates returns null', async () => {
         pool.query.mockResolvedValueOnce([mockEmployeeDetails]);
         pool.query.mockResolvedValueOnce([mockRelevantCourses]);
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getCombinedEmployeeTrainingDetails()).rejects.toThrow('No training dates found');
     });
 
@@ -161,13 +161,13 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getPercentageValidEmployees - should throw error when getEmployeeDetails returns null', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getPercentageValidEmployees()).rejects.toThrow('No employee details found');
     });
 
     test('getPercentageValidEmployees - should throw error when getRelevantCourses returns null', async () => {
         pool.query.mockResolvedValueOnce([mockEmployeeDetails]);
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getPercentageValidEmployees()).rejects.toThrow('No relevant courses found');
     });
 
@@ -204,7 +204,7 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
     });
 
     test('getTrainingStats - should throw error when getRelevantCourses returns null', async () => {
-        pool.query.mockResolvedValueOnce([null]);
+        pool.query.mockResolvedValueOnce(null);
         await expect(getTrainingStats()).rejects.toThrow('No relevant courses found');
     });
 
