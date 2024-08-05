@@ -21,13 +21,6 @@ export async function getUpcomingTrainings() {
      JOIN employees e ON et.employee_id = e.id
      JOIN trainings t ON et.training_id = t.id
      WHERE et.start_date = DATE_ADD(CURDATE(), INTERVAL 3 DAY)`
-    // For testing:
-    // `SELECT et.*, e.name AS employee_name, e.email AS employee_email, t.title AS training_title
-    //  FROM employees_trainings et
-    //  JOIN employees e ON et.employee_id = e.id
-    //  JOIN trainings t ON et.training_id = t.id
-    //  WHERE et.start_date >= CURDATE()
-    //  AND et.start_date < DATE_ADD(CURDATE(), INTERVAL 3 MONTH)`
   );
   return rows;
 }

@@ -25,7 +25,7 @@ dailyRule.tz = "Asia/Singapore";
 
 const dailyJob = schedule.scheduleJob(dailyRule, async function () {
   const upcomingTrainings = await getUpcomingTrainings();
-  sendUpcomingTrainings(upcomingTrainings);
+  sendUpcomingTrainingsEmail(upcomingTrainings);
 });
 
 const update_session_reminder = new schedule.RecurrenceRule();
@@ -54,7 +54,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   timeZone: "Asia/Singapore",
 });
 
-async function sendExpiringTrainingEmail(expiringTrainings) {
+export async function sendExpiringTrainingEmail(expiringTrainings) {
   const now = new Date();
   const formattedDate = dateFormatterLong.format(now);
   const [month, year] = formattedDate.split(" ");
@@ -69,6 +69,7 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
     });
     console.log("No Expiring Training Message sent: %s", info.messageId);
     console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
+    return "No expiring trainings email sent";
   }
 
   let textBody = `The following trainings are expiring this month for ${month} ${year}:\n\n`;
@@ -102,12 +103,17 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
 
   console.log("Expiring Training Message sent: %s", info.messageId);
   console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
+  return "Expiring trainings email sent";
 }
 
-async function sendUpcomingTrainings(upcomingTrainings) {
+export async function sendUpcomingTrainingsEmail(upcomingTrainings) {
   const now = new Date();
   const formattedDate = dateFormatterLong.format(now);
   const [month, year] = formattedDate.split(" ");
+
+  if(upcomingTrainings.length === 0) {
+    return "No Upcoming Trainings";
+  }
 
   const groupedTrainings = upcomingTrainings.reduce((acc, training) => {
     if (!acc[training.employee_email]) {
@@ -154,6 +160,7 @@ async function sendUpcomingTrainings(upcomingTrainings) {
     );
     console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
   }
+  return "Upcoming trainings email sent";
 }
 
 export async function sendNewTrainings() {}
