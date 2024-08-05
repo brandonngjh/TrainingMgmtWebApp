@@ -68,7 +68,10 @@ describe('generateToken', () => {
     // invalid region
     it('should throw error if invalid input', () => {   //boundary testing with fast-check
         fc.assert(
-            fc.property(fc.integer(), fc.string(), (id, username) => {
+            fc.property(
+                fc.oneof(fc.integer(), fc.constant(null)),
+                fc.oneof(fc.string(), fc.constant(null)), 
+                (id, username) => {
                 const user = {id, username};
                 if (user.id == null || user.username == null || user.id < 1 || typeof user.username !== 'string'
                     || !/^[\w]+$/.test(user.username) || /^\d+$/.test(user.username)) {
