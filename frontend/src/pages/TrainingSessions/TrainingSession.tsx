@@ -84,6 +84,7 @@ const Example: React.FC = () => {
             accessorFn: (session) => session.employees.map(employee => employee.employee_id).join(", "),
             id: "employee_id",
             header: "Employee ID",
+            sortDescFirst: true,
             Cell: ({row}) => (
               <Box>
                 {row.original.employees.map((employee, index) => (
@@ -135,7 +136,7 @@ const Example: React.FC = () => {
         header: "Session Details",
         columns : [
           {
-            accessorFn: (session) => session.employees.map(employee => employee.employee_name).join(", "),
+            accessorFn: (session) => session.employees.map(employee => employee.status).join(", "),
             id: "status",
             header: "Status",
             Cell: ({row}) => (
@@ -203,6 +204,12 @@ const Example: React.FC = () => {
         left: ["mrt-row-select"],
         right: ["mrt-row-actions"],
       },
+      sorting: [
+        {
+          id: "session_id",
+          desc: true,
+        }
+      ],
       pagination: {
         pageIndex: 0,
         pageSize: 15, // Set initial rows per page value to 15
