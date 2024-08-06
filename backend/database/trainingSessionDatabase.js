@@ -1,7 +1,9 @@
-import { get } from "http";
 import { getTrainingValidityPeriod } from "./trainingDatabase.js";
 import { checkRelevantTrainingExists, createRelevantTraining, updateRelevantTrainingValidity } from "./relevantTrainingsDatabase.js";
+import { getEmployeeByID } from "./employeeDatabase.js";
+import { sendEmail } from "../middleware/emailService.js";
 import pool from "./database.js";
+import { get } from "http";
 
 // function to format the data obtained from the database
 function formatSession (rows) {
@@ -107,6 +109,8 @@ export async function createTrainingSession(
   const expiry_date = new Date(end_date);
   expiry_date.setMonth(expiry_date.getMonth() + validityPeriod);
 
+  let emailRecipients = [];
+
   for (const employee_id of employee_ids) {
     let relevantTrainingExists = await checkRelevantTrainingExists(employee_id, training_id);
 
@@ -119,6 +123,9 @@ export async function createTrainingSession(
       [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
     );
 
+    const employee = await getEmployeeByID(employee_id);
+    emailRecipients.push(employee.email);
+
     if (status.toLowerCase() === "completed") {
       // if expiry date past today, set validity to expired
       // else set validity to valid
@@ -130,6 +137,16 @@ export async function createTrainingSession(
       }
     }
   }
+
+  const emailRecipientsString = emailRecipients.join(",");
+
+  const { messageId, url } = await sendEmail(
+    emailRecipientsString,
+    "Training Session Created",
+    "A new training session has been created for you",
+    "<p>A new training session has been created</p>"
+  );
+  console.log(`Message ${messageId} sent: ${url}`);
 
   const trainingSession = await getTrainingSession(newMaxSessionId);
   return trainingSession;
