@@ -11,10 +11,6 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
 const valid_string = /^[a-zA-Z][a-zA-Z0-9_]*$/;   // valid string
 const digits = /^\d/;
 
-beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-});
-
 afterEach(() => {
     if (console.error.mockRestore) {
         console.error.mockRestore();
