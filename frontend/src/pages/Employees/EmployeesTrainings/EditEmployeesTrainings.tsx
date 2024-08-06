@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation to get query params
-import BackButton from "../../components/BackButton";
-import Spinner from "../../components/Spinner";
+import BackButton from "../../../components/BackButton";
+import Spinner from "../../../components/Spinner";
 import axios from "axios";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
-const CreateEmployeesTrainings = () => {
-  const [employeeId, setEmployeeId] = useState("");
+const EditEmployeesTrainings = () => {
+  const { id } = useParams();
   const [trainingId, setTrainingId] = useState("");
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -15,6 +15,8 @@ const CreateEmployeesTrainings = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
+
+  const [employeeId, setEmployeeId] = useState("");
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -23,52 +25,69 @@ const CreateEmployeesTrainings = () => {
     if (employeeIdFromURL) {
       setEmployeeId(employeeIdFromURL);
     }
-  }, [location]);
-  
-  const handleSaveEmployeeTraining = () => {
-    // Validate fields
-    if (!employeeId || !trainingId || !status || !startDate || !endDate) {
-      enqueueSnackbar("Please fill out all fields", { variant: "warning" });
+
+    setLoading(true);
+    axios
+      .get(`http://localhost:3000/api/employeesTrainings/${id}`, {
+        headers: {
+          'Authorization':`Bearer ` + token,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        const data = response.data;
+        setTrainingId(data.training_id);
+        setStatus(data.status);
+        setStartDate(data.start_date.split('T')[0] || "");
+        setEndDate(data.end_date.split('T')[0] || "");
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        enqueueSnackbar("An error occurred. Please check the console.", {
+          variant: "error",
+        });
+        console.log(error);
+      });
+  }, [id, location]);
+
+  const handleEditEmployeesTraining = () => {
+    if (!trainingId || !status || !startDate || !endDate) {
+      enqueueSnackbar("Please fill up all fields", { variant: "warning" });
       return;
     }
 
     const data = {
-      employee_id: employeeId,
       training_id: trainingId,
-      status,
+      status: status,
       start_date: startDate,
       end_date: endDate,
     };
 
-    console.log(data); // Log the data being sent
-
     setLoading(true);
-
     axios
-      .post(`http://localhost:3000/api/employeesTrainings`, data, {
+      .put(`http://localhost:3000/api/employeesTrainings/${id}`, data, {
         headers: {
+          'Authorization':`Bearer ` + token,
           'Content-Type': 'application/json',
-          'Authorization':`Bearer ` + token
         },
       })
       .then(() => {
         setLoading(false);
-        enqueueSnackbar("Employee training created successfully", {
-          variant: "success",
-        });
+        enqueueSnackbar("Employee Training edited successfully", { variant: "success" });
         navigate(`/employees/details/${employeeId}`);
       })
       .catch((error) => {
         setLoading(false);
-        enqueueSnackbar("Error creating employee training", { variant: "error" });
-        console.log(error.response.data);  // Log the server response
+        enqueueSnackbar("Error editing employee training", { variant: "error" });
+        console.log(error);
       });
   };
 
   return (
     <div className="p-6">
       <BackButton destination={`/employees/details/${employeeId}`} />
-      <h1 className="text-3xl font-bold text-gray-800 my-4">Create Training Session</h1>
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Edit Employee Training</h1>
       {loading ? <Spinner /> : null}
       <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
         <div className="my-4">
@@ -76,7 +95,6 @@ const CreateEmployeesTrainings = () => {
           <input
             type="text"
             value={employeeId}
-            // onChange={(e) => setEmployeeId(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
           />
         </div>
@@ -122,7 +140,7 @@ const CreateEmployeesTrainings = () => {
         <div className="text-right">
           <button
             className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700"
-            onClick={handleSaveEmployeeTraining}
+            onClick={handleEditEmployeesTraining}
           >
             Save
           </button>
@@ -132,4 +150,4 @@ const CreateEmployeesTrainings = () => {
   );
 };
 
-export default CreateEmployeesTrainings;
+export default EditEmployeesTrainings;

@@ -93,14 +93,14 @@ const MarkAttendance : React.FC = () => {
     })
       .then(() => {
         setLoading(false);
-        enqueueSnackbar("Training Session Updated", {
+        enqueueSnackbar("Attendance Marked", {
           variant: "success",
         });
         navigate(`/sessions`);
       })
       .catch((error) => {
         setLoading(false);
-        enqueueSnackbar("Error creating training session", { variant: "error" });
+        enqueueSnackbar("Error", { variant: "error" });
         console.log(error.response.data);  // Log the server response
       });
   };

@@ -10,13 +10,13 @@ import ReportGenerator from "./components/ReportGenerator";
 
 import Employees from "./pages/Employees/Employees.tsx";
 import CreateEmployee from "./pages/Employees/CreateEmployee.tsx";
-import ShowEmployee from "./pages/Employees/ShowEmployee.tsx";
+import ShowEmployee from "./pages/Employees/IndvEmployee.tsx";
 import EditEmployee from "./pages/Employees/EditEmployee.tsx";
 import DeleteEmployee from "./pages/Employees/DeleteEmployee.tsx";
 
 import Trainings from "./pages/Trainings/Trainings.tsx";
 import CreateTraining from "./pages/Trainings/CreateTraining.tsx";
-import ShowTraining from "./pages/Trainings/ShowTraining.tsx";
+import ShowTraining from "./pages/Trainings/IndvTraining.tsx";
 import EditTraining from "./pages/Trainings/EditTraining.tsx";
 import DeleteTraining from "./pages/Trainings/DeleteTraining.tsx";
 
@@ -26,15 +26,17 @@ import { SessionSelector, EditTrainingSession } from "./pages/TrainingSessions/E
 import DeleteTrainingSession from "./pages/TrainingSessions/DeleteTrainingSession.tsx";
 import MarkAttendance from "./pages/TrainingSessions/MarkAttendance.tsx";
 
-import CreateEmployeesTrainings from "./pages/EmployeesTrainings/CreateEmployeesTrainings.tsx";
-import DeleteEmployeesTrainings from "./pages/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
-import EditEmployeesTrainings from "./pages/EmployeesTrainings/EditEmployeesTrainings.tsx";
 import CreateRelevantTrainings from "./pages/RelevantTrainings/CreateRelevantTrainings.tsx";
 import DeleteRelevantTraining from "./pages/RelevantTrainings/DeleteRelevantTrainings.tsx";
-import CreateTrainingsEmployees from "./pages/TrainingsEmployees/CreateTrainingsEmployees.tsx";
-import EditTrainingsEmployees from "./pages/TrainingsEmployees/EditTrainingsEmployees.tsx";
-import DeleteTrainingsEmployees from "./pages/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
 import EditRelevantTrainings from "./pages/RelevantTrainings/EditRelevantTrainings.tsx";
+
+// import CreateEmployeesTrainings from "./pages/Employees/EmployeesTrainings/CreateEmployeesTrainings.tsx";
+// import DeleteEmployeesTrainings from "./pages/Employees/EmployeesTrainings/DeleteEmployeesTrainings.tsx";
+// import EditEmployeesTrainings from "./pages/Employees/EmployeesTrainings/EditEmployeesTrainings.tsx";
+
+// import CreateTrainingsEmployees from "./pages/Trainings/TrainingsEmployees/CreateTrainingsEmployees.tsx";
+// import EditTrainingsEmployees from "./pages/Trainings/TrainingsEmployees/EditTrainingsEmployees.tsx";
+// import DeleteTrainingsEmployees from "./pages/Trainings/TrainingsEmployees/DeleteTrainingsEmployees.tsx";
 
 const App: React.FC = () => {
   return (
@@ -68,17 +70,17 @@ const App: React.FC = () => {
       <Route path="/trainings/edit/:id" element={<EditTraining />} />
       <Route path="/trainings/delete/:id" element={<DeleteTraining />} />
 
-      <Route path="/employeestrainings/create" element={<CreateEmployeesTrainings />} />
+      {/* <Route path="/employeestrainings/create" element={<CreateEmployeesTrainings />} />
       <Route path="/employeestrainings/delete/:id" element={<DeleteEmployeesTrainings />} />
-      <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} />
+      <Route path="/employeestrainings/edit/:id" element={<EditEmployeesTrainings />} /> */}
 
       <Route path="/relevanttrainings/create/" element={<CreateRelevantTrainings />} />
       <Route path="/relevanttrainings/delete/:trainingId" element={<DeleteRelevantTraining />} />
       <Route path="/relevanttrainings/edit/:trainingId" element={<EditRelevantTrainings />} />
 
-      <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
+      {/* <Route path="/trainingsemployees/create" element={<CreateTrainingsEmployees />} />
       <Route path="/trainingsemployees/edit/:id" element={<EditTrainingsEmployees />} />
-      <Route path="/trainingsemployees/delete/:sessionId" element={<DeleteTrainingsEmployees />} />
+      <Route path="/trainingsemployees/delete/:sessionId" element={<DeleteTrainingsEmployees />} /> */}
       
     </Routes>
     

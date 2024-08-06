@@ -5,15 +5,29 @@ import {
   getUpcomingTrainings,
 } from "../database/emailDatabase.js";
 
-// For testing
+import { sendEmail } from "../middleware/emailService.js";
+
+// For testing, triggered every minute
 const secondRule = new schedule.RecurrenceRule();
 secondRule.second = 0;
+
+// const secondJob = schedule.scheduleJob(secondRule, async function () {
+//   // const expiringTrainings = await getExpiringTrainings();
+//   const link = await sendEmail(
+//     "hr@example.com, hod@example.com",
+//     "Expiring Trainings",
+//     "text",
+//     "html"
+//   )
+//   console.log("Email sent: %s", link);
+// });
 
 const monthlyRule = new schedule.RecurrenceRule();
 monthlyRule.hour = 8;
 monthlyRule.date = 1;
 monthlyRule.tz = "Asia/Singapore";
 
+// Notify HR and HOD of expiring trainings on the 1st of every month at 8am
 const monthlyJob = schedule.scheduleJob(monthlyRule, async function () {
   const expiringTrainings = await getExpiringTrainings();
   sendExpiringTrainingEmail(expiringTrainings);
@@ -23,23 +37,24 @@ const dailyRule = new schedule.RecurrenceRule();
 dailyRule.hour = 8;
 dailyRule.tz = "Asia/Singapore";
 
+// Remind employees of upcoming trainings daily at 8am
 const dailyJob = schedule.scheduleJob(dailyRule, async function () {
   const upcomingTrainings = await getUpcomingTrainings();
   sendUpcomingTrainings(upcomingTrainings);
 });
 
-const update_session_reminder = new schedule.RecurrenceRule();
-update_session_reminder.tz = "Asia/Singapore";
+// const update_session_reminder = new schedule.RecurrenceRule();
+// update_session_reminder.tz = "Asia/Singapore";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "kyleigh.batz@ethereal.email",
-    pass: "fNNZSjYdNprVayT3tM",
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.ethereal.email",
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: "kyleigh.batz@ethereal.email",
+//     pass: "fNNZSjYdNprVayT3tM",
+//   },
+// });
 
 const dateFormatterLong = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -60,15 +75,22 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
   const [month, year] = formattedDate.split(" ");
 
   if (expiringTrainings.length === 0) {
-    const info = await transporter.sendMail({
-      from: '"Admin" <kyleigh.batz@ethereal.email>',
-      to: "hr@example.com, hod@example.com",
-      subject: `No Expiring Trainings This Month (${month}, ${year})`,
-      text: `There are no trainings expiring this month for ${month} ${year}`,
-      html: `<b>There are no trainings expiring this month for ${month} ${year}</b>`,
-    });
-    console.log("No Expiring Training Message sent: %s", info.messageId);
-    console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
+    const {messageId, url } = await sendEmail(
+      "hr@example.com, hod@example.com",
+      `No Expiring Trainings This Month (${month}, ${year})`,
+      `There are no trainings expiring this month for ${month} ${year}`,
+      `<b>There are no trainings expiring this month for ${month} ${year}</b>`
+    )
+    console.log("No Expiring Training Message sent: %s", messageId);
+    console.log("Email Link: %s", url);
+
+    // const info = await transporter.sendMail({
+    //   from: '"Admin" <kyleigh.batz@ethereal.email>',
+    //   to: "hr@example.com, hod@example.com",
+    //   subject: `No Expiring Trainings This Month (${month}, ${year})`,
+    //   text: `There are no trainings expiring this month for ${month} ${year}`,
+    //   html: `<b>There are no trainings expiring this month for ${month} ${year}</b>`,
+    // });
   }
 
   let textBody = `The following trainings are expiring this month for ${month} ${year}:\n\n`;
@@ -92,16 +114,23 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
     }, <b>Expiry Date:</b> ${expiryDateFormatted}<br><br>`;
   });
 
-  const info = await transporter.sendMail({
-    from: '"Admin" <kyleigh.batz@ethereal.email>',
-    to: "hr@example.com, hod@example.com",
-    subject: `Expiring Trainings This Month (${month}, ${year})`,
-    text: textBody,
-    html: htmlBody,
-  });
+  const {messageId, url} = await sendEmail(
+    "hr@example.com, hod@example.com",
+    `Expiring Trainings This Month (${month}, ${year})`,
+    textBody,
+    htmlBody
+  )
+  console.log("Expiring Training Message sent: %s", messageId);
+  console.log("Email Link: %s", url);
 
-  console.log("Expiring Training Message sent: %s", info.messageId);
-  console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
+
+  // const info = await transporter.sendMail({
+  //   from: '"Admin" <kyleigh.batz@ethereal.email>',
+  //   to: "hr@example.com, hod@example.com",
+  //   subject: `Expiring Trainings This Month (${month}, ${year})`,
+  //   text: textBody,
+  //   html: htmlBody,
+  // });
 }
 
 async function sendUpcomingTrainings(upcomingTrainings) {
@@ -140,19 +169,23 @@ async function sendUpcomingTrainings(upcomingTrainings) {
       }, <b>Start Date:</b> ${startDateFormatted}<br><br>`;
     });
 
-    const info = await transporter.sendMail({
-      from: '"Admin" <kyleigh.batz@ethereal.email>',
-      to: email,
-      subject: `Upcoming Trainings for ${month}, ${year}`,
-      text: textBody,
-      html: htmlBody,
-    });
+    // const info = await transporter.sendMail({
+    //   from: '"Admin" <kyleigh.batz@ethereal.email>',
+    //   to: email,
+    //   subject: `Upcoming Trainings for ${month}, ${year}`,
+    //   text: textBody,
+    //   html: htmlBody,
+    // });
 
-    console.log(
-      `Upcoming Training Message sent to ${email}: %s`,
-      info.messageId
-    );
-    console.log("Email Link: %s", nodemailer.getTestMessageUrl(info));
+    const {messageId, url} = await sendEmail(
+      email,
+      `Upcoming Trainings for ${month}, ${year}`,
+      textBody,
+      htmlBody
+    )
+
+    console.log(`Upcoming Training Message sent to ${email}: %s`, messageId);
+    console.log("Email Link: %s", url);
   }
 }
 

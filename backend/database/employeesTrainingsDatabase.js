@@ -60,10 +60,28 @@ export async function getEmployeeTrainingByTrainingID(id) {
 
 // Get employee trainings by employee ID
 export async function getEmployeeTrainingsByEmployeeID(employee_id) {
-  const [rows] = await pool.query(
-    "SELECT * FROM employees_trainings WHERE employee_id = ?",
-    [employee_id]
-  );
+  const [rows] = await pool.query(`
+    SELECT
+      et.id as session_id,
+      t.id as training_id,
+      t.title AS training_title,
+      e.id AS employee_id,
+      e.name AS employee_name,
+      e.email AS employee_email,
+      e.designation as employee_designation,
+      et.status,
+      et.start_date,
+      et.end_date,
+      et.expiry_date
+    FROM
+      employees e
+    JOIN
+      employees_trainings et ON et.employee_id = e.id
+    JOIN
+      trainings t ON et.training_id = t.id
+    WHERE
+      e.id = ?;
+    `, [employee_id]);
   return rows;
 }
 
