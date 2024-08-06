@@ -72,19 +72,39 @@ async function setup() {
   );
 
   await pool.query(
-    `INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (1, "Safety Training", "Safety procedures", 12, "Provider A")`
+    `INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES 
+    (1, "Safety Training", "Safety procedures", 12, "Provider A"),
+    (2, "Machining", "Machining procedures", 6, "Provider B");`
   );
 
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
 
-  const expiryDate1 = new Date(year, month, Math.min(now.getDate() + 1, new Date(year, month , )))
+  const expiryDate1 = new Date(
+    year,
+    month,
+    Math.min(now.getDate() + 5, new Date(year, month + 1, 0).getDate())
+  )
+    .toISOString()
+    .split("T")[0];
+  const expiryDate2 = new Date(
+    year,
+    month,
+    new Date(year, month + 1, 0).getDate()
+  )
+    .toISOString()
+    .split("T")[0];
+
+  const startDate = new Date(now);
+  startDate.setDate(now.getDate() + 3);
+  startDate = startDate.toISOString().split("T")[0];
+
   await pool.query(
     `INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
-    ()
-    ()`
-  )
+    (1, 1, 1, 'Completed', '2023-08-01', '', "${expiryDate1}")
+    (1, 2, 2, 'Scheduled', '', '' )`
+  );
 }
 
 describe("Integration Test: Email Scheduler", () => {
