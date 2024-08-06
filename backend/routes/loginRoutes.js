@@ -3,7 +3,7 @@ import {login} from "../database/loginController.js"
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+router.use((req, res, next) => {    // debugging and access pattern detection
     console.log(`LoginRoute accessed: ${req.originalUrl}`); // Log access to loginRoute
     next();
 });

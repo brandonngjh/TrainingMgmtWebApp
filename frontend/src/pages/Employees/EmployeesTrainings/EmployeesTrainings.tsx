@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Spinner from "../../components/Spinner";
+import Spinner from "../../../components/Spinner";
 import { Link } from "react-router-dom";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
@@ -8,6 +8,7 @@ import { MdOutlineDelete } from "react-icons/md";
 interface EmployeeTraining {
   id: string;
   training_id: string;
+  training_title: string;
   status: string;
   start_date: string;
   end_date: string;
@@ -75,11 +76,12 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
                 <tr>
                   <th className="py-2 px-4 bg-gray-100 border-b">No</th>
                   <th className="py-2 px-4 bg-gray-100 border-b text-center">Training ID</th>
+                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Training Name</th>
                   <th className="py-2 px-4 bg-gray-100 border-b text-center">Status</th>
                   <th className="py-2 px-4 bg-gray-100 border-b text-center">Start Date</th>
                   <th className="py-2 px-4 bg-gray-100 border-b text-center">End Date</th>
                   <th className="py-2 px-4 bg-gray-100 border-b text-center">Expiry Date</th>
-                  <th className="py-2 px-4 bg-gray-100 border-b text-center">Operations</th>
+                  {/* <th className="py-2 px-4 bg-gray-100 border-b text-center">Operations</th> */}
                 </tr>
               </thead>
 
@@ -91,12 +93,13 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
                   >
                     <td className="py-2 px-4 border-b">{index + 1}</td>
                     <td className="py-2 px-4 border-b text-center">{training.training_id}</td>
+                    <td className="py-2 px-4 border-b text-center">{training.training_title}</td>
                     <td className="py-2 px-4 border-b text-center">{training.status}</td>
                     <td className="py-2 px-4 border-b text-center">{formatDate(training.start_date)}</td>
                     <td className="py-2 px-4 border-b text-center">{formatDate(training.end_date)}</td>
                     <td className="py-2 px-4 border-b text-center">{formatDate(training.expiry_date)}</td>
 
-                    <td className="py-2 px-4 border-b">
+                    {/* <td className="py-2 px-4 border-b">
                       <div className="flex justify-center gap-x-4">
 
                         <Link
@@ -114,7 +117,7 @@ const EmployeesTrainings: React.FC<EmployeesTrainingsProps> = ({ employeeId }) =
                         </Link>
                         
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

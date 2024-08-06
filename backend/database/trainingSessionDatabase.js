@@ -1,5 +1,9 @@
-import { get } from "http";
+import { getTrainingValidityPeriod } from "./trainingDatabase.js";
+import { checkRelevantTrainingExists, createRelevantTraining, updateRelevantTrainingValidity } from "./relevantTrainingsDatabase.js";
+import { getEmployeeByID } from "./employeeDatabase.js";
+import { sendEmail } from "../middleware/emailService.js";
 import pool from "./database.js";
+import { get } from "http";
 
 // function to format the data obtained from the database
 function formatSession (rows) {
@@ -100,22 +104,52 @@ export async function createTrainingSession(
     newMaxSessionId = maxSessionIdResult[0].maxSessionId + 1;
   }
 
-  const [trainingValidityPeriod] = await pool.query(
-    "SELECT validity_period FROM trainings WHERE id = ?",
-    [training_id]
-  );
-  const validityPeriod = trainingValidityPeriod[0].validity_period;
+  let validityPeriod = await getTrainingValidityPeriod(training_id);
+  // expiry date = end date + validity period in months
+  const expiry_date = new Date(end_date);
+  expiry_date.setMonth(expiry_date.getMonth() + validityPeriod);
+
+  let emailRecipients = [];
 
   for (const employee_id of employee_ids) {
+    let relevantTrainingExists = await checkRelevantTrainingExists(employee_id, training_id);
+
+    if (!relevantTrainingExists) {
+      await createRelevantTraining(employee_id, training_id);
+    }
+
     await pool.query(
       "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? MONTH))",
       [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
     );
+
+    const employee = await getEmployeeByID(employee_id);
+    emailRecipients.push(employee.email);
+
+    if (status.toLowerCase() === "completed") {
+      // if expiry date past today, set validity to expired
+      // else set validity to valid
+      if (expiry_date < new Date()) {
+        updateRelevantTrainingValidity(employee_id, training_id, "Expired")
+      }
+      else {
+        updateRelevantTrainingValidity(employee_id, training_id, "Valid")
+      }
+    }
   }
+
+  const emailRecipientsString = emailRecipients.join(",");
+
+  const { messageId, url } = await sendEmail(
+    emailRecipientsString,
+    "Training Session Created",
+    "A new training session has been created for you",
+    "<p>A new training session has been created</p>"
+  );
+  console.log(`Message ${messageId} sent: ${url}`);
 
   const trainingSession = await getTrainingSession(newMaxSessionId);
   return trainingSession;
-  // return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
 }
 
 export async function updateTrainingSession(
@@ -146,27 +180,18 @@ export async function markAttendance(session_id, employee_ids) {
     [session_id]
   );
 
-  var [sessionIdRow] = await pool.query(
-    "SELECT validity_period FROM trainings WHERE id = ?",
-    [trainingIdRow[0].training_id]
-  );
-  const validityPeriod = sessionIdRow[0].validity_period;
+  validityPeriod = await getTrainingValidityPeriod(trainingIdRow[0].training_id);
 
   for (const employee_id of employee_ids) {
     const [result] = await pool.query(
       `UPDATE employees_trainings et 
-        SET status = 'completed',
-        expiry_date = DATE_ADD(et.end_date, INTERVAL ? MONTH)
+        SET status = 'completed'
         WHERE session_id = ? AND employee_id = ?`,
-      [validityPeriod, session_id, employee_id]
+      [session_id, employee_id]
     );
 
-    await pool.query(
-      `UPDATE relevant_trainings rt
-        SET validity = 'Valid'
-        WHERE rt.employee_id = ? AND rt.training_id = ?`,
-      [employee_id, trainingIdRow[0].training_id]
-    )
+  await updateRelevantTrainingValidity(employee_id, trainingIdRow[0].training_id, validityPeriod);
+  
   }
   return getTrainingSession(session_id); // Return basic result info
 }
