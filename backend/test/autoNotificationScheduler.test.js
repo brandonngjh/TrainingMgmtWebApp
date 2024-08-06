@@ -1,7 +1,7 @@
 import {
   sendExpiringTrainingEmail,
   sendUpcomingTrainingsEmail,
-} from "../scheduler/emailScheduler.js";
+} from "../scheduler/autoNotificationScheduler.js";
 import pool from "../database/database.js";
 import {
   getExpiringTrainings,
