@@ -102,13 +102,15 @@ export async function createTrainingSession(
     newMaxSessionId = maxSessionIdResult[0].maxSessionId + 1;
   }
 
-  validityPeriod = await getTrainingValidityPeriod(training_id);
-
+  let validityPeriod = await getTrainingValidityPeriod(training_id);
+  // expiry date = end date + validity period in months
+  const expiry_date = new Date(end_date);
+  expiry_date.setMonth(expiry_date.getMonth() + validityPeriod);
 
   for (const employee_id of employee_ids) {
-    checkRelevantTrainingExists = await checkRelevantTrainingExists(employee_id, training_id);
+    let relevantTrainingExists = await checkRelevantTrainingExists(employee_id, training_id);
 
-    if (!checkRelevantTrainingExists) {
+    if (!relevantTrainingExists) {
       await createRelevantTraining(employee_id, training_id);
     }
 
@@ -116,6 +118,17 @@ export async function createTrainingSession(
       "INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL ? MONTH))",
       [newMaxSessionId, employee_id, training_id, status, start_date, end_date, end_date, validityPeriod]
     );
+
+    if (status.toLowerCase() === "completed") {
+      // if expiry date past today, set validity to expired
+      // else set validity to valid
+      if (expiry_date < new Date()) {
+        updateRelevantTrainingValidity(employee_id, training_id, "Expired")
+      }
+      else {
+        updateRelevantTrainingValidity(employee_id, training_id, "Valid")
+      }
+    }
   }
 
   const trainingSession = await getTrainingSession(newMaxSessionId);
