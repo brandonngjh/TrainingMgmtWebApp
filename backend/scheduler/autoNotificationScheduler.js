@@ -40,7 +40,7 @@ dailyRule.tz = "Asia/Singapore";
 // Remind employees of upcoming trainings daily at 8am
 const dailyJob = schedule.scheduleJob(dailyRule, async function () {
   const upcomingTrainings = await getUpcomingTrainings();
-  sendUpcomingTrainings(upcomingTrainings);
+  sendUpcomingTrainingsEmail(upcomingTrainings);
 });
 
 // const update_session_reminder = new schedule.RecurrenceRule();
@@ -69,7 +69,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   timeZone: "Asia/Singapore",
 });
 
-async function sendExpiringTrainingEmail(expiringTrainings) {
+export async function sendExpiringTrainingEmail(expiringTrainings) {
   const now = new Date();
   const formattedDate = dateFormatterLong.format(now);
   const [month, year] = formattedDate.split(" ");
@@ -83,6 +83,7 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
     )
     console.log("No Expiring Training Message sent: %s", messageId);
     console.log("Email Link: %s", url);
+    return "No expiring trainings email sent";
 
     // const info = await transporter.sendMail({
     //   from: '"Admin" <kyleigh.batz@ethereal.email>',
@@ -122,21 +123,17 @@ async function sendExpiringTrainingEmail(expiringTrainings) {
   )
   console.log("Expiring Training Message sent: %s", messageId);
   console.log("Email Link: %s", url);
-
-
-  // const info = await transporter.sendMail({
-  //   from: '"Admin" <kyleigh.batz@ethereal.email>',
-  //   to: "hr@example.com, hod@example.com",
-  //   subject: `Expiring Trainings This Month (${month}, ${year})`,
-  //   text: textBody,
-  //   html: htmlBody,
-  // });
+  return "Expiring trainings email sent";
 }
 
-async function sendUpcomingTrainings(upcomingTrainings) {
+export async function sendUpcomingTrainingsEmail(upcomingTrainings) {
   const now = new Date();
   const formattedDate = dateFormatterLong.format(now);
   const [month, year] = formattedDate.split(" ");
+
+  if(upcomingTrainings.length === 0) {
+    return "No Upcoming Trainings";
+  }
 
   const groupedTrainings = upcomingTrainings.reduce((acc, training) => {
     if (!acc[training.employee_email]) {
@@ -187,6 +184,7 @@ async function sendUpcomingTrainings(upcomingTrainings) {
     console.log(`Upcoming Training Message sent to ${email}: %s`, messageId);
     console.log("Email Link: %s", url);
   }
+  return "Upcoming trainings email sent";
 }
 
 export async function sendNewTrainings() {}
