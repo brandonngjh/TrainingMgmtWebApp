@@ -3,6 +3,7 @@ import {
   sendUpcomingTrainingsEmail,
 } from "../scheduler/emailScheduler.js";
 import pool from "../database/database.js";
+import { getExpiringTrainings, getUpcomingTrainings } from "../database/emailDatabase.js";
 
 async function backupData() {
   const [backupEmployees] = await pool.query("SELECT * FROM employees");
@@ -65,17 +66,17 @@ async function setup() {
   await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
   // Insert some employees with expiring training this month and some employees with upcoming training in 3 days based on relevant trainings
-  await pool.query(
-    `INSERT INTO employees (id, name, email, hire_date, designation) VALUES 
+  await pool.query(`
+    INSERT INTO employees (id, name, email, hire_date, designation) VALUES 
     (1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer'), 
-    (2, 'Jane Smith', 'jane@example.com', '2023-07-28', 'Manager');`
-  );
+    (2, 'Jane Smith', 'jane@example.com', '2023-07-28', 'Manager')
+  `);
 
-  await pool.query(
-    `INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES 
-    (1, "Safety Training", "Safety procedures", 12, "Provider A"),
-    (2, "Machining", "Machining procedures", 6, "Provider B");`
-  );
+  await pool.query(`
+    INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES 
+    (1, 'Safety Training', 'Safety procedures', 12, 'Provider A'),
+    (2, 'Machining', 'Machining procedures', 6, 'Provider B')
+  `);
 
   const now = new Date();
   const year = now.getFullYear();
@@ -98,28 +99,56 @@ async function setup() {
 
   const startDate = new Date(now);
   startDate.setDate(now.getDate() + 3);
-  startDate = startDate.toISOString().split("T")[0];
+  const startDateFormatted = startDate.toISOString().split("T")[0];
 
-  await pool.query(
-    `INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
-    (1, 1, 1, 'Completed', '2023-08-01', '', "${expiryDate1}")
-    (1, 2, 2, 'Scheduled', '', '' )`
-  );
+  await pool.query(`
+    INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
+    (1, 1, 1, 'Completed', '2023-08-01', '2023-08-01', '${expiryDate1}'),
+    (1, 2, 2, 'Completed', '2023-08-01', '2023-08-01', '${expiryDate1}'),
+    (2, 2, 2, 'Completed', '2024-02-01', '2024-02-01', '${expiryDate2}'),
+    (3, 1, 2, 'Scheduled', '${startDateFormatted}', '${startDateFormatted}', NULL)
+  `);
 }
 
 describe("Integration Test: Email Scheduler", () => {
   let originalData;
 
-  beforeAll(async () => {});
+  beforeAll(async () => {
+    originalData = await backupData();
+  });
 
-  afterAll(async () => {});
-  beforeEach(async () => {});
+  afterAll(async () => {
+    await restoreData(originalData);
+    await pool.end();
+  });
 
-  test("sendExpiringTrainingEmail - should send expiring trainings email", async () => {});
+  beforeEach(async () => {
+    await setup();
+  });
 
-  test("sendExpiringTrainingEmail - should send no expiring trainings email if no expiring trainings this month", async () => {});
+  test("sendExpiringTrainingEmail - should send expiring trainings email", async () => {
+    const expiringTrainings = await getExpiringTrainings();
+    const result = await sendExpiringTrainingEmail(expiringTrainings)
+    expect(result).toBe("Expiring trainings email sent")
+  });
 
-  test("sendUpcomingTrainingEmail - should send upcoming trainings email", async () => {});
+  test("sendExpiringTrainingEmail - should send no expiring trainings email if no expiring trainings this month", async () => {
+    await pool.query("TRUNCATE TABLE employees_trainings");
+    const expiringTrainings = await getExpiringTrainings();
+    const result = await sendExpiringTrainingEmail(expiringTrainings);
+    expect(result).toBe("No expiring trainings email sent");
+  });
 
-  test("sendUpcomingTrainingsEmail - should not send email if no upcoming trainings in 3 days", async () => {});
+  test("sendUpcomingTrainingEmail - should send upcoming trainings email", async () => {
+    const upcomingTrainings = await getUpcomingTrainings();
+    const result = await sendUpcomingTrainingsEmail(upcomingTrainings);
+    expect(result).toBe("Upcoming trainings email sent");
+  });
+
+  test("sendUpcomingTrainingsEmail - should not send email if no upcoming trainings in 3 days", async () => {
+    await pool.query("TRUNCATE TABLE employees_trainings");
+    const upcomingTrainings = await getUpcomingTrainings();
+    const result = await sendUpcomingTrainingsEmail(upcomingTrainings);
+    expect(result).toBe("No Upcoming Trainings");
+  });
 });
