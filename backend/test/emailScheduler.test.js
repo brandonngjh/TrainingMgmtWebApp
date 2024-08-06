@@ -3,7 +3,20 @@ import {
   sendUpcomingTrainingsEmail,
 } from "../scheduler/emailScheduler.js";
 import pool from "../database/database.js";
-import { getExpiringTrainings, getUpcomingTrainings } from "../database/emailDatabase.js";
+import {
+  getExpiringTrainings,
+  getUpcomingTrainings,
+} from "../database/emailDatabase.js";
+import schedule from "node-schedule";
+
+function toSingaporeTime(date) {
+  const singaporeOffset = 8 * 60; // Singapore is UTC+8
+  const localOffset = date.getTimezoneOffset(); // Local offset in minutes
+  const adjustedDate = new Date(
+    date.getTime() + (singaporeOffset - localOffset) * 60 * 1000
+  );
+  return adjustedDate;
+}
 
 async function backupData() {
   const [backupEmployees] = await pool.query("SELECT * FROM employees");
@@ -82,24 +95,27 @@ async function setup() {
   const year = now.getFullYear();
   const month = now.getMonth();
 
-  const expiryDate1 = new Date(
-    year,
-    month,
-    Math.min(now.getDate() + 5, new Date(year, month + 1, 0).getDate())
+  const expiryDate1 = toSingaporeTime(
+    new Date(
+      year,
+      month,
+      Math.min(now.getDate() + 5, new Date(year, month + 1, 0).getDate())
+    )
   )
     .toISOString()
     .split("T")[0];
-  const expiryDate2 = new Date(
-    year,
-    month,
-    new Date(year, month + 1, 0).getDate()
+
+  const expiryDate2 = toSingaporeTime(
+    new Date(year, month, new Date(year, month + 1, 0).getDate())
   )
     .toISOString()
     .split("T")[0];
 
   const startDate = new Date(now);
   startDate.setDate(now.getDate() + 3);
-  const startDateFormatted = startDate.toISOString().split("T")[0];
+  const startDateFormatted = toSingaporeTime(startDate)
+    .toISOString()
+    .split("T")[0];
 
   await pool.query(`
     INSERT INTO employees_trainings (session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES
@@ -120,6 +136,7 @@ describe("Integration Test: Email Scheduler", () => {
   afterAll(async () => {
     await restoreData(originalData);
     await pool.end();
+    await schedule.gracefulShutdown();
   });
 
   beforeEach(async () => {
@@ -140,6 +157,7 @@ describe("Integration Test: Email Scheduler", () => {
   });
 
   test("sendUpcomingTrainingEmail - should send upcoming trainings email", async () => {
+    const test = await pool.query("SELECT * FROM employees_trainings");
     const upcomingTrainings = await getUpcomingTrainings();
     const result = await sendUpcomingTrainingsEmail(upcomingTrainings);
     expect(result).toBe("Upcoming trainings email sent");
