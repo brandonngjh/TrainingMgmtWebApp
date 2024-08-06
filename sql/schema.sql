@@ -135,26 +135,26 @@ INSERT INTO relevant_trainings(employee_id, training_id, validity)
 VALUES
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'NA'),
-(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'expired'),
-(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
+(22, (SELECT id FROM trainings WHERE title = 'FOD'), 'Expired'),
+(22, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
 
-(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'valid'),
-(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'valid'),
+(21, (SELECT id FROM trainings WHERE title = 'SAFETY AWARENESS (PPE)'), 'Valid'),
+(21, (SELECT id FROM trainings WHERE title = 'FOD'), 'Valid'),
 (21, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 
-(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
-(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'valid'),
+(504, (SELECT id FROM trainings WHERE title = 'GD&T'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
+(504, (SELECT id FROM trainings WHERE title = 'MEASUREMENT AND CALIBRATION'), 'Valid'),
 
-(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'valid'),
-(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
+(23, (SELECT id FROM trainings WHERE title = 'DEBURING AND BUFFING'), 'Valid'),
+(23, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
 
-(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'expired'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'valid'),
-(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'valid'),
+(587, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'Expired'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 1'), 'Valid'),
+(587, (SELECT id FROM trainings WHERE title = 'MACHINING PHASE 2'), 'Valid'),
 
-(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'valid'),
-(2, (SELECT id FROM trainings WHERE title = '5S'), 'valid'),
+(2, (SELECT id FROM trainings WHERE title = 'PROCESS MANAGEMENT PLANNING'), 'Valid'),
+(2, (SELECT id FROM trainings WHERE title = '5S'), 'Valid'),
 (2, (SELECT id FROM trainings WHERE title = 'IQA TRAINING AS9100D'), 'NA'),
 (22, (SELECT id FROM trainings WHERE title = 'COUNTERFEIT'), 'NA');
 

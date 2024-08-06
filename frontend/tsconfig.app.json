@@ -22,7 +22,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Enable synthetic default imports */
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }
