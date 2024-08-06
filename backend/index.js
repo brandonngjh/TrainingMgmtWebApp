@@ -6,7 +6,7 @@ import loginRoutes from "./routes/loginRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import pool from "./database/database.js";
 import morgan from "morgan";
-import "./scheduler/emailScheduler.js";
+import "./scheduler/autoNotificationScheduler.js";
 import "./scheduler/certificationValidityCheck.js";
 
 dotenv.config({ path: "../.env" }); //.env contains JWT key
@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 app.use(
   "/api",
   (req, res, next) => {
-    console.log("MainRoutes middleware"); // Log every request to the mainRoutes middleware
+    // console.log("MainRoutes middleware"); // Log every request to the mainRoutes middleware
     next();
   },
   mainRoutes
