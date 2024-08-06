@@ -64,18 +64,19 @@ const ReportGenerator: React.FC = () => {
     setSelectedValidity(event.target.value);
   };
 
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
   const generatePDF = () => {
     const doc = new jsPDF('landscape');
     const margin = 10;
-    const lineHeight = 7; // Reduced line height
-    const fontSize = 12; // Reduced font size
+    const lineHeight = 7;
+    const fontSize = 12;
     let y = margin;
   
     doc.setFontSize(fontSize);
     doc.text('Skills Report', margin, y);
     y += lineHeight;
   
-    // Filter skills report based on selected criteria
     const filteredReports = skillsReport.filter(report => 
       (selectedTraining ? report.training_course === selectedTraining : true) &&
       (selectedValidity ? report.validity === selectedValidity : true)
@@ -94,6 +95,9 @@ const ReportGenerator: React.FC = () => {
       startY: y,
     });
   
+    const pdfBlob = doc.output('blob');
+    const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+    setPdfUrl(pdfBlobUrl);
     doc.save('skills_report.pdf');
   };
 

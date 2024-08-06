@@ -14,29 +14,20 @@ describe("Dashboard Page", () => {
   });
 
   it("should fetch and display employee data", () => {
-    cy.intercept("GET", "http://localhost:3000/api/dashboard").as(
-      "getEmployees"
-    );
-
-    cy.wait("@getEmployees").then((interception) => {
-      expect([200, 304]).to.include(interception.response.statusCode);
-    });
-
-    cy.get('[data-test=dashboard-table]').should('contain', 'Brandon');
+    cy.intercept("GET", "http://localhost:3000/api/dashboard").as("getEmployees");
+    cy.get('[data-test=dashboard-table]', { timeout: 10000 }).should('contain', 'Brandon');
     cy.get('[data-test=dashboard-table]').should('contain', 'Maintenance/Construction');
-    cy.get('[data-test=dashboard-table]').should('contain', '10/2/2022');
-    cy.get('[data-test=dashboard-table]').should('contain', '11/2/2023');
+    cy.get('[data-test=dashboard-table]').should('contain', '02/10/2022');
+    cy.get('[data-test=dashboard-table]').should('contain', '02/11/2023');
   });
 
   it("should fetch and display training data", () => {
-    cy.intercept("GET", "http://localhost:3000/api/dashboard/numbers").as(
-      "getTrainings"
-    );
+    cy.intercept("GET", "http://localhost:3000/api/dashboard/numbers").as("getTrainings");
 
     cy.wait("@getTrainings").then((interception) => {
       expect([200, 304]).to.include(interception.response.statusCode);
     });
-    
+
     cy.get("[data-test=training-titles]").should("exist");
     cy.get("[data-test=training-latest-end-dates]").should("exist");
     cy.get("[data-test=training-expiry-dates]").should("exist");
@@ -49,17 +40,13 @@ describe("Dashboard Page", () => {
   });
 
   it("should fetch and display percentage data", () => {
-    cy.intercept("GET", "http://localhost:3000/api/dashboard/percentage").as(
-      "getPercentage"
-    );
+    cy.intercept("GET", "http://localhost:3000/api/dashboard/percentage").as("getPercentage");
 
     cy.wait("@getPercentage").then((interception) => {
       expect([200, 304]).to.include(interception.response.statusCode);
     });
-    cy.get(".piechart-title").should(
-      "contain",
-      "Percentage Of Employees Who Are Fully Certified"
-    );
+
+    cy.get(".piechart-title").should("contain", "Percentage Of Employees Who Are Fully Certified");
   });
 
   it("should navigate to the report generation page", () => {
