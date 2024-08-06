@@ -1,4 +1,6 @@
 import { get } from "http";
+import { getTrainingValidityPeriod } from "./trainingDatabase.js";
+import { checkRelevantTrainingExists, createRelevantTraining, updateRelevantTrainingValidity } from "./relevantTrainingsDatabase.js";
 import pool from "./database.js";
 
 // function to format the data obtained from the database
@@ -100,24 +102,14 @@ export async function createTrainingSession(
     newMaxSessionId = maxSessionIdResult[0].maxSessionId + 1;
   }
 
-  const [trainingValidityPeriod] = await pool.query(
-    "SELECT validity_period FROM trainings WHERE id = ?",
-    [training_id]
-  );
-  const validityPeriod = trainingValidityPeriod[0].validity_period;
+  validityPeriod = await getTrainingValidityPeriod(training_id);
+
 
   for (const employee_id of employee_ids) {
-    // Write sql to check if this training id has been defined for this employee id in the relevant_trainings table. If not, add it.
-    const [relevantTrainingExistsResult] = await pool.query(
-      "SELECT COUNT(*) as count FROM relevant_trainings WHERE employee_id = ? AND training_id = ?",
-      [employee_id, training_id]
-    );
-    // console.log(relevantTrainingExists);
-    if (relevantTrainingExistsResult[0].count === 0) {
-      await pool.query(
-        "INSERT INTO relevant_trainings (employee_id, training_id) VALUES (?, ?)",
-        [employee_id, training_id]
-      );
+    checkRelevantTrainingExists = await checkRelevantTrainingExists(employee_id, training_id);
+
+    if (!checkRelevantTrainingExists) {
+      await createRelevantTraining(employee_id, training_id);
     }
 
     await pool.query(
@@ -128,7 +120,6 @@ export async function createTrainingSession(
 
   const trainingSession = await getTrainingSession(newMaxSessionId);
   return trainingSession;
-  // return { insertId: result.insertId, affectedRows: result.affectedRows }; // Return basic result info
 }
 
 export async function updateTrainingSession(
@@ -159,27 +150,18 @@ export async function markAttendance(session_id, employee_ids) {
     [session_id]
   );
 
-  var [sessionIdRow] = await pool.query(
-    "SELECT validity_period FROM trainings WHERE id = ?",
-    [trainingIdRow[0].training_id]
-  );
-  const validityPeriod = sessionIdRow[0].validity_period;
+  validityPeriod = await getTrainingValidityPeriod(trainingIdRow[0].training_id);
 
   for (const employee_id of employee_ids) {
     const [result] = await pool.query(
       `UPDATE employees_trainings et 
-        SET status = 'completed',
-        expiry_date = DATE_ADD(et.end_date, INTERVAL ? MONTH)
+        SET status = 'completed'
         WHERE session_id = ? AND employee_id = ?`,
-      [validityPeriod, session_id, employee_id]
+      [session_id, employee_id]
     );
 
-    await pool.query(
-      `UPDATE relevant_trainings rt
-        SET validity = 'Valid'
-        WHERE rt.employee_id = ? AND rt.training_id = ?`,
-      [employee_id, trainingIdRow[0].training_id]
-    )
+  await updateRelevantTrainingValidity(employee_id, trainingIdRow[0].training_id, validityPeriod);
+  
   }
   return getTrainingSession(session_id); // Return basic result info
 }

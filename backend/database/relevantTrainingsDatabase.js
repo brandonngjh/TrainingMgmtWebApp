@@ -1,7 +1,7 @@
 import pool from "./database.js";
 
 // Check if a relevant training entry exists
-export async function relevantTrainingExists(employee_id, training_id) {
+export async function checkRelevantTrainingExists(employee_id, training_id) {
   const [rows] = await pool.query(
     "SELECT COUNT(*) as count FROM relevant_trainings WHERE employee_id = ? AND training_id = ?",
     [employee_id, training_id]
@@ -56,11 +56,11 @@ export async function getRelevantTrainingsByEmployeeTrainingId(employee_id, trai
 export async function createRelevantTraining(
     employee_id, 
     training_id, 
-    validity
+    validity = "NA"
 ) {
 
   // Check if the relevant training entry already exists
-  if (await relevantTrainingExists(employee_id, training_id)) {
+  if (await checkRelevantTrainingExists(employee_id, training_id)) {
     throw new Error(`Relevant training for employee_id ${employee_id} and training_id ${training_id} already exists`);
   }
 
@@ -82,12 +82,12 @@ export async function deleteRelevantTraining(employee_id, training_id) {
 // Update an existing relevant training entry
 export async function updateRelevantTraining(employeeId, oldTrainingId, newTrainingId) {
   // Check if the relevant training entry exists before updating
-  if (!(await relevantTrainingExists(employeeId, oldTrainingId))) {
+  if (!(await checkRelevantTrainingExists(employeeId, oldTrainingId))) {
     throw new Error(`Relevant training for employeeId ${employeeId} and trainingId ${oldTrainingId} does not exist`);
   }
 
   // Check for potential conflicts with the new training ID
-  if (await relevantTrainingExists(employeeId, newTrainingId)) {
+  if (await checkRelevantTrainingExists(employeeId, newTrainingId)) {
     throw new Error(`Training ID ${newTrainingId} already exists for employeeId ${employeeId}`);
   }
 
@@ -106,4 +106,50 @@ export async function updateRelevantTraining(employeeId, oldTrainingId, newTrain
     console.error("Database error:", error.message);
     throw error; // Re-throw error to be caught by the route handler
   }
+}
+
+export async function updateRelevantTrainingValidity(employeeId, trainingId, validity) {
+  // Check if the relevant training entry exists before updating
+  if (!(await checkRelevantTrainingExists(employeeId, trainingId))) {
+    throw new Error(`Relevant training for employeeId ${employeeId} and trainingId ${trainingId} does not exist`);
+  }
+
+  try {
+    const [result] = await pool.query(
+      "UPDATE relevant_trainings SET validity = ? WHERE employee_id = ? AND training_id = ?",
+      [validity, employeeId, trainingId]
+    );
+
+    if (result.affectedRows > 0) {
+      return await getRelevantTrainingsByEmployeeId(employeeId);
+    } else {
+      throw new Error(`Failed to update relevant training for employeeId ${employeeId} and trainingId ${trainingId}`);
+    }
+  } catch (error) {
+    console.error("Database error:", error.message);
+    throw error; // Re-throw error to be caught by the route handler
+  }
+}
+
+
+export async function updateCertificationsThatExpired() {
+  // For each employee's relevant training, find their most recent training session expiry date.
+  // If the expiry date has passed, update the relevant training's validity.
+  const [rows] = await pool.query(`
+    UPDATE relevant_trainings rt
+    JOIN (
+      SELECT
+        et.employee_id,
+        et.training_id,
+        MAX(et.expiry_date) as expiry_date
+      FROM
+        employees_trainings et
+      WHERE
+        et.expiry_date < CURDATE()
+      GROUP BY
+        et.employee_id,
+        et.training_id
+    ) AS et ON rt.employee_id = et.employee_id AND rt.training_id = et.training_id
+    SET rt.validity = "Expired"
+  `);
 }

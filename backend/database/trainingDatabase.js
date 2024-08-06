@@ -16,6 +16,14 @@ export async function getTrainings() {
   return rows;
 }
 
+export async function getTrainingValidityPeriod (id) {
+  const [trainingValidityPeriod] = await pool.query(
+    "SELECT validity_period FROM trainings WHERE id = ?",
+    [training_id]
+  );
+  return trainingValidityPeriod[0].validity_period;
+}
+
 // Get a training by ID
 export async function getTrainingByID(id) {
   const [rows] = await pool.query("SELECT * FROM trainings WHERE id = ?", [id]);
