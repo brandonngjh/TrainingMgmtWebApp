@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
-import BackButton from "../../components/BackButton";
-import Spinner from "../../components/Spinner";
+import BackButton from "../../../components/BackButton";
+import Spinner from "../../../components/Spinner";
 
 interface EmployeeTraining {
   id: string;

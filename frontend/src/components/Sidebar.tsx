@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
           } items-center`}
         >
           <img
-            src="https://img.logoipsum.com/325.svg"
+            src="tsh.svg"
             className={`overflow-hidden transition-all ${
               expanded ? "w-32" : "w-0"
             }`}

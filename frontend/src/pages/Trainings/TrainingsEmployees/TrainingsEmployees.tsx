@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Spinner from "../../components/Spinner";
+import Spinner from "../../../components/Spinner";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
 
@@ -129,7 +129,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                     <th className="py-2 px-4 bg-gray-100 border-b">Start Date</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">End Date</th>
                     <th className="py-2 px-4 bg-gray-100 border-b">Expiry Date</th>
-                    <th className="py-2 px-4 bg-gray-100 border-b">Operations</th>
+                    {/* <th className="py-2 px-4 bg-gray-100 border-b">Operations</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -145,7 +145,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                       <td className="py-2 px-4 border-b">{formatDate(session.start_date)}</td>
                       <td className="py-2 px-4 border-b">{formatDate(session.end_date)}</td>
                       <td className="py-2 px-4 border-b">{formatDate(session.expiry_date)}</td>
-                      <td className="py-2 px-4 border-b">
+                      {/* <td className="py-2 px-4 border-b">
                         <div className="flex justify-center gap-x-4">
                           <Link
                             to={`/trainingsemployees/edit/1?trainingId=${session.training_id}`}
@@ -162,7 +162,7 @@ const TrainingsEmployees: React.FC<TrainingsEmployeesProps> = ({ trainingId }) =
                           </Link>
 
                         </div>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>

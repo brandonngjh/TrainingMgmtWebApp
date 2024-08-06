@@ -11,10 +11,11 @@ CREATE TABLE trainings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     validity_period INT,
-    training_provider VARCHAR(255),
 
-    -- REDUNDANT, DO NOT USE
-    description VARCHAR(255)
+    -- NOT IN USE
+    description VARCHAR(255),
+    training_provider VARCHAR(255)
+
 );
 
 CREATE TABLE employees (
