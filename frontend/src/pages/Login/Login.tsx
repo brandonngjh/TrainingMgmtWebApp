@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Form, Button } from "react-bootstrap";
+import { FC, useState } from "react";
+import { Form, Button, Alert } from "react-bootstrap";
 import { Formik, Field, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -12,6 +12,7 @@ interface formValues {
 
 const Login: FC = () => {
   const { login } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     password: Yup.string().required("Password is required"),
@@ -36,9 +37,16 @@ const Login: FC = () => {
       const data = await response.data;
       console.log("Response from server:", data);
       login(data.token);
+      setErrorMessage(null); // Clear previous error message
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error response from server:", error.response?.data);
+        if (error.response?.status === 401) {
+          setErrorMessage("Invalid username or password");
+        } else {
+          setErrorMessage("An error occurred. Please try again.");
+        }
+
       } else {
         console.error("Login failed", error);
       }
@@ -55,6 +63,11 @@ const Login: FC = () => {
           Enter your details to view dashboard.
         </p>
       </div>
+      {errorMessage && (
+        <Alert variant="danger" data-test="error-message">
+          {errorMessage}
+        </Alert>
+      )}
       <Formik
         initialValues={{ username: "", password: "" }}
         validationSchema={validationSchema}
