@@ -43,9 +43,10 @@ async function restoreData(originalData) {
 
   for (const row of originalData.backupEmployeesTrainings) {
     await pool.query(
-      "INSERT INTO employees_trainings (id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO employees_trainings (id, session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         row.id,
+        row.session_id,
         row.employee_id,
         row.training_id,
         row.status,
@@ -75,7 +76,7 @@ async function setup() {
 
   await pool.query(
     "INSERT INTO trainings (id, title, description, validity_period, training_provider) VALUES (?, ?, ?, ?, ?)",
-    [1, 'AS 9100D AWARENESS', 'EXTERNAL', 365, 'Provider A']
+    [1, "AS 9100D AWARENESS", "EXTERNAL", 365, "Provider A"]
   );
 }
 
@@ -94,7 +95,6 @@ describe("Integration Test: Training Routes", () => {
   beforeEach(async () => {
     await setup();
   });
-
 
   test("GET /trainings - should fetch all trainings", async () => {
     const res = await request(app).get("/trainings");

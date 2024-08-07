@@ -17,21 +17,27 @@ describe('Unit Testing: Trainings Database Functions. Mock data modular dates', 
     const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     const mockTrainings = [
-      { 
-        id: 1, 
-        employee_id: 1, 
-        training_id: 1, 
-        expiry_date: firstDayOfMonth.toISOString().split('T')[0], 
-        employee_name: 'John Doe', 
-        training_title: 'Safety Training' 
+      {
+        session_id: 1,
+        employee_id: 1,
+        training_id: 1,
+        status: 'Completed',
+        start_date: '2022-10-01',
+        end_date: '2022-10-02',
+        expiry_date: firstDayOfMonth.toISOString().split('T')[0],
+        employee_name: 'John Doe',
+        training_title: 'Safety Training'
       },
-      { 
-        id: 2, 
-        employee_id: 2, 
-        training_id: 2, 
-        expiry_date: lastDayOfMonth.toISOString().split('T')[0], 
-        employee_name: 'Jane Smith', 
-        training_title: 'First Aid Training' 
+      {
+        session_id: 2,
+        employee_id: 2,
+        training_id: 2,
+        status: 'Completed',
+        start_date: '2022-10-01',
+        end_date: '2022-10-02',
+        expiry_date: lastDayOfMonth.toISOString().split('T')[0],
+        employee_name: 'Jane Smith',
+        training_title: 'First Aid Training'
       },
     ];
     pool.query.mockResolvedValueOnce([mockTrainings]);
@@ -45,23 +51,29 @@ describe('Unit Testing: Trainings Database Functions. Mock data modular dates', 
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
 
     const mockTrainings = [
-      { 
-        id: 1, 
-        employee_id: 1, 
-        training_id: 1, 
-        start_date: threeDaysFromNow.toISOString().split('T')[0], 
-        employee_name: 'John Doe', 
-        employee_email: 'john@example.com', 
-        training_title: 'Safety Training' 
+      {
+        session_id: 1,
+        employee_id: 1,
+        training_id: 1,
+        status: 'Scheduled',
+        start_date: threeDaysFromNow.toISOString().split('T')[0],
+        end_date: '2024-08-15',
+        expiry_date: '2025-08-29',
+        employee_name: 'John Doe',
+        employee_email: 'john@example.com',
+        training_title: 'Safety Training'
       },
-      { 
-        id: 2, 
-        employee_id: 2, 
-        training_id: 2, 
-        start_date: threeDaysFromNow.toISOString().split('T')[0], 
-        employee_name: 'Jane Smith', 
-        employee_email: 'jane@example.com', 
-        training_title: 'First Aid Training' 
+      {
+        session_id: 2,
+        employee_id: 2,
+        training_id: 2,
+        status: 'Scheduled',
+        start_date: threeDaysFromNow.toISOString().split('T')[0],
+        end_date: '2024-08-15',
+        expiry_date: '2025-08-29',
+        employee_name: 'Jane Smith',
+        employee_email: 'jane@example.com',
+        training_title: 'First Aid Training'
       },
     ];
     pool.query.mockResolvedValueOnce([mockTrainings]);
