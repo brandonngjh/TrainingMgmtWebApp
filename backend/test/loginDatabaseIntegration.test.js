@@ -66,8 +66,8 @@ describe('Integration test: Login functions', () => {
         expect(res.json).toHaveBeenCalledWith({ message: 'Invalid username or password' });
     })
 
-    it('should return 401 error if missing username', async () =>{
-      delete req.body.username;
+    it('should return 401 error if missing password', async () =>{
+      delete req.body.password;
       await login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(401);
