@@ -23,7 +23,6 @@ async function restoreData(originalData) {
   await pool.query("TRUNCATE TABLE employees_trainings");
   await pool.query("TRUNCATE TABLE relevant_trainings");
   await pool.query("TRUNCATE TABLE employees");
-  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 
   for (const row of originalData.backupEmployees) {
     await pool.query(
@@ -45,6 +44,8 @@ async function restoreData(originalData) {
       [row.id, row.employee_id, row.training_id, row.validity]
     );
   }
+
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
 }
 
 async function setup() {
