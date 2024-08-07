@@ -11,46 +11,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* Flush buttons to the left */
-  gap: 20px; /* Space between each item */
   background-color: #e0f7fa; /* Nice blue container */
   padding: 20px;
   border-radius: 5px;
   width: auto; /* Adjust the width */
 }
 
-.fetch-button {
-  background-color: #87CEEB; /* Light blue background */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 3px;
-  cursor: pointer;
-  width: fit-content; /* Adjust the button width */
-}
-
-.fetch-button:hover {
-  background-color: #5AAED8; /* Darker blue on hover */
-}
-
-.generate-button {
-  background-color: #007bff; /* Blue button background */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 3px;
-  cursor: pointer;
-  width: fit-content; /* Adjust the button width */
-}
-
-.generate-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
 .select-container {
   display: flex;
   flex-direction: row; /* Display selects in a row */
   gap: 10px; /* Space between each select */
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced space between select container and buttons */
 }
 
 .select-container select {
@@ -63,13 +34,11 @@
 .generate-button-container {
   display: flex;
   justify-content: flex-start; /* Align button to the start (left) */
-  background-color: #083adffe; /* Dark Blue container */
-  color: white;
-  padding: 10px;
+  padding: 5px;
   border-radius: 5px;
   display: inline-block;
 }
 
- table {
+table {
   margin-top: 20px;
 }
