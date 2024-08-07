@@ -36,7 +36,7 @@ describe('Unit Tests: dashboardDatabase.js Functions', () => {
       expect(result).toEqual(mockEmployeeDetails);
     });
 
-    test('getEmployeeDetails - should throw error for null values', async () => {
+    test('getEmployeeDetails - should throw error for null values ', async () => {
         pool.query.mockResolvedValueOnce(null);
         await expect(getEmployeeDetails()).rejects.toThrow('No employee details found');
     });

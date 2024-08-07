@@ -8,7 +8,7 @@ jest.mock('../middleware/middleware.js', () => ({
   protect: (req, res, next) => next()
 }));
 
-describe('Unit Tests: Dashboard Routes Functions', () => {
+describe('Unit Tests: Dashboard Routes Functions ', () => {
   let req, res;
 
   beforeEach(() => {
