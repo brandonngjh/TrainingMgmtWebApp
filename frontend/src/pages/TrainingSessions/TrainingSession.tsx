@@ -245,7 +245,7 @@ const Example: React.FC = () => {
               Delete Session
             </button>
         </Link>
-        <Link to={`/sessions/markattendance`} className="mt-4">
+        <Link to={`/sessions/select`} className="mt-4">
             <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
               Mark Attendance
             </button>
