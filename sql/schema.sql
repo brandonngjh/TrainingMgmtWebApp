@@ -4,7 +4,8 @@ USE training_app;
 CREATE TABLE user_credentials (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE trainings (
@@ -55,9 +56,9 @@ CREATE INDEX idx_training_title ON trainings(title);
 -- CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
 INSERT INTO user_credentials (username, password) VALUES
-('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y'),
-('hr', '$2a$10$Pc6Q5Kq7yaLvJomBGrqcCuDGm2N4ipUJwvdwaUvhUPU7.D7nSL1S.'),
-('hod', '$2a$10$AvHTqnNYfW9HDPWWO7/TlOFPziB31crYB.cu.rxy1lWLW6v2hFPSG');
+('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y', 'admin'),
+('hr', '$2a$10$Pc6Q5Kq7yaLvJomBGrqcCuDGm2N4ipUJwvdwaUvhUPU7.D7nSL1S.', 'hr'),
+('hod', '$2a$10$AvHTqnNYfW9HDPWWO7/TlOFPziB31crYB.cu.rxy1lWLW6v2hFPSG', 'hod');
 
 INSERT INTO employees (id, name, email, hire_date, designation)
 VALUES
