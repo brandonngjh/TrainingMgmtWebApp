@@ -10,11 +10,65 @@ import { number } from "yup";
 import { Link } from "react-router-dom";
 
 
+export const SessionSelectorMarkAttn: React.FC = () => {
+  
+  const [sessionId, setSessionId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const checkSessionID = async () => {
+    setError(null);  // Clear previous errors
+    try {
+      const response = await axios.get(`/api/sessions/${sessionId}`);
+      console.log("API Response:", response.status);
+      if (response.status === 200) {
+        // Session ID exists, navigate to the next page
+        navigate(`/sessions/markattendance/${sessionId}`);
+      } else {
+        // setError("Session ID not found.");
+        navigate(`/sessions`);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setError("Session ID not found.");
+      } else {
+        setError("Error checking Session ID.");
+      }
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <BackButton destination={`/sessions`} />
+      <h1 className="text-3xl font-bold text-gray-800 my-4">Select Training Session for Attendance Marking</h1>
+      <div className="bg-white shadow-md rounded-lg overflow-hidden w-full p-6 mx-auto max-w-lg">
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">Session ID</label>
+          <input
+            type="string"
+            value={sessionId}   // Add the value attribute
+            onChange={(e) => setSessionId(e.target.value)}
+            className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+          />
+        </div>
+        <div className="text-right">
+          {/* <Link to={`/sessions/${sessionID}`} className="mt-4"> */}
+              <button 
+              onClick={checkSessionID}
+              className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+                Edit Session
+              </button>
+          {/* </Link> */}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 interface Employee {
-    id: string;
-    name: string;
-    email: string;
-    designation: string;
+    employee_id: string;
+    employee_name: string;
 }
 
 interface TrainingSession {
@@ -27,15 +81,11 @@ interface TrainingSession {
   employees : Employee[];
 }
 
-const MarkAttendance : React.FC = () => {
+export const MarkAttendance : React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]); // For populating the multiselect list
-  const [sessionId, setSessionId] = useState<string>();
+  // const [sessionId, setSessionId] = useState<string>();
+  const { sessionId } = useParams<{ sessionId: string }>();
   const [employeeIds, setEmployeeIds] = useState<string[]>([]);
-//   const [trainingId, setTrainingId] = useState<string>("");
-//   const [status, setStatus] = useState<string>("");
-//   const [startDate, setStartDate] = useState<string>("");
-//   const [endDate, setEndDate] = useState<string>("");
-
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +96,7 @@ const MarkAttendance : React.FC = () => {
     setLoading(true);
 
     axiosInstance
-    .get("/employees")
+    .get(`http://localhost:3000/api/sessions/employees/${sessionId}`)
     .then((response) => {
         setEmployees(response.data);
         setLoading(false);
@@ -77,10 +127,10 @@ const MarkAttendance : React.FC = () => {
     // console.log(data); // Log the data being sent
 
     // Validate fields
-    if (!sessionId || !employeeIds) {
-      enqueueSnackbar("Please fill out all fields", { variant: "warning" });
-      return;
-    }
+    // if (!sessionId || !employeeIds) {
+    //   enqueueSnackbar("Please fill out all fields", { variant: "warning" });
+    //   return;
+    // }
 
     setLoading(true);
 
@@ -117,13 +167,13 @@ const MarkAttendance : React.FC = () => {
 
 
         <div className="my-4">
-            <label className="text-xl mr-4 text-gray-500">Session ID</label>
+            {/* <label className="text-xl mr-4 text-gray-500">Session ID</label>
             <input
                 type="text"
                 value={sessionId}
                 onInput={(e) => setSessionId(e.currentTarget.value)}
                 className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
-            />
+            /> */}
             </div>
 
             <div className="my-4">
@@ -136,8 +186,8 @@ const MarkAttendance : React.FC = () => {
                     }
                 }}
                 options={employees.map((employee : Employee) => ({
-                    value: employee.id,
-                    label: employee.name,
+                    value: employee.employee_id,
+                    label: employee.employee_name,
                 }))}
             />
             </div>
@@ -189,7 +239,6 @@ const MarkAttendance : React.FC = () => {
                 Save
             </button>
             </div>
-
         </div>
     </div>
   );
