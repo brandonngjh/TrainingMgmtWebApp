@@ -35,6 +35,7 @@
     "supertest": "^7.0.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.24.7",
     "@babel/cli": "^7.24.8",
     "@babel/core": "^7.24.9",
     "@babel/preset-env": "^7.25.0",
