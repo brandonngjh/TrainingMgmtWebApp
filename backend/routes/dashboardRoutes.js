@@ -1,100 +1,41 @@
 import express from "express";
-import { getEmployeeDetails, getRelevantCourses, getTrainingDates} from "../database/dashboardDatabase.js";
+import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../database/dashboardDatabase.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 
-router.use(protect);    //add this
+router.use(protect); //add this
 
+export const getDashboardData = async (req, res) => {
+  const combinedEmployeeTrainingDetails = await getCombinedEmployeeTrainingDetails();
+  if (!Array.isArray(combinedEmployeeTrainingDetails) || combinedEmployeeTrainingDetails.length === 0) {
+    return res.status(500).send({ message: 'No combined employee training details found' });
+  }
+  return res.status(200).send(combinedEmployeeTrainingDetails);
+};
 
-// Returns a massive json file containing all the entries of the employees
+router.get('/', getDashboardData);
 
-router.get("/", async (req, res) => {
-  const [employeeDetails, relevantTrainings, trainingDates] = await Promise.all([
-    getEmployeeDetails(),
-    getRelevantCourses(),
-    getTrainingDates()
-  ]);
-
-  const combined = employeeDetails.map((employee) => {
-    const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
-    const relevantDates = trainingDates.filter(training => training.employee_id === employee.employee_id);
-  
-    employee.relevantTrainings = employeeTrainings.map(training => {
-      const matchingDate = relevantDates.find(date => date.title === training.title);
-      return {
-        validity: training.validity,
-        title: training.title,
-        latest_end_date: matchingDate ? matchingDate.latest_end_date : null,
-        expiry_date: matchingDate ? matchingDate.expiry_date : null,
-        scheduled_date: matchingDate ? matchingDate.scheduled_date : null
-      }
-    })
-  
-    return employee;
-  });
-
-  return res.status(200).send(combined);
-});
-
-
-router.get("/percentage", async (req, res) => {
-  const [employeeDetails, relevantTrainings] = await Promise.all([
-    getEmployeeDetails(),
-    getRelevantCourses()
-  ]);
-
-  const combined = employeeDetails.map((employee) => {
-    const employeeTrainings = relevantTrainings.filter(training => training.employee_id === employee.employee_id);
-
-    employee.relevantTrainings = employeeTrainings.length > 0 ? employeeTrainings.map(training => ({
-      validity: training.validity,
-      title: training.title
-    })) : [{ validity: null, title: null }];
-
-    return employee;
-  });
-
-  const totalEmployees = combined.length;
-  const validEmployees = combined.filter(employee =>
-    employee.relevantTrainings.every(training => training.validity === "Valid")
-  ).length;
-
-  const percentageValidEmployees = (validEmployees / totalEmployees) * 100;
-
+export const getPercentage = async (req, res) => {
+  const percentageValidEmployees = await getPercentageValidEmployees();
+  if (percentageValidEmployees === null) {
+    return res.status(500).send({ message: 'Error calculating percentage of valid employees' });
+  }
   return res.status(200).send({
-    percentageValidEmployees: percentageValidEmployees.toFixed(2)
+    percentageValidEmployees: percentageValidEmployees
   });
-});
+}
 
+router.get("/percentage", getPercentage);
 
-
-router.get("/numbers", async (req, res) => {
-  const [relevantTrainings] = await Promise.all([
-    getRelevantCourses(),
-  ]);
-
-  const trainingStats = relevantTrainings.reduce((acc, training) => {
-    if (!acc[training.title]) {
-      acc[training.title] = { valid: 0, total: 0 };
-    }
-    acc[training.title].total += 1;
-    if (training.validity === "Valid") {
-      acc[training.title].valid += 1;
-    }
-    return acc;
-  }, {});
-
-  const trainingStatsJson = Object.keys(trainingStats).reduce((result, title) => {
-    result[title] = {
-      numberOfEmployeesWithValid: trainingStats[title].valid.toString(),
-      numberOfEmployeesWithTraining: trainingStats[title].total.toString()
-    };
-    return result;
-  }, {});
-
+export const getNumbers = async (req, res) => {
+  const trainingStatsJson = await getTrainingStats();
+  if (typeof trainingStatsJson !== 'object' || trainingStatsJson === null) {
+    return res.status(500).send({ message: 'No training stats found' });
+  }
   res.status(200).json(trainingStatsJson);
-});
+}
 
+router.get("/numbers", getNumbers);
 
 router.get("/employeeDetails", async (req, res) => {
   try {
