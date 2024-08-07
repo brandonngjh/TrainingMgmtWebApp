@@ -13,8 +13,12 @@ app.use("/employees", employeeRoutes);
 
 async function backupData() {
   const [backupEmployees] = await pool.query("SELECT * FROM employees");
-  const [backupEmployeesTrainings] = await pool.query("SELECT * FROM employees_trainings");
-  const [backupRelevantTrainings] = await pool.query("SELECT * FROM relevant_trainings");
+  const [backupEmployeesTrainings] = await pool.query(
+    "SELECT * FROM employees_trainings"
+  );
+  const [backupRelevantTrainings] = await pool.query(
+    "SELECT * FROM relevant_trainings"
+  );
   return { backupEmployees, backupEmployeesTrainings, backupRelevantTrainings };
 }
 
@@ -34,8 +38,17 @@ async function restoreData(originalData) {
 
   for (const row of originalData.backupEmployeesTrainings) {
     await pool.query(
-      "INSERT INTO employees_trainings (id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [row.id, row.employee_id, row.training_id, row.status, row.start_date, row.end_date, row.expiry_date]
+      "INSERT INTO employees_trainings (id, session_id, employee_id, training_id, status, start_date, end_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        row.id,
+        row.session_id,
+        row.employee_id,
+        row.training_id,
+        row.status,
+        row.start_date,
+        row.end_date,
+        row.expiry_date,
+      ]
     );
   }
 
@@ -56,7 +69,7 @@ async function setup() {
 
   await pool.query(
     "INSERT INTO employees (id, name, email, hire_date, designation) VALUES (?, ?, ?, ?, ?)",
-    [1, 'John Doe', 'john@example.com', '2023-07-28', 'Engineer']
+    [1, "John Doe", "john@example.com", "2023-07-28", "Engineer"]
   );
 }
 
@@ -175,7 +188,8 @@ describe("Integration Test: Employee Routes", () => {
       designation: "Manager",
     });
     expect(res.status).toBe(404);
-    expect(res.body).toEqual({ message: "Employee with id 9999 does not exist" });
+    expect(res.body).toEqual({
+      message: "Employee with id 9999 does not exist",
+    });
   });
-
 });

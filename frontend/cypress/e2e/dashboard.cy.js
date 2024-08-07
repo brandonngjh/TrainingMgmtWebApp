@@ -22,10 +22,13 @@ describe("Dashboard Page", () => {
       expect([200, 304]).to.include(interception.response.statusCode);
     });
 
-    cy.get('[data-test=dashboard-table]').should('contain', 'Brandon');
-    cy.get('[data-test=dashboard-table]').should('contain', 'Maintenance/Construction');
-    cy.get('[data-test=dashboard-table]').should('contain', '10/2/2022');
-    cy.get('[data-test=dashboard-table]').should('contain', '11/2/2023');
+    cy.get("[data-test=dashboard-table]").should("contain", "Brandon");
+    cy.get("[data-test=dashboard-table]").should(
+      "contain",
+      "Maintenance/Construction"
+    );
+    cy.get("[data-test=dashboard-table]").should("contain", "10/2/2022");
+    cy.get("[data-test=dashboard-table]").should("contain", "11/2/2023");
   });
 
   it("should fetch and display training data", () => {
@@ -36,16 +39,22 @@ describe("Dashboard Page", () => {
     cy.wait("@getTrainings").then((interception) => {
       expect([200, 304]).to.include(interception.response.statusCode);
     });
-    
+
     cy.get("[data-test=training-titles]").should("exist");
     cy.get("[data-test=training-latest-end-dates]").should("exist");
     cy.get("[data-test=training-expiry-dates]").should("exist");
     cy.get("[data-test=scheduled-training-dates]").should("exist");
 
-    cy.get('[data-test=training-titles]').should('contain', 'COUNTERFEIT');
-    cy.get('[data-test=training-titles]').should('contain', 'MEASUREMENT AND CALIBRATION');
-    cy.get('[data-test=training-titles]').should('contain', 'FOD');
-    cy.get('[data-test=training-titles]').should('contain', 'DEBURING AND BUFFING');
+    cy.get("[data-test=training-titles]").should("contain", "COUNTERFEIT");
+    cy.get("[data-test=training-titles]").should(
+      "contain",
+      "MEASUREMENT AND CALIBRATION"
+    );
+    cy.get("[data-test=training-titles]").should("contain", "FOD");
+    cy.get("[data-test=training-titles]").should(
+      "contain",
+      "DEBURING AND BUFFING"
+    );
   });
 
   it("should fetch and display percentage data", () => {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
@@ -43,27 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsAuthenticated(false);
     navigate('/login');
   }
-
-  const resetTimeout = () => {
-    //clear timeout
-    if (timeout) clearTimeout(timeout);
-    //set new timeout
-    timeout = setTimeout(() => {
-        logout();},
-        sessionTimeout);
-  };
-
-  window.addEventListener('mousemove', resetTimeout)    //check mouse movement
-  window.addEventListener('keydown', resetTimeout)  //check keyboard press
-
-  resetTimeout();
-
-  return () => {
-      window.removeEventListener('mousemove', resetTimeout);  
-      window.removeEventListener('keydown', resetTimeout);
-      if (timeout) clearTimeout(timeout);
-      };
-    }, [navigate, isAuthenticated]);
+}, [navigate, isAuthenticated]);
 
   const isTokenExpired = (token: string) => { //checks if token expired
     try{

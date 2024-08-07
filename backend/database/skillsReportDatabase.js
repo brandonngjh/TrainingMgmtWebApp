@@ -2,25 +2,50 @@ import pool from "./database.js";
 
 // Get all skills report
 export async function getSkillsReport() {
-  const [rows] = await pool.query("SELECT * FROM skills_report");
+  const [rows] = await pool.query(`
+    SELECT 
+      e.id AS employee_id,
+      e.name AS employee_name,
+      t.title AS training_course,
+      rt.validity AS validity
+    FROM 
+      employees e
+    JOIN 
+      employees_trainings et ON e.id = et.employee_id
+    JOIN 
+      trainings t ON et.training_id = t.id
+    JOIN 
+      relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+  `);
   return rows;
 }
 
 // Get filtered skills report
-export async function getFilteredSkillsReport({ job, training, validity }) {
-  let query = 'SELECT * FROM skills_report WHERE 1=1';
+export async function getFilteredSkillsReport({ training, validity }) {
+  let query = `
+    SELECT 
+      e.id AS employee_id,
+      e.name AS employee_name,
+      t.title AS training_course,
+      rt.validity AS validity
+    FROM 
+      employees e
+    JOIN 
+      employees_trainings et ON e.id = et.employee_id
+    JOIN 
+      trainings t ON et.training_id = t.id
+    JOIN 
+      relevant_trainings rt ON e.id = rt.employee_id AND t.id = rt.training_id
+    WHERE 1=1
+  `;
   const queryParams = [];
 
-  if (job) {
-    query += ' AND job_name = ?';
-    queryParams.push(job);
-  }
   if (training) {
-    query += ' AND training_course = ?';
+    query += ' AND t.title = ?';
     queryParams.push(training);
   }
   if (validity) {
-    query += ' AND validity = ?';
+    query += ' AND rt.validity = ?';
     queryParams.push(validity);
   }
 
