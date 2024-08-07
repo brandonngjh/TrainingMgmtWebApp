@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession, markAttendance } from "../database/trainingSessionDatabase.js";
+import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession, markAttendance, getEmployeesbySessionId } from "../database/trainingSessionDatabase.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 
@@ -11,8 +11,21 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/:session_id", async (req, res) => {
-    const trainingSession = await getTrainingSession(req.params.session_id);
-    return res.status(200).send(trainingSession);
+    // const trainingSession = await getTrainingSession(req.params.session_id);
+    // return res.status(200).send(trainingSession);
+    try {
+      const session = await getTrainingSession(req.params.session_id);
+  
+      if (!session) {
+        // If session not found, send a 404 response
+        return res.status(404).json({ error: 'Session ID not found' });
+      }
+  
+      res.json(session);
+    } catch (error) {
+      // Handle unexpected errors
+      res.status(500).json({ error: 'An unexpected error occurred' });
+    }
 })
 
 router.post("/", async(req, res) => {
@@ -82,6 +95,7 @@ router.delete("/:session_id", async (req, res) => {
       }
 })
 
+// To mark attendance for a training session
 router.post("/attendance", async(req, res) => {
     try {
         console.log(req.body)
@@ -96,6 +110,20 @@ router.post("/attendance", async(req, res) => {
           employee_ids
         );
         return res.status(201).json(trainingSession);
+      } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ message: error.message });
+    }
+})
+
+// to get all the employees for a training session
+router.get("/employees/:session_id", async (req, res) => {
+    try {
+        const employees = await getEmployeesbySessionId(req.params.session_id);
+        if (!employees) {
+          return res.status(404).send({ message: "No employees found for this session" });
+        }
+        return res.status(200).json(employees);
       } catch (error) {
         console.error(error.message);
         return res.status(500).send({ message: error.message });

@@ -58,27 +58,60 @@ export async function getAllTrainingSessions() {
 }
 
 export async function getTrainingSession(session_id) {
-    const [rows] = await pool.query(
-        `
-        SELECT
-            ts.session_id AS session_id,
-            ts.status AS status,
-            ts.start_date AS start_date,
-            ts.end_date AS end_date,
-            ts.expiry_date AS expiry_date,
-            e.id AS employee_id,
-            e.name AS employee_name,
-            e.designation as designation,
-            t.title as training_title,
-            t.id as training_id
-        FROM employees_trainings ts
-        JOIN employees e ON ts.employee_id = e.id
-        JOIN trainings t ON ts.training_id = t.id
-        WHERE ts.session_id = ?;
-        `,
-        [session_id]
-    );
-    return formatSession(rows);
+  const sessionExists = await checkSessionIdExists(session_id);
+  
+  if (!sessionExists) {
+    return null;
+  }
+  
+  const [rows] = await pool.query(
+    `
+    SELECT
+      ts.session_id AS session_id,
+      ts.status AS status,
+      ts.start_date AS start_date,
+      ts.end_date AS end_date,
+      ts.expiry_date AS expiry_date,
+      e.id AS employee_id,
+      e.name AS employee_name,
+      e.designation as designation,
+      t.title as training_title,
+      t.id as training_id
+    FROM employees_trainings ts
+    JOIN employees e ON ts.employee_id = e.id
+    JOIN trainings t ON ts.training_id = t.id
+    WHERE ts.session_id = ?;
+    `,
+    [session_id]
+  );
+  return formatSession(rows);
+}
+export async function getEmployeesbySessionId(session_id) {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      e.id AS employee_id,
+      e.name AS employee_name,
+      e.designation as designation,
+      ts.status AS status,
+      ts.start_date AS start_date,
+      ts.end_date AS end_date,
+      ts.expiry_date AS expiry_date
+    FROM employees_trainings ts
+    JOIN employees e ON ts.employee_id = e.id
+    WHERE ts.session_id = ?;
+    `,
+    [session_id]
+  );
+  return rows;
+}
+
+export async function checkSessionIdExists(session_id) {
+  const [rows] = await pool.query(
+    "SELECT COUNT(*) as count FROM employees_trainings WHERE session_id = ?",
+    [session_id]
+  );
+  return rows[0].count > 0;
 }
 
 export async function createTrainingSession(

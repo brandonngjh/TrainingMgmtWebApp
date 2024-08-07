@@ -24,7 +24,7 @@ import TrainingSession from "./pages/TrainingSessions/TrainingSession.tsx";
 import CreateTrainingSession from "./pages/TrainingSessions/CreateTrainingSession.tsx";
 import { SessionSelector, EditTrainingSession } from "./pages/TrainingSessions/EditTrainingSession.tsx";
 import DeleteTrainingSession from "./pages/TrainingSessions/DeleteTrainingSession.tsx";
-import MarkAttendance from "./pages/TrainingSessions/MarkAttendance.tsx";
+import { SessionSelectorMarkAttn, MarkAttendance} from "./pages/TrainingSessions/MarkAttendance.tsx";
 
 import CreateRelevantTrainings from "./pages/RelevantTrainings/CreateRelevantTrainings.tsx";
 import DeleteRelevantTraining from "./pages/RelevantTrainings/DeleteRelevantTrainings.tsx";
@@ -56,7 +56,8 @@ const App: React.FC = () => {
       <Route path="/sessions/edit" element={<SessionSelector/>} />
       <Route path="/sessions/:id" element={<EditTrainingSession />} />
       <Route path="/sessions/delete/" element={<DeleteTrainingSession />} />
-      <Route path="/sessions/markattendance" element={<MarkAttendance />} />
+      <Route path="/sessions/select" element={<SessionSelectorMarkAttn />} />
+      <Route path="/sessions/markattendance/:sessionId" element={<MarkAttendance />} />
 
       <Route path="/employees" element={<Employees />} />
       <Route path="/employees/create" element={<CreateEmployee />} />
