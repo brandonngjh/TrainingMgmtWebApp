@@ -42,7 +42,6 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
-        console.log('getFilteredSkillsReport result (training and validity):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training', 'Valid']);
     });
@@ -61,7 +60,6 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
-        console.log('getFilteredSkillsReport result (training only):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Safety Training']);
     });
@@ -80,7 +78,6 @@ describe('Unit Test: skillsReportDatabase.js Functions', () => {
         };
 
         const result = await getFilteredSkillsReport(filterParams);
-        console.log('getFilteredSkillsReport result (validity only):', result); 
         expect(result).toEqual(expectedData);
         expect(pool.query).toHaveBeenCalledWith(expect.any(String), ['Valid']);
     });

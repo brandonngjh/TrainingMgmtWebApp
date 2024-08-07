@@ -6,6 +6,11 @@ import { generateToken } from '../auth_utils/jwt.js';
 //compares entered password and username with one in database
 export const login = async (req, res) => {
     const { username, password } = req.body;
+    console.log('Login controller called with:', { username, password });
+
+    if (!username || !password) {
+        return res.status(401).json({ message: 'Missing username or password' });
+    }
 
     try {
         const [rows] = await pool.query('SELECT * FROM user_credentials WHERE username = ?', [username]);
