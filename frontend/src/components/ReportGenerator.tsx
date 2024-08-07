@@ -117,8 +117,6 @@ const ReportGenerator: React.FC = () => {
       <div className="flex-1">
         <h2 data-test="report-generator-header" className="text-3xl my-8">Skills Report Generator</h2>
         <div className="button-container">
-          <button data-test="fetch-report-button" onClick={fetchSkillsReport}>Fetch Skills Report</button>
-  
           <div className="select-container">
             <select data-test="training-select" value={selectedTraining} onChange={handleTrainingChange}>
               <option value="">All Trainings</option>
@@ -134,9 +132,9 @@ const ReportGenerator: React.FC = () => {
               <option value="NA">NA</option>
             </select>
           </div>
-  
-          <div className="generate-button-container">
-            <button data-test="generate-report-button" onClick={generatePDF}>Download Skills Report PDF</button>
+          <div className="buttons flex items-center space-x-4 mt-4">
+            <button data-test="fetch-report-button" onClick={fetchSkillsReport} className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">Fetch Skills Report</button>
+            <button data-test="generate-report-button" onClick={generatePDF} className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">Download Skills Report PDF</button>
           </div>
         </div>
   
