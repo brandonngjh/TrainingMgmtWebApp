@@ -1,150 +1,111 @@
-import request from "supertest";
-import express from "express";
-import dashboardRoutes from "../routes/dashboardRoutes";
+import request from 'supertest';
+import express from 'express';
+import { getDashboardData, getPercentage, getNumbers } from '../routes/dashboardRoutes.js';
+import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../database/dashboardDatabase.js";
 
-jest.mock("../database/dashboardDatabase", () => ({
-  getEmployeeDetails: jest.fn(),
-  getRelevantCourses: jest.fn(),
-  getTrainingDates: jest.fn(),
+jest.mock('../database/dashboardDatabase.js');
+jest.mock('../middleware/middleware.js', () => ({
+  protect: (req, res, next) => next()
 }));
 
-import {
-  getEmployeeDetails,
-  getRelevantCourses,
-  getTrainingDates,
-} from "../database/dashboardDatabase";
+describe('Unit Tests: Dashboard Routes Functions ', () => {
+  let req, res;
 
-jest.mock("../middleware/middleware.js", () => ({
-  protect: (req, res, next) => next(),
-}));
-
-const app = express();
-app.use(express.json());
-app.use("/dashboard", dashboardRoutes);
-
-describe("Integration Test: Dashboard Routes", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  beforeEach(() => {
+    req = {};
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+      json: jest.fn()
+    };
   });
 
-  test("GET /dashboard - should fetch all combined employee details", async () => {
-    const mockEmployeeDetails = [
-      { employee_id: 1, employee_name: "John Doe", designation: "Engineer" },
-    ];
-    const mockRelevantCourses = [
-      { employee_id: 1, training_id: 1, validity: "Valid", title: "Safety Training" },
-    ];
-    const mockTrainingDates = [
-      {
-        employee_id: 1,
-        training_id: 1,
-        title: "Safety Training",
-        latest_end_date: "2023-07-01",
-        expiry_date: "2023-12-31",
-        scheduled_date: null,
-      },
-    ];
-
-    getEmployeeDetails.mockResolvedValue(mockEmployeeDetails);
-    getRelevantCourses.mockResolvedValue(mockRelevantCourses);
-    getTrainingDates.mockResolvedValue(mockTrainingDates);
-
-    const res = await request(app).get("/dashboard");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual([
-      {
-        employee_id: 1,
-        employee_name: "John Doe",
-        designation: "Engineer",
-        relevantTrainings: [
-          {
-            validity: "Valid",
-            title: "Safety Training",
-            latest_end_date: "2023-07-01",
-            expiry_date: "2023-12-31",
-            scheduled_date: null,
-          },
-        ],
-      },
-    ]);
+  test('getDashboardData should return combined employee training details with status 200', async () => {
+    const mockCombinedEmployeeTrainingDetails = [
+        {
+          employee_id: 1,
+          employee_name: 'John Doe',
+          designation: 'Material Planner',
+          relevantTrainings: [
+            {
+              validity: 'Valid',
+              title: 'COUNTERFEIT',
+              latest_end_date: '2024-07-01',
+              expiry_date: '2025-07-01',
+              scheduled_date: null
+            }
+          ]
+        },
+        {
+          employee_id: 2,
+          employee_name: 'Jane Smith',
+          designation: 'Production Machining HOD',
+          relevantTrainings: [
+            {
+              validity: 'NA',
+              title: 'FOD',
+              latest_end_date: null,
+              expiry_date: null,
+              scheduled_date: '2024-10-15'
+            }
+          ]
+        }
+      ];
+    getCombinedEmployeeTrainingDetails.mockResolvedValue(mockCombinedEmployeeTrainingDetails);
+    await getDashboardData(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith(mockCombinedEmployeeTrainingDetails);
   });
 
-  test("GET /dashboard/percentage - should fetch percentage of employees with all valid trainings", async () => {
-    const mockEmployeeDetails = [
-      { employee_id: 1, employee_name: "John Doe", designation: "Engineer" },
-    ];
-    const mockRelevantCourses = [
-      { employee_id: 1, training_id: 1, validity: "Valid", title: "Safety Training" },
-    ];
-
-    getEmployeeDetails.mockResolvedValue(mockEmployeeDetails);
-    getRelevantCourses.mockResolvedValue(mockRelevantCourses);
-
-    const res = await request(app).get("/dashboard/percentage");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      percentageValidEmployees: "100.00",
-    });
+  test('getDashboardData should handle null values and return status 500', async () => {
+    getCombinedEmployeeTrainingDetails.mockResolvedValue(null);
+    await getDashboardData(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ message: 'No combined employee training details found' });
   });
 
-  test("GET /dashboard/numbers - should fetch number of employees with valid trainings", async () => {
-    const mockRelevantCourses = [
-      { employee_id: 1, training_id: 1, validity: "Valid", title: "Safety Training" },
-      { employee_id: 2, training_id: 1, validity: "Expired", title: "Safety Training" },
-    ];
-
-    getRelevantCourses.mockResolvedValue(mockRelevantCourses);
-
-    const res = await request(app).get("/dashboard/numbers");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      "Safety Training": {
-        numberOfEmployeesWithValid: "1",
-        numberOfEmployeesWithTraining: "2",
-      },
-    });
+  test('getDashboardData should handle empty array and return status 500', async () => {
+    getCombinedEmployeeTrainingDetails.mockResolvedValue([]);
+    await getDashboardData(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ message: 'No combined employee training details found' });
   });
 
-  test("GET /dashboard/employeeDetails - should fetch all employee details", async () => {
-    const mockEmployeeDetails = [
-      { employee_id: 1, employee_name: "John Doe", designation: "Engineer" },
-    ];
-
-    getEmployeeDetails.mockResolvedValue(mockEmployeeDetails);
-
-    const res = await request(app).get("/dashboard/employeeDetails");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockEmployeeDetails);
+  test('getPercentage should return percentage of valid employees with status 200', async () => {
+    getPercentageValidEmployees.mockResolvedValue('50.00');
+    await getPercentage(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({"percentageValidEmployees": "50.00"});
   });
 
-  test("GET /dashboard/relevantTrainings - should fetch all relevant trainings", async () => {
-    const mockRelevantCourses = [
-      { employee_id: 1, training_id: 1, validity: "Valid", title: "Safety Training" },
-    ];
-
-    getRelevantCourses.mockResolvedValue(mockRelevantCourses);
-
-    const res = await request(app).get("/dashboard/relevantTrainings");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockRelevantCourses);
+  test('getPercentage should handle null values and return status 500', async () => {
+    getPercentageValidEmployees.mockResolvedValue(null);
+    await getPercentage(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ message: 'Error calculating percentage of valid employees' });
   });
 
-  test("GET /dashboard/trainingDates - should fetch all training dates", async () => {
-    const mockTrainingDates = [
-      {
-        employee_id: 1,
-        training_id: 1,
-        title: "Safety Training",
-        latest_end_date: "2023-07-01",
-        expiry_date: "2023-12-31",
-        scheduled_date: null,
-      },
-    ];
+  test('getNumbers should return training stats with status 200', async () => {
+    const mockTrainingStats = {
+        'COUNTERFEIT': {
+            numberOfEmployeesWithValid: '1',
+            numberOfEmployeesWithTraining: '1'
+        },
+        'FOD': {
+            numberOfEmployeesWithValid: '1',
+            numberOfEmployeesWithTraining: '2'
+        }
+    };
+    getTrainingStats.mockResolvedValue(mockTrainingStats);
+    await getNumbers(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockTrainingStats);
+  });
 
-    getTrainingDates.mockResolvedValue(mockTrainingDates);
-
-    const res = await request(app).get("/dashboard/trainingDates");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockTrainingDates);
+  test('getNumbers should handle null values and return status 500', async () => {
+    getTrainingStats.mockResolvedValue(null);
+    await getNumbers(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ message: 'No training stats found' });
   });
 });
