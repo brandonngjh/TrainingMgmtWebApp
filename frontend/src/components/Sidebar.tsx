@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { CgMoreVertical } from "react-icons/cg";
 import { FaRegUserCircle } from "react-icons/fa";
 import { LuChevronFirst, LuChevronLast } from "react-icons/lu";
-import { MdModelTraining, MdOutlineDashboard } from "react-icons/md";
+import { MdModelTraining, MdOutlineDashboard, MdOutlineDescription } from "react-icons/md";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, children }) => {
     {icon: <RiCalendarScheduleLine size={20} />, text: "Training Sessions", link: '/sessions'},
     { icon: <FaRegUserCircle size={20} />, text: "Employees", link: '/employees' },
     { icon: <MdModelTraining size={20} />, text: "Trainings", link: '/trainings' },
+    {icon: <MdOutlineDescription size={20} />, text: "Report", link: '/report'},
   ];
 
   return (

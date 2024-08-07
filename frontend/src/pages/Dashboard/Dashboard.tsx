@@ -276,13 +276,13 @@ const Example: React.FC = () => {
         <div id="dashboard-table" data-test="dashboard-table">
           <MaterialReactTable table={table} />
         </div>
-        <div className="dashboard-generate-button-container">
+        {/* <div className="dashboard-generate-button-container">
           <Link to="/report">
             <button className="dashboard-generate-button" data-test="dashboard-generate-button">
               Generate Skills Report
             </button>
           </Link>
-        </div>
+        </div> */}
         <div className="stats-container">
           <PercentagePieChart />
           <Numbers />
