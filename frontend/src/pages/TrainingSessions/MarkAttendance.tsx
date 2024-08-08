@@ -56,7 +56,7 @@ export const SessionSelectorMarkAttn: React.FC = () => {
               <button 
               onClick={checkSessionID}
               className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
-                Edit Session
+                Next
               </button>
           {/* </Link> */}
         </div>

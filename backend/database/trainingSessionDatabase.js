@@ -213,7 +213,7 @@ export async function markAttendance(session_id, employee_ids) {
     [session_id]
   );
 
-  validityPeriod = await getTrainingValidityPeriod(trainingIdRow[0].training_id);
+  // validityPeriod = await getTrainingValidityPeriod(trainingIdRow[0].training_id);
 
   for (const employee_id of employee_ids) {
     const [result] = await pool.query(
@@ -223,7 +223,7 @@ export async function markAttendance(session_id, employee_ids) {
       [session_id, employee_id]
     );
 
-  await updateRelevantTrainingValidity(employee_id, trainingIdRow[0].training_id, validityPeriod);
+  await updateRelevantTrainingValidity(employee_id, trainingIdRow[0].training_id, "Valid");
   
   }
   return getTrainingSession(session_id); // Return basic result info
