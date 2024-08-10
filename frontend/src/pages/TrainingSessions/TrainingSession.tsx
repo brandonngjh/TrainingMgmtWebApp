@@ -231,26 +231,26 @@ const Example: React.FC = () => {
       <div className="dashboard-content">
         <h2 className="text-3xl my-8">Training Sessions Page</h2>
         <Link to={`/sessions/create`} className="mt-4">
-            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700" data-test="create-session-button">
               Create Session
             </button>
         </Link>
         <Link to={`/sessions/edit`} className="mt-4">
-            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700" data-test="edit-session-button">
               Edit Session
             </button>
         </Link>
         <Link to={`/sessions/delete`} className="mt-4">
-            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700" data-test="delete-session-button">
               Delete Session
             </button>
         </Link>
         <Link to={`/sessions/select`} className="mt-4">
-            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700">
+            <button className="bg-indigo-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-indigo-700" data-test="mark-attendance-button">
               Mark Attendance
             </button>
         </Link>
-        <div id="dashboard-table">
+        <div id="dashboard-table" data-test="session-table">
           <MaterialReactTable table={table} />
         </div>
       </div>
