@@ -20,7 +20,7 @@ describe('Integration Test: login Routes', () => {
         const hashedPassword = await bcrypt.hash(testPassword, 10); //hash first before inserting database
         await pool.query(
             'INSERT INTO user_credentials (username, password) VALUES (?, ?)',
-            [testUsername, hashedPassword, 'hr']
+            [testUsername, hashedPassword]
           );
         });
     
