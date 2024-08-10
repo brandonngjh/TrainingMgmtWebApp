@@ -66,6 +66,7 @@ const CreateTraining = () => {
             value={title}
             onInput={(e) => setTitle(e.currentTarget.value.toUpperCase())}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-title"
           />
         </div>
         <div className="my-4">
@@ -74,6 +75,7 @@ const CreateTraining = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-description"
           >
             <option value="PROMPT">Select your description</option>
             <option value="INTERNAL">INTERNAL</option>
@@ -88,6 +90,7 @@ const CreateTraining = () => {
             value={validityPeriod}
             onChange={(e) => setValidityPeriod(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-validity"
           />
         </div>
         <div className="my-4">
@@ -97,6 +100,7 @@ const CreateTraining = () => {
             value={trainingProvider}
             onChange={(e) => setTrainingProvider(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-provider"
           />
         </div>
         <div className="text-right">
