@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -91,6 +91,7 @@ const EditTraining = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-title"
           />
         </div>
         <div className="my-4">
@@ -99,6 +100,7 @@ const EditTraining = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-description"
           >
             <option value="INTERNAL">INTERNAL</option>
             <option value="EXTERNAL">EXTERNAL</option>
@@ -112,6 +114,7 @@ const EditTraining = () => {
             value={validityPeriod}
             onChange={(e) => setValidityPeriod(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full rounded-md"
+            data-test="input-validity"
           />
         </div>
         {/* <div className="my-4">

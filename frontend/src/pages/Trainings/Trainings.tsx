@@ -89,18 +89,21 @@ const Trainings = () => {
                         <Link
                           to={`/trainings/details/${training.id}`}
                           className="bg-green-100 p-1 rounded-full hover:bg-green-200"
+                          data-test={`view-training`}
                         >
                           <BsInfoCircle className="text-green-600 text-lg cursor-pointer" />
                         </Link>
                         <Link
                           to={`/trainings/edit/${training.id}`}
                           className="bg-yellow-100 p-1 rounded-full hover:bg-yellow-200"
+                          data-test={`edit-training`}
                         >
                           <AiOutlineEdit className="text-yellow-600 text-lg cursor-pointer" />
                         </Link>
                         <Link
                           to={`/trainings/delete/${training.id}`}
                           className="bg-red-100 p-1 rounded-full hover:bg-red-200"
+                          data-test={`delete-training`}
                         >
                           <MdOutlineDelete className="text-red-600 text-lg cursor-pointer" />
                         </Link>
