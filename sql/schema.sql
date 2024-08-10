@@ -55,7 +55,7 @@ CREATE INDEX idx_employee_email ON employees(email);
 CREATE INDEX idx_training_title ON trainings(title);
 -- CREATE INDEX idx_employee_id ON skills_report(employee_id);
 
-INSERT INTO user_credentials (username, password) VALUES
+INSERT INTO user_credentials (username, password, role) VALUES
 ('admin', '$2a$10$aHJ70OAKBr1M/L1JWxNzaethzAgDck0AtT7kRvVmhsLH71Uf4sr4y', 'admin'),
 ('hr', '$2a$10$Pc6Q5Kq7yaLvJomBGrqcCuDGm2N4ipUJwvdwaUvhUPU7.D7nSL1S.', 'hr'),
 ('hod', '$2a$10$AvHTqnNYfW9HDPWWO7/TlOFPziB31crYB.cu.rxy1lWLW6v2hFPSG', 'hod');

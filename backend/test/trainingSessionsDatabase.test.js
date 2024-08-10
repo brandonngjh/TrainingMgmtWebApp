@@ -9,6 +9,8 @@ jest.mock("../database/database.js", () => ({
   query: jest.fn(),
 }));
 
+
+// TO FIX:
 describe("Unit Test: Training Session Database Functions", () => {
   afterEach(() => {
     jest.clearAllMocks();
