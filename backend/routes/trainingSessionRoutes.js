@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession, markAttendance, getEmployeesbySessionId } from "../database/trainingSessionDatabase.js";
+import { getAllTrainingSessions, getTrainingSession, createTrainingSession, deleteTrainingSession, updateTrainingSession, markAttendance, getEmployeesbySessionId } from "../models/trainingSessionModel.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 

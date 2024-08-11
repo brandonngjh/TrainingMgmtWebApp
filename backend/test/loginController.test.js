@@ -1,11 +1,11 @@
-import pool from "../database/database.js"
+import pool from "../models/database.js"
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../auth_utils/jwt.js';
 import request from 'supertest'
 import fc from 'fast-check';
-import {login} from "../database/loginController.js"
+import {login} from "../models/loginController.js"
 
-jest.mock('../database/database.js', () => ({
+jest.mock('../models/database.js', () => ({
     query: jest.fn()
 }));
 

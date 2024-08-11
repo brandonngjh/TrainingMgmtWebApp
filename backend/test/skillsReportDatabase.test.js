@@ -1,10 +1,10 @@
-import pool from "../database/database.js";
+import pool from "../models/database.js";
 import {
   getSkillsReport,
   getFilteredSkillsReport,
-} from "../database/skillsReportDatabase.js";
+} from "../models/skillsReportModel.js";
 
-jest.mock('../database/database.js', () => ({
+jest.mock('../models/database.js', () => ({
     query: jest.fn()
 }))
 

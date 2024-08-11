@@ -2,12 +2,10 @@ import {
   sendExpiringTrainingEmail,
   sendUpcomingTrainingsEmail,
 } from "../scheduler/autoNotificationScheduler.js";
-import pool from "../database/database.js";
-import {
-  getExpiringTrainings,
-  getUpcomingTrainings,
-} from "../database/emailDatabase.js";
+import pool from "../models/database.js";
 import schedule from "node-schedule";
+import {getExpiringTrainings} from "../models/relevantTrainingsModel.js";
+import {getUpcomingTrainings} from "../models/trainingSessionModel.js";
 
 async function backupData() {
   const [backupEmployees] = await pool.query("SELECT * FROM employees");

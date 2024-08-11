@@ -7,7 +7,7 @@ import {
   createEmployeeTraining,
   deleteEmployeeTraining,
   updateEmployeeTraining,
-} from "../database/employeesTrainingsDatabase.js";
+} from "../models/employeeModels/employeesTrainingsDatabase.js";
 
 const router = express.Router();
 

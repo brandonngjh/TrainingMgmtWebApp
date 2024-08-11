@@ -1,8 +1,9 @@
-import pool from '../database/database.js';
-import { getExpiringTrainings, getUpcomingTrainings } from '../database/emailDatabase.js';
+import pool from '../models/database.js';
+import {getExpiringTrainings} from "../models/relevantTrainingsModel.js";
+import {getUpcomingTrainings} from "../models/trainingSessionModel.js";
 
 // Mock the pool.query method
-jest.mock('../database/database.js', () => ({
+jest.mock('../models/database.js', () => ({
   query: jest.fn(),
 }));
 

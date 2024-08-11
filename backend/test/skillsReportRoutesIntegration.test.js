@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import skillsReportRoutes from '../routes/skillsReportRoutes.js';
-import pool from '../database/database.js';
+import pool from '../models/database.js';
 
 jest.mock('../middleware/middleware.js', () => ({
     protect: (req, res, next) => next(),

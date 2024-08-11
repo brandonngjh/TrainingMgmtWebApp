@@ -2,7 +2,7 @@ import request from "supertest";
 import express from "express";
 import dashboardRoutes from "../routes/dashboardRoutes";
 
-jest.mock("../database/dashboardDatabase", () => ({
+jest.mock("../models/dashboardModel.js", () => ({
   getEmployeeDetails: jest.fn(),
   getRelevantCourses: jest.fn(),
   getTrainingDates: jest.fn(),
@@ -12,7 +12,7 @@ import {
   getEmployeeDetails,
   getRelevantCourses,
   getTrainingDates,
-} from "../database/dashboardDatabase";
+} from "../models/dashboardModel.js";
 
 jest.mock("../middleware/middleware.js", () => ({
   protect: (req, res, next) => next(),

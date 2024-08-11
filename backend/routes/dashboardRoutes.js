@@ -1,5 +1,5 @@
 import express from "express";
-import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../database/dashboardDatabase.js";
+import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../models/dashboardModel.js";
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    
 

@@ -1,4 +1,4 @@
-import pool from "./database.js";
+import pool from "../models/database.js";
 import bcrypt from "bcryptjs";
 
 //run this once for localdatabase to hash passwords when in backend folder by running "node database/hashpassword.js"

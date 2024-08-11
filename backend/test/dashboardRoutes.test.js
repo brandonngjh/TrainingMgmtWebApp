@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express from 'express';
 import { getDashboardData, getPercentage, getNumbers } from '../routes/dashboardRoutes.js';
-import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../database/dashboardDatabase.js";
+import { getEmployeeDetails, getRelevantCourses, getTrainingDates, getCombinedEmployeeTrainingDetails, getPercentageValidEmployees, getTrainingStats} from "../models/dashboardModel.js";
 
-jest.mock('../database/dashboardDatabase.js');
+jest.mock('../models/dashboardModel.js');
 jest.mock('../middleware/middleware.js', () => ({
   protect: (req, res, next) => next()
 }));

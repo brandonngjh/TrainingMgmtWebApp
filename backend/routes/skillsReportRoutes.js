@@ -2,7 +2,7 @@ import express from 'express';
 import { 
     getSkillsReport, 
     getFilteredSkillsReport 
-} from '../database/skillsReportDatabase.js';
+} from '../models/skillsReportModel.js';
 
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    

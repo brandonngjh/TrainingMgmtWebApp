@@ -1,4 +1,4 @@
-import pool from "../database/database.js";
+import pool from "../models/database.js";
 import {
   trainingIdExists,
   getTrainings,
@@ -6,9 +6,9 @@ import {
   createTraining,
   deleteTraining,
   updateTraining,
-} from "../database/trainingDatabase.js";
+} from "../models/trainingModel.js";
 
-jest.mock('../database/database.js', () => ({
+jest.mock('../models/database.js', () => ({
   query: jest.fn(),
 }));
 
