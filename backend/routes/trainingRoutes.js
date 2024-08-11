@@ -6,7 +6,7 @@ import {
   createTraining,
   deleteTraining,
   updateTraining,
-} from "../database/trainingDatabase.js";
+} from "../models/trainingModel.js";
 import { protect } from "../middleware/middleware.js"; //add this
 
 const router = express.Router();

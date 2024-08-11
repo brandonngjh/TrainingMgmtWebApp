@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../auth_utils/jwt.js';
 import fc from 'fast-check';
-import {login} from "../database/loginController.js"
+import {login} from "../models/loginController.js"
 import request from "supertest";
 import express from "express";
 import loginRoutes from "../routes/loginRoutes.js"
 
-jest.mock("../database/loginController.js", () => ({
+jest.mock("../models/loginController.js", () => ({
     login: jest.fn()
   }));
 

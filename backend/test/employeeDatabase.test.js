@@ -1,4 +1,4 @@
-import pool from "../database/database.js";
+import pool from "../models/database.js";
 import {
   employeeIdExists,
   getEmployees,
@@ -6,9 +6,9 @@ import {
   createEmployee,
   deleteEmployee,
   updateEmployee,
-} from "../database/employeeDatabase.js";
+} from "../models/employeeModels/employeeModel.js";
 
-jest.mock('../database/database.js', () => ({
+jest.mock('../models/database.js', () => ({
     query: jest.fn()
 }))
 

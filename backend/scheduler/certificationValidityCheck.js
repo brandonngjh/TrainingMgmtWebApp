@@ -1,5 +1,5 @@
 import schedule from "node-schedule";
-import { updateCertificationsThatExpired } from "../database/relevantTrainingsDatabase.js";
+import { updateCertificationsThatExpired } from "../models/relevantTrainingsModel.js";
 
 
 const dailyRule = new schedule.RecurrenceRule();

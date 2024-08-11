@@ -2,7 +2,7 @@ import request from "supertest";
 import express from "express";
 import skillsReportRoutes from "../routes/skillsReportRoutes";
 
-jest.mock("../database/skillsReportDatabase", () => ({
+jest.mock("../models/skillsReportModel.js", () => ({
   getSkillsReport: jest.fn(),
   getFilteredSkillsReport: jest.fn(),
 }));
@@ -14,7 +14,7 @@ jest.mock('../middleware/middleware.js', () => ({
 import {
   getSkillsReport,
   getFilteredSkillsReport,
-} from "../database/skillsReportDatabase";
+} from "../models/skillsReportModel.js";
 
 const app = express();
 app.use(express.json());

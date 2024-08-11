@@ -153,3 +153,16 @@ export async function updateCertificationsThatExpired() {
     SET rt.validity = "Expired"
   `);
 }
+
+// Get all trainings expiring this month
+export async function getExpiringTrainings() {
+  const [rows] = await pool.query(
+      `SELECT et.*, e.name AS employee_name, t.title AS training_title 
+     FROM employees_trainings et
+     JOIN employees e ON et.employee_id = e.id
+     JOIN trainings t ON et.training_id = t.id
+     WHERE et.expiry_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01') 
+     AND et.expiry_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')`
+  );
+  return rows;
+}

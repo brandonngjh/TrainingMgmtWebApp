@@ -1,11 +1,9 @@
 import nodemailer from "nodemailer";
 import schedule from "node-schedule";
-import {
-  getExpiringTrainings,
-  getUpcomingTrainings,
-} from "../database/emailDatabase.js";
 
 import { sendEmail } from "../middleware/emailService.js";
+import {getExpiringTrainings} from "../models/relevantTrainingsModel.js";
+import {getUpcomingTrainings} from "../models/trainingSessionModel.js";
 
 // For testing, triggered every minute
 const secondRule = new schedule.RecurrenceRule();

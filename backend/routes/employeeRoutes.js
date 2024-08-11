@@ -5,7 +5,7 @@ import {
   createEmployee,
   deleteEmployee,
   updateEmployee,
-} from "../database/employeeDatabase.js";
+} from "../models/employeeModels/employeeModel.js";
 
 import { protect } from '../middleware/middleware.js'; //add this
 const router = express.Router();    

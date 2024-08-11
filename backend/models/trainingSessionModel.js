@@ -1,9 +1,12 @@
-import { getTrainingValidityPeriod } from "./trainingDatabase.js";
-import { checkRelevantTrainingExists, createRelevantTraining, updateRelevantTrainingValidity } from "./relevantTrainingsDatabase.js";
-import { getEmployeeByID } from "./employeeDatabase.js";
-import { sendEmail } from "../middleware/emailService.js";
+import {getTrainingValidityPeriod} from "./trainingModel.js";
+import {
+  checkRelevantTrainingExists,
+  createRelevantTraining,
+  updateRelevantTrainingValidity
+} from "./relevantTrainingsModel.js";
+import {getEmployeeByID} from "./employeeModels/employeeModel.js";
+import {sendEmail} from "../middleware/emailService.js";
 import pool from "./database.js";
-import { get } from "http";
 
 // function to format the data obtained from the database
 function formatSession (rows) {
@@ -227,4 +230,16 @@ export async function markAttendance(session_id, employee_ids) {
   
   }
   return getTrainingSession(session_id); // Return basic result info
+}
+
+// Get all upcoming training sessions in exactly 3 days
+export async function getUpcomingTrainings() {
+  const [rows] = await pool.query(
+      `SELECT et.*, e.name AS employee_name, e.email AS employee_email, t.title AS training_title
+     FROM employees_trainings et
+     JOIN employees e ON et.employee_id = e.id
+     JOIN trainings t ON et.training_id = t.id
+     WHERE et.start_date = DATE_ADD(CURDATE(), INTERVAL 3 DAY)`
+  );
+  return rows;
 }

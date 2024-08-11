@@ -1,7 +1,7 @@
-import pool from '../database/database.js';
+import pool from '../models/database.js';
 import { generateToken, verifyToken} from '../auth_utils/jwt.js';
 import bcrypt from 'bcryptjs';
-import {login} from "../database/loginController.js"
+import {login} from "../models/loginController.js"
 
 describe('Integration test: Login functions', () => {
     let req,res;

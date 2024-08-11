@@ -8,7 +8,7 @@ import {
   createRelevantTraining,
   deleteRelevantTraining,
   updateRelevantTraining,
-} from "../database/relevantTrainingsDatabase.js";
+} from "../models/relevantTrainingsModel.js";
 
 const router = express.Router();
 

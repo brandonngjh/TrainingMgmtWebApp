@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import mainRoutes from "./routes/routes.js";
 import loginRoutes from "./routes/loginRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-import pool from "./database/database.js";
+import pool from "./models/database.js";
 import morgan from "morgan";
 import "./scheduler/autoNotificationScheduler.js";
 import "./scheduler/certificationValidityCheck.js";

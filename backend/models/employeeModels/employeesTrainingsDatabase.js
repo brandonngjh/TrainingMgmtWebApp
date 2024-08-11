@@ -1,4 +1,4 @@
-import pool from "./database.js";
+import pool from "../database.js";
 
 // Check if an employee training ID exists
 export async function employeeTrainingIdExists(id) {

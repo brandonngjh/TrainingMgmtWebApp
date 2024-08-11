@@ -1,8 +1,8 @@
-import pool from "../database/database.js";
+import pool from "../models/database.js";
 import {
   getSkillsReport,
   getFilteredSkillsReport,
-} from "../database/skillsReportDatabase.js";
+} from "../models/skillsReportModel.js";
 
 describe('Integration Test: Skills Report Functions', () => {
     const mockEmployees = [
