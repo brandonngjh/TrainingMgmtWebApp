@@ -113,7 +113,7 @@ const ReportGenerator: React.FC = () => {
 
   return (
     <div className="flex">
-      <Sidebar activeItem="Skills Report Generator" />
+      <Sidebar activeItem="Report" />
       <div className="flex-1">
         <h2 data-test="report-generator-header" className="text-3xl my-8">Skills Report Generator</h2>
         <div className="button-container">
