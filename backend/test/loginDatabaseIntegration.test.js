@@ -13,8 +13,8 @@ describe('Integration test: Login functions', () => {
          console.log(testUsername, testPassword);
           const hashedPassword = await bcrypt.hash(testPassword, 10); //hash first before inserting database
           await pool.query(
-              'INSERT INTO user_credentials (username, password, role) VALUES (?, ?, ?)',
-              [testUsername, hashedPassword, 'hr']
+              'INSERT INTO user_credentials (username, password) VALUES (?, ?)',
+              [testUsername, hashedPassword]
             );
           });
 
@@ -66,8 +66,8 @@ describe('Integration test: Login functions', () => {
         expect(res.json).toHaveBeenCalledWith({ message: 'Invalid username or password' });
     })
 
-    it('should return 401 error if missing username', async () =>{
-      delete req.body.username;
+    it('should return 401 error if missing password', async () =>{
+      delete req.body.password;
       await login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(401);

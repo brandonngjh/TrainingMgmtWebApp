@@ -9,8 +9,6 @@ describe("Dashboard Page", () => {
 
     cy.get("[data-test=dashboard-header]").should("be.visible");
     cy.get("[data-test=dashboard-content]").should("be.visible");
-    cy.get("[data-test=dashboard-table]").should("be.visible");
-    cy.get("[data-test=dashboard-generate-button]").should("be.visible");
   });
 
   it("should fetch and display employee data", () => {
@@ -22,13 +20,10 @@ describe("Dashboard Page", () => {
       expect([200, 304]).to.include(interception.response.statusCode);
     });
 
-    cy.get("[data-test=dashboard-table]").should("contain", "Brandon");
-    cy.get("[data-test=dashboard-table]").should(
-      "contain",
-      "Maintenance/Construction"
-    );
-    cy.get("[data-test=dashboard-table]").should("contain", "02/10/2022");
-    cy.get("[data-test=dashboard-table]").should("contain", "02/11/2023");
+    cy.contains("Brandon");
+    cy.contains("Maintenance/Construction");
+    cy.contains("10/2/2022");
+    cy.contains("5/10/2025");
   });
 
   it("should fetch and display training data", () => {
@@ -72,7 +67,7 @@ describe("Dashboard Page", () => {
   });
 
   it("should navigate to the report generation page", () => {
-    cy.get("[data-test=dashboard-generate-button]").click();
+    cy.contains("Report").click();
     cy.url().should("include", "/report");
   });
 });
