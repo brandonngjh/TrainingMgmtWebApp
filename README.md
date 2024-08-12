@@ -13,6 +13,7 @@ The application is developed using:
 
 - **Login (IAM) using Tokens JWT Authentication:** Secure login system using JSON Web Tokens (JWT) for authentication.
 - **Automation of Emailing Employees:** Automated email scheduling using `node-schedule` and email functionality with `nodemailer`.
+- **PDF Report Generation:** Employee Trainings report using `jdpsf`.
 
 ## Testing
 
