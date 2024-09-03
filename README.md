@@ -1,5 +1,8 @@
 # Training Management Web App
 
+[![Video Demo](https://github.com/user-attachments/assets/c3d8bc4c-f6b5-4d84-b164-fce54fec9694)](https://youtu.be/4RTHZGaZaH8)
+[Video Demo](https://youtu.be/4RTHZGaZaH8)
+
 This project consists of a frontend and backend service for a training management web application, along with a MySQL database. It is designed to reduce the workload of HR by automating tasks and providing visualization and efficient platform. The services are containerized using Docker and managed with Docker Compose.
 
 The application is developed using:
