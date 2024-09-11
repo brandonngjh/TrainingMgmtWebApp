@@ -10,8 +10,6 @@ The application is developed using:
 - Express and Node.js for the backend
 - React with TypeScript and TailwindCSS for the frontend
 
-**Note:** This application is still a work in progress.
-
 ## Features
 
 - **Login (IAM) using Tokens JWT Authentication:** Secure login system using JSON Web Tokens (JWT) for authentication.
